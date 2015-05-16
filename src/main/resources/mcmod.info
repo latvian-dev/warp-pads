@@ -1,0 +1,20 @@
+[
+{
+  "modid": "XPT",
+  "name": "XP Teleporters",
+  "description": "This mod adds XP Teleporters",
+  "version": "${version}",
+  "url": "http://minecraft.curseforge.com/mc-mods/",
+  "updateUrl": "",
+  "authorList": [
+    "LatvianModder"
+  ],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [
+  ],
+  "parent":"",
+  "dependencies": [
+  ]
+}
+]
