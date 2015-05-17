@@ -26,7 +26,6 @@ public class XPT
 		block.setBlockName("xpt:teleporter");
 		block.setHardness(1F);
 		block.setCreativeTab(CreativeTabs.tabTransport);
-		block.setBlockBounds(0F, 0F, 0F, 1F, 1F / 8F, 1F);
 		
 		item.setUnlocalizedName("xpt:link_card");
 		item.setTextureName("xpt:link_card");
@@ -43,7 +42,10 @@ public class XPT
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent e)
 	{
-		block.loadRecipes();
-		item.loadRecipes();
+		if(XPTConfig.enable_crafting)
+		{
+			block.loadRecipes();
+			item.loadRecipes();
+		}
 	}
 }

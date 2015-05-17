@@ -1,6 +1,6 @@
 package latmod.xpt;
 
-import net.minecraft.item.Item;
+import net.minecraft.item.*;
 
 public class ItemXPT extends Item
 {
@@ -11,4 +11,7 @@ public class ItemXPT extends Item
 	public void loadRecipes()
 	{
 	}
+	
+	public boolean hasEffect(ItemStack is, int pass)
+	{ return is.hasTagCompound() && is.stackTagCompound.hasKey("Coords"); }
 }
