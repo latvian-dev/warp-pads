@@ -1,6 +1,6 @@
-def mod_name = "EMC_Condenser";
-def mod_group = "latmod.emcc";
-def mod_class = "EMCC.java";
+def mod_name = "XPTeleporters";
+def mod_group = "latmod.xpt";
+def mod_class = "XPT.java";
 
 buildscript {
     repositories {
@@ -42,8 +42,6 @@ minecraft {
 }
 
 dependencies {
-    compile files("sources/Exported/LatCoreMC-" + config.version_mc + "-" + config.version_mods + "-dev.jar")
-    compile files(config.mods_dir + "unused/EE3-dev.jar")
 }
 
 sourceSets {

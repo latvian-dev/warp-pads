@@ -25,6 +25,7 @@ public class XPT
 		
 		block.setBlockName("xpt:teleporter");
 		block.setHardness(1F);
+		block.setResistance(100000F);
 		block.setCreativeTab(CreativeTabs.tabTransport);
 		
 		item.setUnlocalizedName("xpt:link_card");

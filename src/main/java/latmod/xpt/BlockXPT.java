@@ -4,10 +4,13 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.*;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.world.*;
+import net.minecraftforge.oredict.*;
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.*;
 
 public class BlockXPT extends BlockContainer
@@ -26,6 +29,10 @@ public class BlockXPT extends BlockContainer
 	
 	public void loadRecipes()
 	{
+		GameRegistry.addRecipe(new ShapedOreRecipe(this, "IEI", "IPI",
+				'E', "blockEmerald",
+				'I', "ingotIron",
+				'P', Items.ender_pearl));
 	}
 	
 	public void setBlockBoundsForItemRender()

@@ -1,4 +1,5 @@
 package latmod.xpt;
+import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.entity.player.*;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -44,11 +45,14 @@ public class TileXPT extends TileEntity // TileLM
 		tag.setString("Name", name);
 		if(maxCooldown > 0) tag.setInteger("MaxCooldown", maxCooldown);
 	}
+	
+	public int getDim()
+	{ return (getWorldObj() == null) ? 0 : getWorldObj().provider.dimensionId; }
 
 	public int getIconID()
 	{
 		if(worldObj != null && linkedY > 0)
-			return (linkedDim == worldObj.provider.dimensionId) ? 1 : 2;
+			return (linkedDim == getDim()) ? 1 : 2;
 		return 0;
 	}
 	
@@ -57,24 +61,32 @@ public class TileXPT extends TileEntity // TileLM
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 	
+	public boolean isServer()
+	{ return !getWorldObj().isRemote; }
+	
 	public void updateEntity()
 	{
+		if(cooldown < 0)
+			cooldown = 0;
+		
 		if(cooldown > 0)
 		{
 			cooldown--;
 			
-			if(!worldObj.isRemote && cooldown == 0)
+			if(cooldown == 0 && isServer())
 				markDirty();
 		}
 		
-		if(!worldObj.isRemote)
+		if(isServer())
 		{
-			if(linkedY > 0 && (!created || worldObj.getTotalWorldTime() % 100L == 13L))
+			if(linkedY > 0 && (!created || getWorldObj().getTotalWorldTime() % 60L == 13L))
 			{
 				TileXPT t = getLinkedTile();
 				
-				if(t == null || !t.getLinkedTile().equals(this))
+				if(t == null || !equals(t.getLinkedTile()))
 				{ linkedY = 0; markDirty(); }
+				
+				markDirty();
 			}
 			
 			if(!created)
@@ -116,8 +128,12 @@ public class TileXPT extends TileEntity // TileLM
 			if(!is.hasDisplayName()) return;
 			
 			name = is.getDisplayName();
-			is.stackSize--;
+			
+			if(!ep.capabilities.isCreativeMode)
+				is.stackSize--;
+			
 			markDirty();
+			
 			return;
 		}
 		
@@ -138,11 +154,12 @@ public class TileXPT extends TileEntity // TileLM
 				t.linkedX = xCoord;
 				t.linkedY = yCoord;
 				t.linkedZ = zCoord;
-				t.linkedDim = worldObj.provider.dimensionId;
+				t.linkedDim = getDim();
 				cooldown = maxCooldown = t.cooldown = t.maxCooldown = 0;
 				markDirty();
 				t.markDirty();
 				is.stackSize--;
+				ep.addChatMessage(new ChatComponentText((t.linkedDim == linkedDim ? "Intra" : "Extra") + "-dimensional link created!"));
 			}
 			else linkedY = 0;
 		}
@@ -175,13 +192,35 @@ public class TileXPT extends TileEntity // TileLM
 			
 			TileXPT t = getLinkedTile();
 			
-			if(t != null && t.getLinkedTile().equals(this) && teleportPlayer((EntityPlayerMP)ep, linkedX + 0.5D, linkedY + 1D, linkedZ + 0.5D, linkedDim))
+			if(t != null && equals(t.getLinkedTile()))
 			{
-				cooldown = maxCooldown = XPTConfig.cooldown_seconds * 20;
-				t.cooldown = t.maxCooldown = cooldown;
-				ep.addChatMessage(new ChatComponentText("Used teleport '" + (name.isEmpty() ? (worldObj.provider.getDimensionName() + ": " + xCoord + ", " + yCoord + ", " + zCoord) : name) + "'"));
-				markDirty();
-				t.markDirty();
+				boolean crossdim = linkedDim != getDim();
+				double dist = crossdim ? 0D : Math.sqrt(getDistanceFrom(t.xCoord + 0.5D, t.yCoord + 0.5D, t.zCoord + 0.5D));
+				int levels = XPTConfig.levels_for_crossdim;
+				if(!crossdim) levels = (XPTConfig.levels_for_1000_blocks > 0) ? MathHelper.ceiling_double_int(XPTConfig.levels_for_1000_blocks * dist / 1000D) : 0;
+				
+				if(!ep.capabilities.isCreativeMode && levels > 0 && ep.experienceLevel < levels)
+				{
+					ep.addChatMessage(new ChatComponentText("You need level " + levels + " to teleport"));
+					return;
+				}
+				
+				//worldObj.playSoundEffect(d3, d4, d5, "mob.endermen.portal", 1.0F, 1.0F);
+				
+				if(teleportPlayer((EntityPlayerMP)ep, linkedX + 0.5D, linkedY + 1.2D, linkedZ + 0.5D, linkedDim))
+				{
+					if(levels > 0 && !ep.capabilities.isCreativeMode)
+						ep.addExperienceLevel(-levels);
+					
+					cooldown = maxCooldown = t.cooldown = t.maxCooldown = XPTConfig.cooldown_seconds * 20;
+					
+					ep.motionY = 0.05D;
+					ep.addChatMessage(new ChatComponentText("Used teleport '" + (name.isEmpty() ? (worldObj.provider.getDimensionName() + ": " + xCoord + ", " + yCoord + ", " + zCoord) : name) + "'"));
+					markDirty();
+					t.markDirty();
+					
+					//worldObj.playSoundEffect(d3, d4, d5, "mob.endermen.portal", 1.0F, 1.0F);
+				}
 			}
 		}
 	}
@@ -195,10 +234,12 @@ public class TileXPT extends TileEntity // TileLM
 	
 	public boolean equals(Object o)
 	{
-		if(o.getClass() != TileXPT.class) return false;
+		if(o == null || o.getClass() != TileXPT.class) return false;
 		TileXPT t = (TileXPT)o;
-		if(t.xCoord != xCoord) return false; if(t.yCoord != yCoord) return false; if(t.zCoord != zCoord) return false;
-		if(t.worldObj != null && worldObj != null && t.worldObj.provider.dimensionId != worldObj.provider.dimensionId) return false;
+		if(t.xCoord != xCoord) return false;
+		if(t.yCoord != yCoord) return false;
+		if(t.zCoord != zCoord) return false;
+		if(t.getDim() != getDim()) return false;
 		return true;
 	}
 	
