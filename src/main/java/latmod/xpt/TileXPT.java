@@ -1,19 +1,15 @@
 package latmod.xpt;
-import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.entity.player.*;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.*;
-import net.minecraft.network.play.server.*;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.server.MinecraftServer;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
-import net.minecraft.world.*;
+import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.FakePlayer;
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.*;
 
 public class TileXPT extends TileEntity // TileLM
@@ -47,7 +43,7 @@ public class TileXPT extends TileEntity // TileLM
 	}
 	
 	public int getDim()
-	{ return (getWorldObj() == null) ? 0 : getWorldObj().provider.dimensionId; }
+	{ return (worldObj == null) ? 0 : worldObj.provider.dimensionId; }
 
 	public int getIconID()
 	{
@@ -57,12 +53,10 @@ public class TileXPT extends TileEntity // TileLM
 	}
 	
 	public void markDirty()
-	{
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-	}
+	{ worldObj.markBlockForUpdate(xCoord, yCoord, zCoord); }
 	
 	public boolean isServer()
-	{ return !getWorldObj().isRemote; }
+	{ return !worldObj.isRemote; }
 	
 	public void updateEntity()
 	{
@@ -77,24 +71,8 @@ public class TileXPT extends TileEntity // TileLM
 				markDirty();
 		}
 		
-		if(isServer())
-		{
-			if(linkedY > 0 && (!created || getWorldObj().getTotalWorldTime() % 60L == 13L))
-			{
-				TileXPT t = getLinkedTile();
-				
-				if(t == null || !equals(t.getLinkedTile()))
-				{ linkedY = 0; markDirty(); }
-				
-				markDirty();
-			}
-			
-			if(!created)
-			{
-				created = true;
-				markDirty();
-			}
-		}
+		if(!created && isServer())
+		{ created = true; markDirty(); }
 	}
 	
 	public final Packet getDescriptionPacket()
@@ -147,19 +125,10 @@ public class TileXPT extends TileEntity // TileLM
 			linkedZ = pos[2];
 			linkedDim = pos[3];
 			
-			TileXPT t = getLinkedTile();
-			
-			if(t != null && !t.equals(this))
+			if(createLink(pos[0], pos[1], pos[2], pos[3], true))
 			{
-				t.linkedX = xCoord;
-				t.linkedY = yCoord;
-				t.linkedZ = zCoord;
-				t.linkedDim = getDim();
-				cooldown = maxCooldown = t.cooldown = t.maxCooldown = 0;
-				markDirty();
-				t.markDirty();
 				is.stackSize--;
-				ep.addChatMessage(new ChatComponentText((t.linkedDim == linkedDim ? "Intra" : "Extra") + "-dimensional link created!"));
+				ep.addChatMessage(new ChatComponentText((linkedDim == getDim() ? "Intra" : "Extra") + "-dimensional link created!"));
 			}
 			else linkedY = 0;
 		}
@@ -170,11 +139,42 @@ public class TileXPT extends TileEntity // TileLM
 		}
 	}
 	
+	public boolean createLink(int x, int y, int z, int dim, boolean updateLink)
+	{
+		if(!isServer()) return false;
+		if(x == linkedX && y == linkedY && z == linkedZ && dim == linkedDim) return false;
+		if(x == xCoord && y == yCoord && z == zCoord && dim == getDim()) return false;
+		
+		TileXPT t = getLinkedTile();
+		if(t != null)
+		{
+			t.linkedY = 0;
+			t.markDirty();
+		}
+		
+		linkedX = x;
+		linkedY = y;
+		linkedZ = z;
+		linkedDim = dim;
+		
+		if(updateLink)
+		{
+			t = getLinkedTile();
+			
+			if(t != null)
+				t.createLink(xCoord, yCoord, zCoord, getDim(), false);
+		}
+		
+		markDirty();
+		return true;
+	}
+	
 	public TileXPT getLinkedTile()
 	{
-		if(DimensionManager.isDimensionRegistered(linkedDim))
+		World w = DimensionManager.getWorld(linkedDim);
+		
+		if(w != null)
 		{
-			World w = MinecraftServer.getServer().worldServerForDimension(linkedDim);
 			TileEntity te = w.getTileEntity(linkedX, linkedY, linkedZ);
 			
 			if(te != null && !te.isInvalid() && te instanceof TileXPT)
@@ -186,12 +186,11 @@ public class TileXPT extends TileEntity // TileLM
 	
 	public void onPlayerCollided(EntityPlayer ep)
 	{
-		if(!worldObj.isRemote && cooldown <= 0 && ep.isSneaking() && ep instanceof EntityPlayerMP && !(ep instanceof FakePlayer))
+		if(isServer() && cooldown <= 0 && ep.isSneaking() && ep instanceof EntityPlayerMP && !(ep instanceof FakePlayer))
 		{
 			ep.setSneaking(false);
 			
 			TileXPT t = getLinkedTile();
-			
 			if(t != null && equals(t.getLinkedTile()))
 			{
 				boolean crossdim = linkedDim != getDim();
@@ -207,7 +206,8 @@ public class TileXPT extends TileEntity // TileLM
 				
 				//worldObj.playSoundEffect(d3, d4, d5, "mob.endermen.portal", 1.0F, 1.0F);
 				
-				if(teleportPlayer((EntityPlayerMP)ep, linkedX + 0.5D, linkedY + 1.2D, linkedZ + 0.5D, linkedDim))
+				//if(teleportPlayer((EntityPlayerMP)ep, linkedX + 0.5D, linkedY + 1.2D, linkedZ + 0.5D, linkedDim))
+				if(Teleporter.travelEntity(ep, linkedX + 0.5D, linkedY + 0.3D, linkedZ + 0.5D, linkedDim))
 				{
 					if(levels > 0 && !ep.capabilities.isCreativeMode)
 						ep.addExperienceLevel(-levels);
@@ -221,6 +221,11 @@ public class TileXPT extends TileEntity // TileLM
 					
 					//worldObj.playSoundEffect(d3, d4, d5, "mob.endermen.portal", 1.0F, 1.0F);
 				}
+			}
+			else
+			{
+				ep.addChatMessage(new ChatComponentText("Link broken!"));
+				if(t != null) { linkedY = 0; markDirty(); }
 			}
 		}
 	}
@@ -250,55 +255,4 @@ public class TileXPT extends TileEntity // TileLM
 	@SideOnly(Side.CLIENT)
 	public double getMaxRenderDistanceSquared()
 	{ return 64D; }
-	
-	/** @author CoFH */
-	public static boolean teleportPlayer(EntityPlayerMP ep, double x, double y, double z, int dim)
-	{
-		if(ep.worldObj.isRemote || ep.isDead || !DimensionManager.isDimensionRegistered(dim)) return false;
-		
-		if(dim != ep.dimension)
-		{
-			MinecraftServer ms = MinecraftServer.getServer();
-			
-			int dim0 = ep.dimension;
-			WorldServer w0 = ms.worldServerForDimension(ep.dimension);
-			ep.dimension = dim;
-			WorldServer w1 = ms.worldServerForDimension(ep.dimension);
-			ep.playerNetServerHandler.sendPacket(new S07PacketRespawn(ep.dimension, ep.worldObj.difficultySetting, ep.worldObj.getWorldInfo().getTerrainType(), ep.theItemInWorldManager.getGameType()));
-			w0.removePlayerEntityDangerously(ep);
-			if(ep.riddenByEntity != null) ep.riddenByEntity.mountEntity(null);
-			if(ep.ridingEntity != null) ep.mountEntity(null);
-			
-			ep.isDead = false;
-			
-			double d = w0.provider.getMovementFactor() / w1.provider.getMovementFactor();
-			double md = 29999872D;
-			
-			w0.theProfiler.startSection("placing");
-			
-			if(ep.isEntityAlive())
-			{
-				ep.setLocationAndAngles(MathHelper.clamp_double(ep.posX * d, -md, md), ep.posY, MathHelper.clamp_double(ep.posZ * d, -md, md), ep.rotationYaw, ep.rotationPitch);
-				w1.spawnEntityInWorld(ep);
-				w1.updateEntityWithOptionalForce(ep, false);
-			}
-			
-			w0.theProfiler.endSection();
-			ep.setWorld(w1);
-			
-			ms.getConfigurationManager().func_72375_a(ep, w0);
-			ep.playerNetServerHandler.setPlayerLocation(ep.posX, ep.posY, ep.posZ, ep.rotationYaw, ep.rotationPitch);
-			ep.theItemInWorldManager.setWorld(w1);
-			ms.getConfigurationManager().updateTimeAndWeatherForPlayer(ep, w1);
-			ms.getConfigurationManager().syncPlayerInventory(ep);
-			
-			for(Object o : ep.getActivePotionEffects())
-				ep.playerNetServerHandler.sendPacket(new S1DPacketEntityEffect(ep.getEntityId(), (PotionEffect)o));
-			
-			FMLCommonHandler.instance().firePlayerChangedDimensionEvent(ep, dim0, dim);
-		}
-		
-		ep.playerNetServerHandler.setPlayerLocation(x, y, z, ep.rotationYaw, ep.rotationPitch);
-		return true;
-	}
 }
