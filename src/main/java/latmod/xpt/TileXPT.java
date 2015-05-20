@@ -12,7 +12,7 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.FakePlayer;
 import cpw.mods.fml.relauncher.*;
 
-public class TileXPT extends TileEntity // TileLM
+public class TileXPT extends TileEntity // TileLM // BlockXPT
 {
 	public int linkedX, linkedY, linkedZ, linkedDim, cooldown, maxCooldown;
 	public String name = "";
@@ -120,17 +120,13 @@ public class TileXPT extends TileEntity // TileLM
 		if(is.hasTagCompound() && is.stackTagCompound.hasKey("Coords"))
 		{
 			int[] pos = is.stackTagCompound.getIntArray("Coords");
-			linkedX = pos[0];
-			linkedY = pos[1];
-			linkedZ = pos[2];
-			linkedDim = pos[3];
 			
 			if(createLink(pos[0], pos[1], pos[2], pos[3], true))
 			{
 				is.stackSize--;
 				ep.addChatMessage(new ChatComponentText((linkedDim == getDim() ? "Intra" : "Extra") + "-dimensional link created!"));
 			}
-			else linkedY = 0;
+			else ep.addChatMessage(new ChatComponentText("Can't create a link!"));
 		}
 		else if(yCoord > 0)
 		{
@@ -191,8 +187,10 @@ public class TileXPT extends TileEntity // TileLM
 			ep.setSneaking(false);
 			
 			TileXPT t = getLinkedTile();
-			if(t != null && equals(t.getLinkedTile()))
+			if(t != null && (t.linkedY <= 0 || equals(t.getLinkedTile())))
 			{
+				if(t.linkedY <= 0) t.createLink(xCoord, yCoord, zCoord, getDim(), false);
+				
 				boolean crossdim = linkedDim != getDim();
 				double dist = crossdim ? 0D : Math.sqrt(getDistanceFrom(t.xCoord + 0.5D, t.yCoord + 0.5D, t.zCoord + 0.5D));
 				int levels = XPTConfig.levels_for_crossdim;
@@ -204,7 +202,7 @@ public class TileXPT extends TileEntity // TileLM
 					return;
 				}
 				
-				//worldObj.playSoundEffect(d3, d4, d5, "mob.endermen.portal", 1.0F, 1.0F);
+				//worldObj.playSoundEffect(xCoord + 0.5D, yCoord + 1D, zCoord + 0.5D, "mob.endermen.portal", 1F, 1F);
 				
 				//if(teleportPlayer((EntityPlayerMP)ep, linkedX + 0.5D, linkedY + 1.2D, linkedZ + 0.5D, linkedDim))
 				if(Teleporter.travelEntity(ep, linkedX + 0.5D, linkedY + 0.3D, linkedZ + 0.5D, linkedDim))
@@ -255,4 +253,10 @@ public class TileXPT extends TileEntity // TileLM
 	@SideOnly(Side.CLIENT)
 	public double getMaxRenderDistanceSquared()
 	{ return 64D; }
+
+	public void onBroken()
+	{
+		if(XPTConfig.unlink_broken)
+			createLink(0, 0, 0, 0, true);
+	}
 }

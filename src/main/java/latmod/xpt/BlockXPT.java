@@ -1,5 +1,5 @@
 package latmod.xpt;
-import net.minecraft.block.BlockContainer;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.*;
@@ -73,6 +73,18 @@ public class BlockXPT extends BlockContainer
 			if(t != null && !t.isInvalid())
 				t.onPlacedBy((EntityPlayer)el, is);
 		}
+	}
+	
+	public void breakBlock(World w, int x, int y, int z, Block b, int m)
+	{
+		if(!w.isRemote)
+		{
+			TileXPT t = (TileXPT)w.getTileEntity(x, y, z);
+			if(t != null && !t.isInvalid())
+				t.onBroken();
+		}
+		
+		super.breakBlock(w, x, y, z, b, m);
 	}
 	
 	@SideOnly(Side.CLIENT)

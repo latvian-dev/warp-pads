@@ -51,7 +51,7 @@ public class RenderXPT extends TileEntitySpecialRenderer
 		
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
 		
-		GL11.glTranslated(rx + 0.5D, ry - 0.0D, rz + 0.5D);
+		GL11.glTranslated(rx + 0.5D, ry + 0.0D, rz + 0.5D);
 		GL11.glScalef(-1F, -1F, 1F);
 		GL11.glRotated(-Math.atan2((te.xCoord + 0.5D) - RenderManager.instance.viewerPosX, (te.zCoord + 0.5D) - RenderManager.instance.viewerPosZ) * 180D / Math.PI, 0D, 1D, 0D);
 		
@@ -68,13 +68,15 @@ public class RenderXPT extends TileEntitySpecialRenderer
 		GL11.glColor4f(0F, 1F, 1F, 0F);
 		GL11.glBegin(GL11.GL_QUADS);
 		double s = cooldown * 0.75D;
-		double s1 = cooldown * 0.02D;
+		double s1 = cooldown * 0.12D;
 		GL11.glVertex3d(-s, -1.5D, 0D);
 		GL11.glVertex3d(s, -1.5D, 0D);
-		if(ID == 1) GL11.glColor4f(86F / 255F, 218F / 255F, 1F, alpha);
-		else GL11.glColor4f(48F / 255F, 1F, 113F / 255F, alpha);
-		GL11.glVertex3d(s1, 0.125D, 0D);
-		GL11.glVertex3d(-s1, 0.125D, 0D);
+		
+		if(ID == 1) GL11.glColor4f(0.2F, 0.4F, 1F, alpha);
+		else GL11.glColor4f(0.2F, 1F, 0.2F, alpha * 0.8F);
+		
+		GL11.glVertex3d(s1, -0.125D, 0D);
+		GL11.glVertex3d(-s1, -0.125D, 0D);
 		GL11.glEnd();
 		
 		if(t.cooldown > 0)
