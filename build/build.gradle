@@ -1,6 +1,7 @@
 def mod_name = "XPTeleporters";
 def mod_group = "latmod.xpt";
 def mod_class = "XPT.java";
+def mod_version = "1.0.0";
 
 buildscript {
     repositories {
@@ -29,7 +30,7 @@ configFile.withReader {
     project.ext.config = new ConfigSlurper().parse prop
 }
 
-version = config.version_mc + "-" + config.version_mods
+version = config.version_mc + "-" + mod_version
 group = mod_group
 archivesBaseName = mod_name
 
@@ -37,7 +38,7 @@ minecraft {
     version = config.version_mc + "-" + config.version_forge
     runDir = "eclipse/assets"
     
-    replace "@VERSION@", config.version_mods
+    replace "@VERSION@", mod_version
     replaceIn mod_class
 }
 
