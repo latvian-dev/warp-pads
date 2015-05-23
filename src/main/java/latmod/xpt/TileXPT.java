@@ -121,9 +121,30 @@ public class TileXPT extends TileEntity // TileLM // BlockXPT
 		{
 			int[] pos = is.stackTagCompound.getIntArray("Coords");
 			
+			int levels = 0;
+			
+			if(XPTConfig.only_linking_uses_xp)
+			{
+				boolean crossdim = pos[3] != getDim();
+				
+				if(crossdim) levels = XPTConfig.levels_for_crossdim;
+				else
+				{
+					double dist = Math.sqrt(getDistanceFrom(pos[0] + 0.5D, pos[1] + 0.5D, pos[2] + 0.5D));
+					levels = (XPTConfig.levels_for_1000_blocks > 0) ? MathHelper.ceiling_double_int(XPTConfig.levels_for_1000_blocks * dist / 1000D) : 0;
+				}
+				
+				if(!ep.capabilities.isCreativeMode && levels > 0 && ep.experienceLevel < levels)
+				{
+					ep.addChatMessage(new ChatComponentText("You need level " + levels + " to link teleporters"));
+					return;
+				}
+			}
+			
 			if(createLink(pos[0], pos[1], pos[2], pos[3], true))
 			{
 				is.stackSize--;
+				if(levels > 0) ep.addExperienceLevel(-levels);
 				ep.addChatMessage(new ChatComponentText((linkedDim == getDim() ? "Intra" : "Extra") + "-dimensional link created!"));
 			}
 			else ep.addChatMessage(new ChatComponentText("Can't create a link!"));
@@ -193,8 +214,14 @@ public class TileXPT extends TileEntity // TileLM // BlockXPT
 				
 				boolean crossdim = linkedDim != getDim();
 				double dist = crossdim ? 0D : Math.sqrt(getDistanceFrom(t.xCoord + 0.5D, t.yCoord + 0.5D, t.zCoord + 0.5D));
-				int levels = XPTConfig.levels_for_crossdim;
-				if(!crossdim) levels = (XPTConfig.levels_for_1000_blocks > 0) ? MathHelper.ceiling_double_int(XPTConfig.levels_for_1000_blocks * dist / 1000D) : 0;
+				
+				int levels = 0;
+				
+				if(!XPTConfig.only_linking_uses_xp)
+				{
+					levels = XPTConfig.levels_for_crossdim;
+					if(!crossdim) levels = (XPTConfig.levels_for_1000_blocks > 0) ? MathHelper.ceiling_double_int(XPTConfig.levels_for_1000_blocks * dist / 1000D) : 0;
+				}
 				
 				if(!ep.capabilities.isCreativeMode && levels > 0 && ep.experienceLevel < levels)
 				{
