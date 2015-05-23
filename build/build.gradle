@@ -1,7 +1,7 @@
 def mod_name = "XPTeleporters";
 def mod_group = "latmod.xpt";
 def mod_class = "XPT.java";
-def mod_version = "1.0.0";
+def mod_version = "1.0.1";
 
 buildscript {
     repositories {
