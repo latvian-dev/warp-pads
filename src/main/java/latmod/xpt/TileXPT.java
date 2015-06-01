@@ -1,4 +1,5 @@
 package latmod.xpt;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.*;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -117,9 +118,9 @@ public class TileXPT extends TileEntity // TileLM // BlockXPT
 		
 		if(is.getItem() != XPT.item) return;
 		
-		if(is.hasTagCompound() && is.stackTagCompound.hasKey("Coords"))
+		if(ItemXPT.hasData(is))
 		{
-			int[] pos = is.stackTagCompound.getIntArray("Coords");
+			int[] pos = is.stackTagCompound.getIntArray(ItemXPT.NBT_TAG);
 			
 			int levels = 0;
 			
@@ -151,8 +152,15 @@ public class TileXPT extends TileEntity // TileLM // BlockXPT
 		}
 		else if(yCoord > 0)
 		{
-			if(!is.hasTagCompound()) is.stackTagCompound = new NBTTagCompound();
-			is.stackTagCompound.setIntArray("Coords", new int[] { xCoord, yCoord, zCoord, worldObj.provider.dimensionId });
+			if(!ep.capabilities.isCreativeMode) is.stackSize--;
+			ItemStack is1 = new ItemStack(XPT.item);
+			is1.stackTagCompound = new NBTTagCompound();
+			is1.stackTagCompound.setIntArray(ItemXPT.NBT_TAG, new int[] { xCoord, yCoord, zCoord, worldObj.provider.dimensionId });
+			
+			if(ep.inventory.addItemStackToInventory(is1))
+				ep.openContainer.detectAndSendChanges();
+			else
+				worldObj.spawnEntityInWorld(new EntityItem(worldObj, ep.posX, ep.posY, ep.posZ, is1));
 		}
 	}
 	
@@ -223,7 +231,7 @@ public class TileXPT extends TileEntity // TileLM // BlockXPT
 					if(!crossdim) levels = (XPTConfig.levels_for_1000_blocks > 0) ? MathHelper.ceiling_double_int(XPTConfig.levels_for_1000_blocks * dist / 1000D) : 0;
 				}
 				
-				if(!ep.capabilities.isCreativeMode && levels > 0 && ep.experienceLevel < levels)
+				if(!ep.capabilities.isCreativeMode && !canTeleport(ep, levels))
 				{
 					ep.addChatMessage(new ChatComponentText("You need level " + levels + " to teleport"));
 					return;
@@ -235,12 +243,12 @@ public class TileXPT extends TileEntity // TileLM // BlockXPT
 				if(Teleporter.travelEntity(ep, linkedX + 0.5D, linkedY + 0.3D, linkedZ + 0.5D, linkedDim))
 				{
 					if(levels > 0 && !ep.capabilities.isCreativeMode)
-						ep.addExperienceLevel(-levels);
+						teleport(ep, levels);
 					
 					cooldown = maxCooldown = t.cooldown = t.maxCooldown = XPTConfig.cooldown_seconds * 20;
 					
 					ep.motionY = 0.05D;
-					ep.addChatMessage(new ChatComponentText("Used teleport '" + (name.isEmpty() ? (worldObj.provider.getDimensionName() + ": " + xCoord + ", " + yCoord + ", " + zCoord) : name) + "'"));
+					ep.addChatMessage(new ChatComponentText("Used teleport '" + (name.isEmpty() ? (xCoord + ", " + yCoord + ", " + zCoord + " @ " + worldObj.provider.getDimensionName()) : name) + "'"));
 					markDirty();
 					t.markDirty();
 					
@@ -252,6 +260,27 @@ public class TileXPT extends TileEntity // TileLM // BlockXPT
 				ep.addChatMessage(new ChatComponentText("Link broken!"));
 				if(t != null) { linkedY = 0; markDirty(); }
 			}
+		}
+	}
+	
+	private boolean canTeleport(EntityPlayer ep, int levels)
+	{
+		if(levels <= 0) return false;
+		
+		if(XPTConfig.use_food_levels == 0)
+			return ep.experienceLevel < levels;
+		
+		int foodLevels = ep.getFoodStats().getFoodLevel();
+		return foodLevels > 0 && (XPTConfig.use_food_levels == 1 || (foodLevels >= Math.min(levels, 20)));
+	}
+	
+	private void teleport(EntityPlayer ep, int levels)
+	{
+		if(XPTConfig.use_food_levels == 0)
+			ep.addExperienceLevel(-levels);
+		else
+		{
+			ep.getFoodStats().addStats(-Math.min(ep.getFoodStats().getFoodLevel(), Math.min(20, levels)), 0F);
 		}
 	}
 	
