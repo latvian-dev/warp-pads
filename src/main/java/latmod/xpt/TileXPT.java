@@ -22,25 +22,60 @@ public class TileXPT extends TileEntity // TileLM // BlockXPT
 	public void readFromNBT(NBTTagCompound tag)
 	{
 		super.readFromNBT(tag);
-		linkedX = tag.getInteger("LinkX");
-		linkedY = tag.getInteger("LinkY");
-		linkedZ = tag.getInteger("LinkZ");
-		linkedDim = tag.getInteger("LinkDim");
-		cooldown = tag.getInteger("Cooldown");
-		maxCooldown = tag.getInteger("MaxCooldown");
+		if(tag.hasKey("Link") && tag.hasKey("Timer"))
+		{
+			int[] link = tag.getIntArray("Link");
+			int[] cd = tag.getIntArray("Timer");
+			
+			linkedX = link[0];
+			linkedY = link[1];
+			linkedZ = link[2];
+			linkedDim = link[3];
+			
+			cooldown = cd[0];
+			maxCooldown = cd[1];
+		}
+		else
+		{
+			linkedX = tag.getInteger("LinkX");
+			linkedY = tag.getInteger("LinkY");
+			linkedZ = tag.getInteger("LinkZ");
+			linkedDim = tag.getInteger("LinkDim");
+			cooldown = tag.getInteger("Cooldown");
+			maxCooldown = tag.getInteger("MaxCooldown");
+		}
+		
 		name = tag.getString("Name");
 	}
 	
 	public void writeToNBT(NBTTagCompound tag)
 	{
 		super.writeToNBT(tag);
-		tag.setInteger("LinkX", linkedX);
-		tag.setInteger("LinkY", linkedY);
-		tag.setInteger("LinkZ", linkedZ);
-		tag.setInteger("LinkDim", linkedDim);
-		tag.setInteger("Cooldown", cooldown);
+		tag.setIntArray("Link", new int[] { linkedX, linkedY, linkedZ, linkedDim });
+		tag.setIntArray("Timer", new int[] { cooldown, maxCooldown });
 		tag.setString("Name", name);
-		if(maxCooldown > 0) tag.setInteger("MaxCooldown", maxCooldown);
+	}
+	
+	public final Packet getDescriptionPacket()
+	{
+		NBTTagCompound tag = new NBTTagCompound();
+		tag.setIntArray("D", new int[] { linkedX, linkedY, linkedZ, linkedDim, cooldown, maxCooldown });
+		tag.setString("N", name);
+		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, tag);
+	}
+	
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
+	{
+		NBTTagCompound tag = pkt.func_148857_g();
+		int[] data = tag.getIntArray("D");
+		linkedX = data[0];
+		linkedY = data[1];
+		linkedZ = data[2];
+		linkedDim = data[3];
+		cooldown = data[4];
+		maxCooldown = data[5];
+		name = tag.getString("N");
+		worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
 	}
 	
 	public int getDim()
@@ -76,28 +111,6 @@ public class TileXPT extends TileEntity // TileLM // BlockXPT
 		{ created = true; markDirty(); }
 	}
 	
-	public final Packet getDescriptionPacket()
-	{
-		NBTTagCompound tag = new NBTTagCompound();
-		tag.setIntArray("D", new int[] { linkedX, linkedY, linkedZ, linkedDim, cooldown, maxCooldown });
-		tag.setString("N", name);
-		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, tag);
-	}
-	
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
-	{
-		NBTTagCompound tag = pkt.func_148857_g();
-		int[] data = tag.getIntArray("D");
-		linkedX = data[0];
-		linkedY = data[1];
-		linkedZ = data[2];
-		linkedDim = data[3];
-		cooldown = data[4];
-		maxCooldown = data[5];
-		name = tag.getString("N");
-		worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
-	}
-	
 	public void onRightClick(EntityPlayer ep, ItemStack is)
 	{
 		if(worldObj.isRemote || is == null) return;
@@ -120,7 +133,7 @@ public class TileXPT extends TileEntity // TileLM // BlockXPT
 		
 		if(ItemXPT.hasData(is))
 		{
-			int[] pos = is.stackTagCompound.getIntArray(ItemXPT.NBT_TAG);
+			int[] pos = is.getTagCompound().getIntArray(ItemXPT.NBT_TAG);
 			
 			int levels = 0;
 			
@@ -157,8 +170,8 @@ public class TileXPT extends TileEntity // TileLM // BlockXPT
 				if(!ep.capabilities.isCreativeMode) is.stackSize--;
 				
 				ItemStack is1 = new ItemStack(XPT.item);
-				is1.stackTagCompound = new NBTTagCompound();
-				is1.stackTagCompound.setIntArray(ItemXPT.NBT_TAG, new int[] { xCoord, yCoord, zCoord, worldObj.provider.dimensionId });
+				is1.setTagCompound(new NBTTagCompound());
+				is1.getTagCompound().setIntArray(ItemXPT.NBT_TAG, new int[] { xCoord, yCoord, zCoord, worldObj.provider.dimensionId });
 				
 				if(ep.inventory.addItemStackToInventory(is1))
 					ep.openContainer.detectAndSendChanges();
@@ -167,8 +180,8 @@ public class TileXPT extends TileEntity // TileLM // BlockXPT
 			}
 			else
 			{
-				is.stackTagCompound = new NBTTagCompound();
-				is.stackTagCompound.setIntArray(ItemXPT.NBT_TAG, new int[] { xCoord, yCoord, zCoord, worldObj.provider.dimensionId });
+				is.setTagCompound(new NBTTagCompound());
+				is.getTagCompound().setIntArray(ItemXPT.NBT_TAG, new int[] { xCoord, yCoord, zCoord, worldObj.provider.dimensionId });
 				//ep.openContainer.detectAndSendChanges();
 			}
 		}
@@ -278,7 +291,7 @@ public class TileXPT extends TileEntity // TileLM // BlockXPT
 		if(levels <= 0) return true;
 		
 		if(XPTConfig.use_food_levels == 0)
-			return ep.experienceLevel < levels;
+			return ep.experienceLevel >= levels;
 		
 		int foodLevels = ep.getFoodStats().getFoodLevel();
 		return foodLevels > 0 && (XPTConfig.use_food_levels == 1 || (foodLevels >= Math.min(levels, 20)));
@@ -291,9 +304,7 @@ public class TileXPT extends TileEntity // TileLM // BlockXPT
 		if(XPTConfig.use_food_levels == 0)
 			ep.addExperienceLevel(-levels);
 		else
-		{
 			ep.getFoodStats().addStats(-Math.min(ep.getFoodStats().getFoodLevel(), Math.min(20, levels)), 0F);
-		}
 	}
 	
 	public void onPlacedBy(EntityPlayer el, ItemStack is)
