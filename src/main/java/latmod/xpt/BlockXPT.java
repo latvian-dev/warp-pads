@@ -3,7 +3,7 @@ import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.*;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.*;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -22,6 +22,7 @@ public class BlockXPT extends BlockContainer
 	{
 		super(Material.wood);
 		isBlockContainer = true;
+		setBlockBounds(0F, 0F, 0F, 1F, 1F / 8F, 1F);
 	}
 	
 	public TileEntity createNewTileEntity(World w, int m)
@@ -35,14 +36,15 @@ public class BlockXPT extends BlockContainer
 				'P', Items.ender_pearl));
 	}
 	
-	public void setBlockBoundsForItemRender()
-	{ setBlockBounds(0F, 0.5F - 1F / 16F, 0F, 1F, 0.5F + 1F / 16F, 1F); }
-	
-	public void setBlockBoundsBasedOnState(IBlockAccess iba, int x, int y, int z)
-	{ setBlockBounds(0F, 0F, 0F, 1F, 1F / 8F, 1F); }
+	public void setBlockBoundsForItemRender() { }
+	public void setBlockBoundsBasedOnState(IBlockAccess iba, int x, int y, int z) { }
 	
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World w, int x, int y, int z)
-	{ setBlockBoundsBasedOnState(w, x, y, z); return super.getCollisionBoundingBoxFromPool(w, x, y, z); }
+	{
+		if(XPTConfig.soft_blocks) return null;
+		setBlockBoundsBasedOnState(w, x, y, z);
+		return super.getCollisionBoundingBoxFromPool(w, x, y, z);
+	}
 	
 	public boolean onBlockActivated(World w, int x, int y, int z, EntityPlayer ep, int s, float x1, float y1, float z1)
 	{
@@ -56,12 +58,12 @@ public class BlockXPT extends BlockContainer
 	
 	public void onEntityCollidedWithBlock(World w, int x, int y, int z, Entity e)
 	{
-		if(e != null && !e.isDead && e instanceof EntityPlayer)
+		if(e != null && !e.isDead && e instanceof EntityPlayerMP)
 		{
 			TileXPT t = (TileXPT)w.getTileEntity(x, y, z);
 			
 			if(t != null && !t.isInvalid())
-				t.onPlayerCollided((EntityPlayer)e);
+				t.onPlayerCollided((EntityPlayerMP)e);
 		}
 	}
 	

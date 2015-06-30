@@ -3,20 +3,24 @@ package latmod.xpt.client;
 import java.awt.Color;
 import java.util.Random;
 
-import latmod.xpt.TileXPT;
+import latmod.xpt.*;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
-public class RenderXPT extends TileEntitySpecialRenderer
+public class RenderXPT extends TileEntitySpecialRenderer implements IItemRenderer
 {
+	public static final RenderXPT instance = new RenderXPT();
 	public static final Random random = new Random();
 	
 	public void renderTileEntityAt(TileEntity te, double rx, double ry, double rz, float pt)
@@ -155,5 +159,71 @@ public class RenderXPT extends TileEntitySpecialRenderer
 		if(dist <= maxDist) return 1F;
 		if(dist > maxDist + 3D) return 0F;
 		return (maxDist + 3D - dist) / (maxDist - 3D);
+	}
+	
+	public boolean handleRenderType(ItemStack item, ItemRenderType type)
+	{
+		return type == ItemRenderType.INVENTORY;
+	}
+	
+	public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper)
+	{
+		return true;
+	}
+	
+	public void renderItem(ItemRenderType type, ItemStack item, Object... data)
+	{
+		GL11.glPushMatrix();
+		GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+		
+		RenderBlocks rb = (RenderBlocks)data[0];
+		
+		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
+		
+		XPT.block.setBlockBoundsForItemRender();
+		rb.setRenderBoundsFromBlock(XPT.block);
+		rb.renderBlockAsItem(XPT.block, 0, 1F);
+		
+		float lastBrightnessX = OpenGlHelper.lastBrightnessX;
+		float lastBrightnessY = OpenGlHelper.lastBrightnessY;
+		
+		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
+		
+		GL11.glTranslatef(0F, -0.6F, 0F);
+		float sc = 1F;
+		GL11.glScalef(-sc, -sc, sc);
+		GL11.glRotated(45F, 0D, 1D, 0D);
+		
+		GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glDisable(GL11.GL_CULL_FACE);
+		GL11.glDepthMask(false);
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GL11.glColor4f(1F, 1F, 1F, 1F);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+		GL11.glDisable(GL11.GL_ALPHA_TEST);
+		GL11.glShadeModel(GL11.GL_SMOOTH);
+		
+		GL11.glColor4f(0F, 1F, 1F, 0F);
+		GL11.glBegin(GL11.GL_QUADS);
+		float s = 0.75F;
+		float s1 = 0.12F;
+		GL11.glVertex3d(-s, -1.5F, 0F);
+		GL11.glVertex3d(s, -1.5F, 0F);
+		
+		GL11.glColor4f(0.2F, 0.4F, 1F, 1F);
+		
+		GL11.glVertex3f(s1, -0.125F, 0F);
+		GL11.glVertex3f(-s1, -0.125F, 0F);
+		GL11.glEnd();
+		
+		GL11.glPopAttrib();
+		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
+		GL11.glPopMatrix();
+		
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glShadeModel(GL11.GL_FLAT);
+		GL11.glColor4f(1F, 1F, 1F, 1F);
+		GL11.glDepthMask(true);
 	}
 }

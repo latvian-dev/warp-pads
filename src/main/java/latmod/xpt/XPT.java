@@ -1,5 +1,4 @@
 package latmod.xpt;
-import net.minecraft.creativetab.CreativeTabs;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -17,6 +16,7 @@ public class XPT
 	
 	public static final BlockXPT block = new BlockXPT();
 	public static final ItemXPT item = new ItemXPT();
+	public static final CreativeTabXPT creativeTab = new CreativeTabXPT();
 	
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent e)
@@ -26,11 +26,11 @@ public class XPT
 		block.setBlockName("xpt:teleporter");
 		block.setHardness(1F);
 		block.setResistance(100000F);
-		block.setCreativeTab(CreativeTabs.tabTransport);
+		block.setCreativeTab(creativeTab);
 		
 		item.setUnlocalizedName("xpt:link_card");
 		item.setTextureName("xpt:link_card");
-		item.setCreativeTab(CreativeTabs.tabTransport);
+		item.setCreativeTab(creativeTab);
 		item.setMaxStackSize(1);
 		
 		GameRegistry.registerBlock(block, "teleporter");

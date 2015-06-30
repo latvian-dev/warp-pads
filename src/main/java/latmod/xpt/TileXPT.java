@@ -135,31 +135,26 @@ public class TileXPT extends TileEntity // TileLM // BlockXPT
 		{
 			int[] pos = is.getTagCompound().getIntArray(ItemXPT.NBT_TAG);
 			
-			int levels = 0;
+			TileXPT t = getTileXPT(pos[0], pos[1], pos[2], pos[3]);
 			
-			if(XPTConfig.only_linking_uses_xp)
+			if(t != null)
 			{
 				boolean crossdim = pos[3] != getDim();
+				int levels = XPTConfig.only_linking_uses_xp ? getLevels(t, crossdim) : 0;
 				
-				if(crossdim) levels = XPTConfig.levels_for_crossdim;
-				else
+				if(!canConsumeLevels(ep, levels))
 				{
-					double dist = Math.sqrt(getDistanceFrom(pos[0] + 0.5D, pos[1] + 0.5D, pos[2] + 0.5D));
-					levels = (XPTConfig.levels_for_1000_blocks > 0) ? MathHelper.ceiling_double_int(XPTConfig.levels_for_1000_blocks * dist / 1000D) : 0;
-				}
-				
-				if(!ep.capabilities.isCreativeMode && canTeleport(ep, levels))
-				{
-					ep.addChatMessage(new ChatComponentText("You need level " + levels + " to link teleporters"));
+					ep.addChatMessage(new ChatComponentText("You need " + (XPTConfig.use_food_levels > 0 ? "food" : "XP") + " level " + levels + " to link teleporters!"));
 					return;
 				}
-			}
-			
-			if(createLink(pos[0], pos[1], pos[2], pos[3], true))
-			{
-				is.stackSize--;
-				consumeLevels(ep, levels);
-				ep.addChatMessage(new ChatComponentText((linkedDim == getDim() ? "Intra" : "Extra") + "-dimensional link created!"));
+				
+				if(createLink(t, true))
+				{
+					is.stackSize--;
+					consumeLevels(ep, levels);
+					ep.addChatMessage(new ChatComponentText((linkedDim == getDim() ? "Intra" : "Extra") + "-dimensional link created!"));
+				}
+				else ep.addChatMessage(new ChatComponentText("Can't create a link!"));
 			}
 			else ep.addChatMessage(new ChatComponentText("Can't create a link!"));
 		}
@@ -187,43 +182,41 @@ public class TileXPT extends TileEntity // TileLM // BlockXPT
 		}
 	}
 	
-	public boolean createLink(int x, int y, int z, int dim, boolean updateLink)
+	public boolean createLink(TileXPT t, boolean updateLink)
 	{
-		if(!isServer()) return false;
-		if(x == linkedX && y == linkedY && z == linkedZ && dim == linkedDim) return false;
-		if(x == xCoord && y == yCoord && z == zCoord && dim == getDim()) return false;
+		if(t == null || !isServer()) return false;
+		if(t.xCoord == linkedX && t.yCoord == linkedY && t.zCoord == linkedZ && t.getDim() == linkedDim) return false;
+		if(t.xCoord == xCoord && t.yCoord == yCoord && t.zCoord == zCoord && t.getDim() == getDim()) return false;
 		
-		TileXPT t = getLinkedTile();
-		if(t != null)
+		TileXPT t0 = getLinkedTile();
+		if(t0 != null)
 		{
-			t.linkedY = 0;
-			t.markDirty();
+			t0.linkedY = 0;
+			t0.markDirty();
 		}
 		
-		linkedX = x;
-		linkedY = y;
-		linkedZ = z;
-		linkedDim = dim;
+		linkedX = t.xCoord;
+		linkedY = t.yCoord;
+		linkedZ = t.zCoord;
+		linkedDim = t.getDim();
 		
 		if(updateLink)
 		{
 			t = getLinkedTile();
-			
-			if(t != null)
-				t.createLink(xCoord, yCoord, zCoord, getDim(), false);
+			if(t != null) t.createLink(this, false);
 		}
 		
 		markDirty();
 		return true;
 	}
 	
-	public TileXPT getLinkedTile()
+	public TileXPT getTileXPT(int x, int y, int z, int dim)
 	{
-		World w = DimensionManager.getWorld(linkedDim);
+		World w = DimensionManager.getWorld(dim);
 		
 		if(w != null)
 		{
-			TileEntity te = w.getTileEntity(linkedX, linkedY, linkedZ);
+			TileEntity te = w.getTileEntity(x, y, z);
 			
 			if(te != null && !te.isInvalid() && te instanceof TileXPT)
 				return (TileXPT)te;
@@ -232,53 +225,46 @@ public class TileXPT extends TileEntity // TileLM // BlockXPT
 		return null;
 	}
 	
-	public void onPlayerCollided(EntityPlayer ep)
+	public TileXPT getLinkedTile()
+	{ if(linkedY == 0) return null; return getTileXPT(linkedX, linkedY, linkedZ, linkedDim); }
+	
+	public void onPlayerCollided(EntityPlayerMP ep)
 	{
-		if(isServer() && cooldown <= 0 && ep.isSneaking() && ep instanceof EntityPlayerMP && !(ep instanceof FakePlayer))
+		if(isServer() && cooldown <= 0 && ep.isSneaking() && !(ep instanceof FakePlayer))
 		{
 			ep.setSneaking(false);
 			
 			TileXPT t = getLinkedTile();
 			if(t != null && (t.linkedY <= 0 || equals(t.getLinkedTile())))
 			{
-				if(t.linkedY <= 0) t.createLink(xCoord, yCoord, zCoord, getDim(), false);
+				if(t.linkedY <= 0) t.createLink(this, false);
 				
 				boolean crossdim = linkedDim != getDim();
-				double dist = crossdim ? 0D : Math.sqrt(getDistanceFrom(t.xCoord + 0.5D, t.yCoord + 0.5D, t.zCoord + 0.5D));
+				int levels = XPTConfig.only_linking_uses_xp ? 0 : getLevels(t, crossdim);
 				
-				int levels = 0;
-				
-				if(!XPTConfig.only_linking_uses_xp)
+				if(!canConsumeLevels(ep, levels))
 				{
-					levels = XPTConfig.levels_for_crossdim;
-					if(!crossdim) levels = (XPTConfig.levels_for_1000_blocks > 0) ? MathHelper.ceiling_double_int(XPTConfig.levels_for_1000_blocks * dist / 1000D) : 0;
-				}
-				
-				if(!ep.capabilities.isCreativeMode && !canTeleport(ep, levels))
-				{
-					ep.addChatMessage(new ChatComponentText("You need level " + levels + " to teleport"));
+					ep.addChatMessage(new ChatComponentText("You need " + (XPTConfig.use_food_levels > 0 ? "food" : "XP") + " level " + levels + " to teleport"));
 					return;
 				}
 				
 				//worldObj.playSoundEffect(xCoord + 0.5D, yCoord + 1D, zCoord + 0.5D, "mob.endermen.portal", 1F, 1F);
 				
 				//if(teleportPlayer((EntityPlayerMP)ep, linkedX + 0.5D, linkedY + 1.2D, linkedZ + 0.5D, linkedDim))
-				if(Teleporter.travelEntity(ep, linkedX + 0.5D, linkedY + 0.3D, linkedZ + 0.5D, linkedDim))
+				if(Teleporter.teleportPlayer(ep, linkedX + 0.5D, linkedY + 0.3D, linkedZ + 0.5D, linkedDim))
 				{
-					if(levels > 0 && !ep.capabilities.isCreativeMode)
-						consumeLevels(ep, levels);
-					
+					consumeLevels(ep, levels);
 					cooldown = maxCooldown = t.cooldown = t.maxCooldown = XPTConfig.cooldown_seconds * 20;
 					
-					ep.motionY = 0.05D;
-					ep.addChatMessage(new ChatComponentText("Used teleport '" + (name.isEmpty() ? (xCoord + ", " + yCoord + ", " + zCoord + " @ " + worldObj.provider.getDimensionName()) : name) + "'"));
+					ep.motionY = 01.05D;
+					ep.addChatMessage(new ChatComponentText("Used teleport '" + getName() + "'"));
 					markDirty();
 					t.markDirty();
 					
 					//worldObj.playSoundEffect(d3, d4, d5, "mob.endermen.portal", 1.0F, 1.0F);
 				}
 			}
-			else
+			else if(XPTConfig.unlink_broken)
 			{
 				ep.addChatMessage(new ChatComponentText("Link broken!"));
 				if(t != null) { linkedY = 0; markDirty(); }
@@ -286,9 +272,16 @@ public class TileXPT extends TileEntity // TileLM // BlockXPT
 		}
 	}
 	
-	private boolean canTeleport(EntityPlayer ep, int levels)
+	private int getLevels(TileXPT t, boolean crossdim)
 	{
-		if(levels <= 0) return true;
+		if(crossdim) return XPTConfig.levels_for_crossdim;
+		double dist = crossdim ? 0D : Math.sqrt(getDistanceFrom(t.xCoord + 0.5D, t.yCoord + 0.5D, t.zCoord + 0.5D));
+		return (XPTConfig.levels_for_1000_blocks > 0) ? MathHelper.ceiling_double_int(XPTConfig.levels_for_1000_blocks * dist / 1000D) : 0;
+	}
+	
+	private boolean canConsumeLevels(EntityPlayer ep, int levels)
+	{
+		if(levels <= 0 || ep.capabilities.isCreativeMode) return true;
 		
 		if(XPTConfig.use_food_levels == 0)
 			return ep.experienceLevel >= levels;
@@ -299,7 +292,7 @@ public class TileXPT extends TileEntity // TileLM // BlockXPT
 	
 	private void consumeLevels(EntityPlayer ep, int levels)
 	{
-		if(levels <= 0) return;
+		if(levels <= 0 || ep.capabilities.isCreativeMode) return;
 		
 		if(XPTConfig.use_food_levels == 0)
 			ep.addExperienceLevel(-levels);
@@ -325,6 +318,9 @@ public class TileXPT extends TileEntity // TileLM // BlockXPT
 		return true;
 	}
 	
+	public String getName()
+	{ return name.isEmpty() ? (xCoord + ", " + yCoord + ", " + zCoord + " @ " + worldObj.provider.getDimensionName()) : name; }
+	
 	@SideOnly(Side.CLIENT)
 	public AxisAlignedBB getRenderBoundingBox()
 	{ double d = 0.5D; return AxisAlignedBB.getBoundingBox(xCoord - d, yCoord, zCoord - d, xCoord + 1D + d, yCoord + 2D, zCoord + 1D + d); }
@@ -336,6 +332,6 @@ public class TileXPT extends TileEntity // TileLM // BlockXPT
 	public void onBroken()
 	{
 		if(XPTConfig.unlink_broken)
-			createLink(0, 0, 0, 0, true);
+			createLink(null, true);
 	}
 }
