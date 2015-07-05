@@ -13,12 +13,9 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.*;
 
-public class BlockXPT extends BlockContainer
+public class BlockTeleporter extends BlockContainer
 {
-	@SideOnly(Side.CLIENT)
-	public IIcon icon_intra, icon_extra;
-	
-	public BlockXPT()
+	public BlockTeleporter()
 	{
 		super(Material.wood);
 		isBlockContainer = true;
@@ -26,7 +23,7 @@ public class BlockXPT extends BlockContainer
 	}
 	
 	public TileEntity createNewTileEntity(World w, int m)
-	{ return new TileXPT(); }
+	{ return new TileTeleporter(); }
 	
 	public void loadRecipes()
 	{
@@ -48,7 +45,7 @@ public class BlockXPT extends BlockContainer
 	
 	public boolean onBlockActivated(World w, int x, int y, int z, EntityPlayer ep, int s, float x1, float y1, float z1)
 	{
-		TileXPT t = (TileXPT)w.getTileEntity(x, y, z);
+		TileTeleporter t = (TileTeleporter)w.getTileEntity(x, y, z);
 		
 		if(t != null && !t.isInvalid())
 			t.onRightClick(ep, ep.getHeldItem());
@@ -60,7 +57,7 @@ public class BlockXPT extends BlockContainer
 	{
 		if(e != null && !e.isDead && e instanceof EntityPlayerMP)
 		{
-			TileXPT t = (TileXPT)w.getTileEntity(x, y, z);
+			TileTeleporter t = (TileTeleporter)w.getTileEntity(x, y, z);
 			
 			if(t != null && !t.isInvalid())
 				t.onPlayerCollided((EntityPlayerMP)e);
@@ -71,7 +68,7 @@ public class BlockXPT extends BlockContainer
 	{
 		if(!w.isRemote && el instanceof EntityPlayer && is != null)
 		{
-			TileXPT t = (TileXPT)w.getTileEntity(x, y, z);
+			TileTeleporter t = (TileTeleporter)w.getTileEntity(x, y, z);
 			if(t != null && !t.isInvalid())
 				t.onPlacedBy((EntityPlayer)el, is);
 		}
@@ -81,7 +78,7 @@ public class BlockXPT extends BlockContainer
 	{
 		if(!w.isRemote)
 		{
-			TileXPT t = (TileXPT)w.getTileEntity(x, y, z);
+			TileTeleporter t = (TileTeleporter)w.getTileEntity(x, y, z);
 			if(t != null && !t.isInvalid())
 				t.onBroken();
 		}
@@ -91,32 +88,7 @@ public class BlockXPT extends BlockContainer
 	
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister ir)
-	{
-		blockIcon = ir.registerIcon("xpt:teleporter");
-		icon_intra = ir.registerIcon("xpt:teleporter_intra");
-		icon_extra = ir.registerIcon("xpt:teleporter_extra");
-	}
-	
-	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(IBlockAccess iba, int x, int y, int z, int s)
-	{
-		if(s != 1) return blockIcon;
-		
-		TileXPT t = (TileXPT)iba.getTileEntity(x, y, z);
-		
-		if(t != null && !t.isInvalid())
-		{
-			int i = t.getIconID();
-			if(i == 1) return icon_intra;
-			if(i == 2) return icon_extra;
-		}
-		
-		return blockIcon;
-	}
-	
-	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(int s, int m)
-	{ return (s == 1) ? icon_intra : blockIcon; }
+	{ blockIcon = ir.registerIcon("xpt:teleporter"); }
 	
 	public boolean isOpaqueCube()
 	{ return false; }

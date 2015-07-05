@@ -18,17 +18,17 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
-public class RenderXPT extends TileEntitySpecialRenderer implements IItemRenderer
+public class RenderTeleporter extends TileEntitySpecialRenderer implements IItemRenderer
 {
-	public static final RenderXPT instance = new RenderXPT();
+	public static final RenderTeleporter instance = new RenderTeleporter();
 	public static final Random random = new Random();
 	
 	public void renderTileEntityAt(TileEntity te, double rx, double ry, double rz, float pt)
 	{
-		if(te == null || te.isInvalid() || !(te instanceof TileXPT)) return;
-		TileXPT t = (TileXPT)te;
+		if(te == null || te.isInvalid() || !(te instanceof TileTeleporter)) return;
+		TileTeleporter t = (TileTeleporter)te;
 		
-		int ID = t.getIconID();
+		int ID = t.getType();
 		if(ID == 0) return;
 		
 		Minecraft mc = Minecraft.getMinecraft();
@@ -69,14 +69,17 @@ public class RenderXPT extends TileEntitySpecialRenderer implements IItemRendere
 		GL11.glDisable(GL11.GL_ALPHA_TEST);
 		GL11.glShadeModel(GL11.GL_SMOOTH);
 		
-		GL11.glColor4f(0F, 1F, 1F, 0F);
+		if(ID == 3) GL11.glColor4f(1F, 0.9F, 0.1F, 0F);
+		else GL11.glColor4f(0F, 1F, 1F, 0F);
+		
 		GL11.glBegin(GL11.GL_QUADS);
 		double s = cooldown * 0.75D;
 		double s1 = cooldown * 0.12D;
 		GL11.glVertex3d(-s, -1.5D, 0D);
 		GL11.glVertex3d(s, -1.5D, 0D);
 		
-		if(ID == 1) GL11.glColor4f(0.2F, 0.4F, 1F, alpha);
+		if(ID == 3) GL11.glColor4f(1F, 0.9F, 0.1F, alpha);
+		else if(ID == 1) GL11.glColor4f(0.2F, 0.4F, 1F, alpha);
 		else GL11.glColor4f(0.2F, 1F, 0.2F, alpha * 0.8F);
 		
 		GL11.glVertex3d(s1, -0.125D, 0D);
@@ -180,9 +183,9 @@ public class RenderXPT extends TileEntitySpecialRenderer implements IItemRendere
 		
 		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
 		
-		XPT.block.setBlockBoundsForItemRender();
-		rb.setRenderBoundsFromBlock(XPT.block);
-		rb.renderBlockAsItem(XPT.block, 0, 1F);
+		XPT.teleporter.setBlockBoundsForItemRender();
+		rb.setRenderBoundsFromBlock(XPT.teleporter);
+		rb.renderBlockAsItem(XPT.teleporter, 0, 1F);
 		
 		float lastBrightnessX = OpenGlHelper.lastBrightnessX;
 		float lastBrightnessY = OpenGlHelper.lastBrightnessY;

@@ -13,13 +13,14 @@ public class CreativeTabXPT extends CreativeTabs
 	
 	@SideOnly(Side.CLIENT)
 	public Item getTabIconItem()
-	{ return Item.getItemFromBlock(XPT.block); }
+	{ return Item.getItemFromBlock(XPT.teleporter); }
 	
 	@SuppressWarnings("all")
 	@SideOnly(Side.CLIENT)
     public void displayAllReleventItems(List l)
     {
-		l.add(new ItemStack(XPT.block));
-		l.add(new ItemStack(XPT.item));
+		l.add(new ItemStack(XPT.teleporter));
+		l.add(new ItemStack(XPT.link_card));
+		l.add(new ItemStack(XPT.recall_remote));
     }
 }

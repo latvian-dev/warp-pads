@@ -11,16 +11,18 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.*;
 
-public class ItemXPT extends Item
+public class ItemLinkCard extends Item
 {
 	public static final String NBT_TAG = "Coords";
 	
-	public ItemXPT()
+	public ItemLinkCard()
 	{
+		setMaxStackSize(16);
 	}
 	
 	public void loadRecipes()
 	{
+		if(XPTConfig.enable_crafting)
 		GameRegistry.addRecipe(new ShapelessOreRecipe(this, "gemDiamond", "gemEmerald", Items.paper, Items.ender_pearl));
 	}
 	
@@ -61,9 +63,20 @@ public class ItemXPT extends Item
 			sb.append(", ");
 			sb.append(coords[2]);
 			sb.append(" @ ");
-			World w = DimensionManager.getWorld(coords[3]);
-			if(w != null) sb.append(w.provider.getDimensionName());
-			else sb.append("DIM" + coords[3]);
+			
+			if(coords[3] == 0)
+				sb.append("Overworld");
+			else if(coords[3] == 1)
+				sb.append("The End");
+			else if(coords[3] == -1)
+				sb.append("Nether");
+			else
+			{
+				World w = DimensionManager.getWorld(coords[3]);
+				if(w != null) sb.append(w.provider.getDimensionName());
+				else sb.append("DIM" + coords[3]);
+			}
+			
 			l.add(sb.toString());
 		}
 	}

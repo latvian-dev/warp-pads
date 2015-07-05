@@ -14,8 +14,9 @@ public class XPT
 	@SidedProxy(clientSide = "latmod.xpt.client.XPTClient", serverSide = "latmod.xpt.XPTCommon")
 	public static XPTCommon proxy;
 	
-	public static final BlockXPT block = new BlockXPT();
-	public static final ItemXPT item = new ItemXPT();
+	public static final BlockTeleporter teleporter = new BlockTeleporter();
+	public static final ItemLinkCard link_card = new ItemLinkCard();
+	public static final ItemRecallRemote recall_remote = new ItemRecallRemote();
 	public static final CreativeTabXPT creativeTab = new CreativeTabXPT();
 	
 	@Mod.EventHandler
@@ -23,19 +24,25 @@ public class XPT
 	{
 		XPTConfig.load(e);
 		
-		block.setBlockName("xpt:teleporter");
-		block.setHardness(1F);
-		block.setResistance(100000F);
-		block.setCreativeTab(creativeTab);
+		teleporter.setBlockName("xpt:teleporter");
+		teleporter.setHardness(1F);
+		teleporter.setResistance(100000F);
+		teleporter.setCreativeTab(creativeTab);
 		
-		item.setUnlocalizedName("xpt:link_card");
-		item.setTextureName("xpt:link_card");
-		item.setCreativeTab(creativeTab);
-		item.setMaxStackSize(1);
+		link_card.setUnlocalizedName("xpt:link_card");
+		link_card.setTextureName("xpt:link_card");
+		link_card.setCreativeTab(creativeTab);
+		link_card.setMaxStackSize(1);
 		
-		GameRegistry.registerBlock(block, "teleporter");
-		GameRegistry.registerItem(item, "link_card");
-		GameRegistry.registerTileEntity(TileXPT.class, "xpt.teleporter");
+		recall_remote.setUnlocalizedName("xpt:recall_remote");
+		recall_remote.setTextureName("xpt:recall_remote");
+		recall_remote.setCreativeTab(creativeTab);
+		recall_remote.setMaxStackSize(1);
+		
+		GameRegistry.registerBlock(teleporter, "teleporter");
+		GameRegistry.registerItem(link_card, "link_card");
+		GameRegistry.registerItem(recall_remote, "recall_remote");
+		GameRegistry.registerTileEntity(TileTeleporter.class, "xpt.teleporter");
 		
 		proxy.load();
 	}
@@ -45,8 +52,9 @@ public class XPT
 	{
 		if(XPTConfig.enable_crafting)
 		{
-			block.loadRecipes();
-			item.loadRecipes();
+			teleporter.loadRecipes();
+			link_card.loadRecipes();
+			recall_remote.loadRecipes();
 		}
 	}
 }
