@@ -147,7 +147,7 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 					
 					if(!XPTConfig.canConsumeLevels(ep, levels))
 					{
-						XPTChatMessages.getNeedLevel(false).print(ep, levels);
+						XPTChatMessages.getNeedLevel(false).print(ep, "" + levels);
 						return;
 					}
 					
@@ -214,7 +214,7 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 				
 				if(!XPTConfig.canConsumeLevels(ep, levels))
 				{
-					XPTChatMessages.getNeedLevel(false).print(ep, levels);
+					XPTChatMessages.getNeedLevel(false).print(ep, "" + levels);
 					return;
 				}
 				else
@@ -273,11 +273,11 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 	}
 	
 	public TileTeleporter getLinkedTile()
-	{ if(linkedY == 0) return null; return getTileXPT(linkedX, linkedY, linkedZ, linkedDim); }
+	{ if(linkedY == 0 || linkedY == 999) return null; return getTileXPT(linkedX, linkedY, linkedZ, linkedDim); }
 	
 	public void onPlayerCollided(EntityPlayerMP ep)
 	{
-		if(isServer() && cooldown <= 0 && ep.isSneaking() && !(ep instanceof FakePlayer))
+		if(isServer() && cooldown <= 0 && ep.isSneaking() && !(ep instanceof FakePlayer) && linkedY > 0 && linkedY != 999)
 		{
 			ep.setSneaking(false);
 			
@@ -291,7 +291,7 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 				
 				if(!XPTConfig.canConsumeLevels(ep, levels))
 				{
-					XPTChatMessages.getNeedLevel(true).print(ep, levels);
+					XPTChatMessages.getNeedLevel(true).print(ep, "" + levels);
 					return;
 				}
 				

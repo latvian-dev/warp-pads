@@ -9,11 +9,11 @@ tile.xpt:teleporter.name=XP Teleporter
 itemGroup.xpt=XPTeleporters
 
 xpt.lang.cant_link=Can't Link!
-xpt.lang.tp_to=Teleported to '{0}'
+xpt.lang.tp_to=Teleported to %s
 xpt.lang.link_broken=Link is broken!
 xpt.lang.link_created=Link created!
-xpt.lang.need_xp_level_tp=You need XP Level {0} to teleport!
-xpt.lang.need_food_level_tp=You need food Level {0} to teleport!
-xpt.lang.need_xp_level_link=You need XP Level {0} to create a link!
-xpt.lang.need_food_level_link=You need food Level {0} to create a link!
+xpt.lang.need_xp_level_tp=You need XP level %s to teleport!
+xpt.lang.need_food_level_tp=You need food level %s to teleport!
+xpt.lang.need_xp_level_link=You need XP level %s to create a link!
+xpt.lang.need_food_level_link=You need food level %s to create a link!
 xpt.lang.recall_disabled=Recall feature is disabled!
