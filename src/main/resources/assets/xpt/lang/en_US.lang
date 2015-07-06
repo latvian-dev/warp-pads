@@ -9,7 +9,7 @@ tile.xpt:teleporter.name=XP Teleporter
 itemGroup.xpt=XPTeleporters
 
 xpt.lang.cant_link=Can't Link!
-xpt.lang.tp_to=Teleported to %s
+xpt.lang.tp_to=Teleported!
 xpt.lang.link_broken=Link is broken!
 xpt.lang.link_created=Link created!
 xpt.lang.need_xp_level_tp=You need XP level %s to teleport!

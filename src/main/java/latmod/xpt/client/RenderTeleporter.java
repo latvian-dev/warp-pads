@@ -90,7 +90,9 @@ public class RenderTeleporter extends TileEntitySpecialRenderer implements IItem
 		{
 			double b = 1D / 32D;
 			
-			GL11.glColor4f(86F / 255F, 218F / 255F, 1F, alpha * 0.3F);
+			if(ID == 3) GL11.glColor4f(1F, 0.9F, 0.1F, alpha * 0.3F);
+			else GL11.glColor4f(86F / 255F, 218F / 255F, 1F, alpha * 0.3F);
+			
 			double w = 1D;
 			double h = 1D / 4D;
 			double x = -w / 2D;
