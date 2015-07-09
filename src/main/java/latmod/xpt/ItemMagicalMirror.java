@@ -35,11 +35,26 @@ public class ItemMagicalMirror extends ItemLinkCard
 	{
 		if(ep instanceof EntityPlayerMP && ep.isSneaking() && hasData(is))
 		{
+			if(XPTConfig.levels_for_recall <= 0)
+			{
+				XPTChatMessages.RECALL_DISABLED.print(ep);
+				return is;
+			}
+			
+			int levels = XPTConfig.levels_for_recall;
+			
+			if(!XPTConfig.canConsumeLevels(ep, levels))
+			{
+				XPTChatMessages.getNeedLevel(true).print(ep, "" + levels);
+				return is;
+			}
+			
 			int[] coords = is.stackTagCompound.getIntArray(NBT_TAG);
 			TileTeleporter t = TileTeleporter.getTileXPT(coords[0], coords[1], coords[2], coords[3]);
 			
 			if(t != null && t.cooldown <= 0)
 			{
+				XPTConfig.consumeLevels(ep, levels);
 				t.cooldown = t.maxCooldown = XPTConfig.cooldown_seconds * 100;
 				t.markDirty();
 				XPTChatMessages.TELEPORTED_TO.print(ep);
