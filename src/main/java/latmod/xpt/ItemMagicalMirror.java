@@ -7,13 +7,13 @@ import net.minecraft.init.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.*;
 
-public class ItemRecallRemote extends ItemLinkCard
+public class ItemMagicalMirror extends ItemLinkCard
 {
-	public ItemRecallRemote()
+	public ItemMagicalMirror()
 	{
 		super();
 		setMaxStackSize(1);
@@ -22,7 +22,10 @@ public class ItemRecallRemote extends ItemLinkCard
 	public void loadRecipes()
 	{
 		if(XPTConfig.levels_for_recall > 0)
-			GameRegistry.addRecipe(new ShapelessOreRecipe(this, XPT.link_card, "dustRedstone", Items.nether_star, Blocks.stone_button));
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this), "GGL", "GSG", "LGG",
+					'L', XPT.link_card,
+					'G', Blocks.glass_pane,
+					'S', Items.nether_star));
 	}
 	
 	public int getItemStackLimit(ItemStack is)

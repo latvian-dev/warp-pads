@@ -21,6 +21,6 @@ public class CreativeTabXPT extends CreativeTabs
     {
 		l.add(new ItemStack(XPT.teleporter));
 		l.add(new ItemStack(XPT.link_card));
-		l.add(new ItemStack(XPT.recall_remote));
+		l.add(new ItemStack(XPT.mirror));
     }
 }

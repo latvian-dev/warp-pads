@@ -1,6 +1,6 @@
 ## Items ##
 item.xpt:link_card.name=XPT Link Card
-item.xpt:recall_remote.name=Recall Remote
+item.xpt:mirror.name=Recall Mirror
 
 ## Blocks ##
 tile.xpt:teleporter.name=XP Teleporter

@@ -183,7 +183,7 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 				}
 			}
 		}
-		else if(is.getItem() == XPT.recall_remote)
+		else if(is.getItem() == XPT.mirror)
 		{
 			XPTConfig.levels_for_recall = 1;
 			

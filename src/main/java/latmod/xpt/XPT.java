@@ -16,7 +16,7 @@ public class XPT
 	
 	public static final BlockTeleporter teleporter = new BlockTeleporter();
 	public static final ItemLinkCard link_card = new ItemLinkCard();
-	public static final ItemRecallRemote recall_remote = new ItemRecallRemote();
+	public static final ItemMagicalMirror mirror = new ItemMagicalMirror();
 	public static final CreativeTabXPT creativeTab = new CreativeTabXPT();
 	
 	@Mod.EventHandler
@@ -34,14 +34,14 @@ public class XPT
 		link_card.setCreativeTab(creativeTab);
 		link_card.setMaxStackSize(1);
 		
-		recall_remote.setUnlocalizedName("xpt:recall_remote");
-		recall_remote.setTextureName("xpt:recall_remote");
-		recall_remote.setCreativeTab(creativeTab);
-		recall_remote.setMaxStackSize(1);
+		mirror.setUnlocalizedName("xpt:mirror");
+		mirror.setTextureName("xpt:mirror");
+		mirror.setCreativeTab(creativeTab);
+		mirror.setMaxStackSize(1);
 		
 		GameRegistry.registerBlock(teleporter, "teleporter");
 		GameRegistry.registerItem(link_card, "link_card");
-		GameRegistry.registerItem(recall_remote, "recall_remote");
+		GameRegistry.registerItem(mirror, "mirror");
 		GameRegistry.registerTileEntity(TileTeleporter.class, "xpt.teleporter");
 		
 		proxy.load();
@@ -54,7 +54,7 @@ public class XPT
 		{
 			teleporter.loadRecipes();
 			link_card.loadRecipes();
-			recall_remote.loadRecipes();
+			mirror.loadRecipes();
 		}
 	}
 }
