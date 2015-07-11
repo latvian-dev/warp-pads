@@ -46,10 +46,7 @@ public class BlockTeleporter extends BlockContainer
 	public boolean onBlockActivated(World w, int x, int y, int z, EntityPlayer ep, int s, float x1, float y1, float z1)
 	{
 		TileTeleporter t = (TileTeleporter)w.getTileEntity(x, y, z);
-		
-		if(t != null && !t.isInvalid())
-			t.onRightClick(ep, ep.getHeldItem());
-		
+		if(t != null) t.onRightClick(ep, ep.getHeldItem());
 		return true;
 	}
 	
@@ -58,9 +55,7 @@ public class BlockTeleporter extends BlockContainer
 		if(e != null && !e.isDead && e instanceof EntityPlayerMP)
 		{
 			TileTeleporter t = (TileTeleporter)w.getTileEntity(x, y, z);
-			
-			if(t != null && !t.isInvalid())
-				t.onPlayerCollided((EntityPlayerMP)e);
+			if(t != null) t.onPlayerCollided((EntityPlayerMP)e);
 		}
 	}
 	
@@ -69,8 +64,7 @@ public class BlockTeleporter extends BlockContainer
 		if(!w.isRemote && el instanceof EntityPlayer && is != null)
 		{
 			TileTeleporter t = (TileTeleporter)w.getTileEntity(x, y, z);
-			if(t != null && !t.isInvalid())
-				t.onPlacedBy((EntityPlayer)el, is);
+			if(t != null) t.onPlacedBy((EntityPlayer)el, is);
 		}
 	}
 	
@@ -79,8 +73,7 @@ public class BlockTeleporter extends BlockContainer
 		if(!w.isRemote)
 		{
 			TileTeleporter t = (TileTeleporter)w.getTileEntity(x, y, z);
-			if(t != null && !t.isInvalid())
-				t.onBroken();
+			if(t != null) t.onBroken();
 		}
 		
 		super.breakBlock(w, x, y, z, b, m);

@@ -131,8 +131,7 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 			
 			return;
 		}
-		
-		if(is.getItem() == XPT.link_card)
+		else if(is.getItem() == XPT.link_card)
 		{
 			if(ItemLinkCard.hasData(is))
 			{
