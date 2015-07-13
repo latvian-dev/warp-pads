@@ -20,6 +20,7 @@ public class CreativeTabXPT extends CreativeTabs
     public void displayAllReleventItems(List l)
     {
 		l.add(new ItemStack(XPT.teleporter));
+		l.add(new ItemStack(XPT.teleporter_recall));
 		l.add(new ItemStack(XPT.link_card));
 		l.add(new ItemStack(XPT.mirror));
     }

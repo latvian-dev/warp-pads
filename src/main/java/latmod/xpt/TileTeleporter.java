@@ -84,10 +84,7 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 	public int getType()
 	{
 		if(worldObj != null && linkedY > 0)
-		{
-			if(linkedY == 999) return 3;
 			return (linkedDim == getDim()) ? 1 : 2;
-		}
 		return 0;
 	}
 	
@@ -182,50 +179,6 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 				}
 			}
 		}
-		else if(is.getItem() == XPT.mirror)
-		{
-			XPTConfig.levels_for_recall = 1;
-			
-			if(XPTConfig.levels_for_recall == 0)
-			{
-				XPTChatMessages.RECALL_DISABLED.print(ep);
-				return;
-			}
-			
-			int prevLinkedX = 0;
-			int prevLinkedY = 0;
-			int prevLinkedZ = 0;
-			int prevLinkedDim = ep.dimension;
-			
-			if(ItemLinkCard.hasData(is))
-			{
-				int[] pos = is.getTagCompound().getIntArray(ItemLinkCard.NBT_TAG);
-				
-				prevLinkedX = pos[0];
-				prevLinkedY = pos[1];
-				prevLinkedZ = pos[2];
-				prevLinkedDim = pos[3];
-			}
-			
-			if(prevLinkedX != xCoord || prevLinkedY != yCoord || prevLinkedZ != zCoord || prevLinkedDim != getDim())
-			{
-				int levels = XPTConfig.only_linking_uses_xp ? XPTConfig.levels_for_recall : 0;
-				
-				if(!XPTConfig.canConsumeLevels(ep, levels))
-				{
-					XPTChatMessages.getNeedLevel(false).print(ep, "" + levels);
-					return;
-				}
-				else
-				{
-					is.setTagCompound(new NBTTagCompound());
-					is.getTagCompound().setIntArray(ItemLinkCard.NBT_TAG, new int[] { xCoord, yCoord, zCoord, worldObj.provider.dimensionId });
-					linkedY = 999;
-					markDirty();
-				}
-			}
-			else XPTChatMessages.CANT_CREATE_A_LINK.print(ep);
-		}
 	}
 	
 	public boolean createLink(TileTeleporter t, boolean updateLink)
@@ -272,11 +225,11 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 	}
 	
 	public TileTeleporter getLinkedTile()
-	{ if(linkedY == 0 || linkedY == 999) return null; return getTileXPT(linkedX, linkedY, linkedZ, linkedDim); }
+	{ if(linkedY == 0) return null; return getTileXPT(linkedX, linkedY, linkedZ, linkedDim); }
 	
 	public void onPlayerCollided(EntityPlayerMP ep)
 	{
-		if(isServer() && cooldown <= 0 && ep.isSneaking() && !(ep instanceof FakePlayer) && linkedY > 0 && linkedY != 999)
+		if(isServer() && cooldown <= 0 && ep.isSneaking() && !(ep instanceof FakePlayer) && linkedY > 0)
 		{
 			ep.setSneaking(false);
 			
@@ -294,9 +247,8 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 					return;
 				}
 				
-				//worldObj.playSoundEffect(xCoord + 0.5D, yCoord + 1D, zCoord + 0.5D, "mob.endermen.portal", 1F, 1F);
+				worldObj.playSoundEffect(xCoord + 0.5D, yCoord + 1.5D, zCoord + 0.5D, "mob.endermen.portal", 1F, 1F);
 				
-				//if(teleportPlayer((EntityPlayerMP)ep, linkedX + 0.5D, linkedY + 1.2D, linkedZ + 0.5D, linkedDim))
 				if(Teleporter.teleportPlayer(ep, linkedX + 0.5D, linkedY + 0.3D, linkedZ + 0.5D, linkedDim))
 				{
 					XPTConfig.consumeLevels(ep, levels);
@@ -307,7 +259,7 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 					markDirty();
 					t.markDirty();
 					
-					//worldObj.playSoundEffect(d3, d4, d5, "mob.endermen.portal", 1.0F, 1.0F);
+					t.worldObj.playSoundEffect(linkedX + 0.5D, linkedY + 1.5D, linkedZ + 0.5D, "mob.endermen.portal", 1F, 1F);
 				}
 			}
 			else if(XPTConfig.unlink_broken)

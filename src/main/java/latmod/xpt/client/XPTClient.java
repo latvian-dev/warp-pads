@@ -12,5 +12,6 @@ public class XPTClient extends XPTCommon
 	{
 		ClientRegistry.bindTileEntitySpecialRenderer(TileTeleporter.class, RenderTeleporter.instance);
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(XPT.teleporter), RenderTeleporter.instance);
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(XPT.teleporter_recall), RenderTeleporterRecall.instance);
 	}
 }

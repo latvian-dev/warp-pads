@@ -15,6 +15,7 @@ public class XPT
 	public static XPTCommon proxy;
 	
 	public static final BlockTeleporter teleporter = new BlockTeleporter();
+	public static final BlockTeleporterRecall teleporter_recall = new BlockTeleporterRecall();
 	public static final ItemLinkCard link_card = new ItemLinkCard();
 	public static final ItemMagicalMirror mirror = new ItemMagicalMirror();
 	public static final CreativeTabXPT creativeTab = new CreativeTabXPT();
@@ -29,6 +30,11 @@ public class XPT
 		teleporter.setResistance(100000F);
 		teleporter.setCreativeTab(creativeTab);
 		
+		teleporter_recall.setBlockName("xpt:teleporter_recall");
+		teleporter_recall.setHardness(1F);
+		teleporter_recall.setResistance(100000F);
+		teleporter_recall.setCreativeTab(creativeTab);
+		
 		link_card.setUnlocalizedName("xpt:link_card");
 		link_card.setTextureName("xpt:link_card");
 		link_card.setCreativeTab(creativeTab);
@@ -40,6 +46,7 @@ public class XPT
 		mirror.setMaxStackSize(1);
 		
 		GameRegistry.registerBlock(teleporter, "teleporter");
+		GameRegistry.registerBlock(teleporter_recall, "teleporter_recall");
 		GameRegistry.registerItem(link_card, "link_card");
 		GameRegistry.registerItem(mirror, "mirror");
 		GameRegistry.registerTileEntity(TileTeleporter.class, "xpt.teleporter");
@@ -53,6 +60,7 @@ public class XPT
 		if(XPTConfig.enable_crafting)
 		{
 			teleporter.loadRecipes();
+			teleporter_recall.loadRecipes();
 			link_card.loadRecipes();
 			mirror.loadRecipes();
 		}

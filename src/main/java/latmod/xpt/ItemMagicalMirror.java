@@ -4,14 +4,14 @@ import java.util.List;
 
 import net.minecraft.entity.player.*;
 import net.minecraft.init.*;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.*;
 
-public class ItemMagicalMirror extends ItemLinkCard
+public class ItemMagicalMirror extends ItemLinkCard // ItemBow
 {
 	public ItemMagicalMirror()
 	{
@@ -31,17 +31,26 @@ public class ItemMagicalMirror extends ItemLinkCard
 	public int getItemStackLimit(ItemStack is)
 	{ return 1; }
 	
-	public ItemStack onItemRightClick(ItemStack is, World w, EntityPlayer ep)
+	public void onPlayerStoppedUsing(ItemStack is, World w, EntityPlayer ep, int p_77615_4_)
 	{
-		if(ep instanceof EntityPlayerMP && ep.isSneaking() && hasData(is))
+	}
+	
+	public ItemStack onEaten(ItemStack is, World w, EntityPlayer ep)
+	{
+		if(ep instanceof EntityPlayerMP)
 		{
-			if(XPTConfig.levels_for_recall <= 0)
+			if(XPTConfig.levels_for_recall == -1)
 			{
 				XPTChatMessages.RECALL_DISABLED.print(ep);
 				return is;
 			}
+			else if(!hasData(is))
+			{
+				XPTChatMessages.LINK_BROKEN.print(ep);
+				return is;
+			}
 			
-			int levels = XPTConfig.levels_for_recall;
+			int levels = XPTConfig.only_linking_uses_xp ? 0 : XPTConfig.levels_for_recall;
 			
 			if(!XPTConfig.canConsumeLevels(ep, levels))
 			{
@@ -50,20 +59,29 @@ public class ItemMagicalMirror extends ItemLinkCard
 			}
 			
 			int[] coords = is.stackTagCompound.getIntArray(NBT_TAG);
-			TileTeleporter t = TileTeleporter.getTileXPT(coords[0], coords[1], coords[2], coords[3]);
 			
-			if(t != null && t.cooldown <= 0)
+			World w1 = DimensionManager.getWorld(coords[3]);
+			
+			if(w1.getBlock(coords[0], coords[1], coords[2]) == XPT.teleporter_recall)
 			{
 				XPTConfig.consumeLevels(ep, levels);
-				t.cooldown = t.maxCooldown = XPTConfig.cooldown_seconds * 100;
-				t.markDirty();
 				XPTChatMessages.TELEPORTED_TO.print(ep);
-				Teleporter.teleportPlayer((EntityPlayerMP)ep, coords[0] + 0.5D, coords[1] + 1.5D, coords[2] + 0.5D, coords[3]);
+				Teleporter.teleportPlayer((EntityPlayerMP)ep, coords[0] + 0.5D, coords[1] + 0.5D, coords[2] + 0.5D, coords[3]);
 			}
+			else XPTChatMessages.LINK_BROKEN.print(ep);
 		}
 		
 		return is;
 	}
+	
+	public int getMaxItemUseDuration(ItemStack is)
+	{ return 28; }
+	
+	public EnumAction getItemUseAction(ItemStack p_77661_1_)
+	{ return EnumAction.bow; }
+	
+	public ItemStack onItemRightClick(ItemStack is, World w, EntityPlayer ep)
+	{ ep.setItemInUse(is, getMaxItemUseDuration(is)); return is; }
 	
 	@SuppressWarnings("all")
 	@SideOnly(Side.CLIENT)

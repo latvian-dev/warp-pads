@@ -1,7 +1,6 @@
 package latmod.xpt.client;
 
 import java.awt.Color;
-import java.util.Random;
 
 import latmod.xpt.*;
 import net.minecraft.client.Minecraft;
@@ -21,7 +20,6 @@ import cpw.mods.fml.relauncher.*;
 public class RenderTeleporter extends TileEntitySpecialRenderer implements IItemRenderer
 {
 	public static final RenderTeleporter instance = new RenderTeleporter();
-	public static final Random random = new Random();
 	
 	public void renderTileEntityAt(TileEntity te, double rx, double ry, double rz, float pt)
 	{
@@ -69,8 +67,7 @@ public class RenderTeleporter extends TileEntitySpecialRenderer implements IItem
 		GL11.glDisable(GL11.GL_ALPHA_TEST);
 		GL11.glShadeModel(GL11.GL_SMOOTH);
 		
-		if(ID == 3) GL11.glColor4f(1F, 0.9F, 0.1F, 0F);
-		else GL11.glColor4f(0F, 1F, 1F, 0F);
+		GL11.glColor4f(0F, 1F, 1F, 0F);
 		
 		GL11.glBegin(GL11.GL_QUADS);
 		double s = cooldown * 0.75D;
@@ -78,8 +75,7 @@ public class RenderTeleporter extends TileEntitySpecialRenderer implements IItem
 		GL11.glVertex3d(-s, -1.5D, 0D);
 		GL11.glVertex3d(s, -1.5D, 0D);
 		
-		if(ID == 3) GL11.glColor4f(1F, 0.9F, 0.1F, alpha);
-		else if(ID == 1) GL11.glColor4f(0.2F, 0.4F, 1F, alpha);
+		if(ID == 1) GL11.glColor4f(0.2F, 0.4F, 1F, alpha);
 		else GL11.glColor4f(0.2F, 1F, 0.2F, alpha * 0.8F);
 		
 		GL11.glVertex3d(s1, -0.125D, 0D);
@@ -144,7 +140,7 @@ public class RenderTeleporter extends TileEntitySpecialRenderer implements IItem
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
 	}
 	
-	public void drawQuad(double x1, double y1, double x2, double y2, double z)
+	private void drawQuad(double x1, double y1, double x2, double y2, double z)
 	{
 		GL11.glBegin(GL11.GL_QUADS);
 		GL11.glVertex3d(x1, y1, z);
@@ -154,10 +150,10 @@ public class RenderTeleporter extends TileEntitySpecialRenderer implements IItem
 		GL11.glEnd();
 	}
 	
-	public void drawRect(double x, double y, double w, double h, double z)
+	private void drawRect(double x, double y, double w, double h, double z)
 	{ drawQuad(x, y, x + w, y + h, z); }
 	
-	public double getAlpha(double dist)
+	private double getAlpha(double dist)
 	{
 		if(dist < 2D) return dist / 2D;
 		double maxDist = 5D;

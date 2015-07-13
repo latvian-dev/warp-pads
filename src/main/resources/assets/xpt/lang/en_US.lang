@@ -4,6 +4,7 @@ item.xpt:mirror.name=Recall Mirror
 
 ## Blocks ##
 tile.xpt:teleporter.name=XP Teleporter
+tile.xpt:teleporter_recall.name=Recall XP Teleporter
 
 ## Misc ##
 itemGroup.xpt=XPTeleporters
