@@ -17,7 +17,6 @@ public class BlockTeleporterRecall extends Block
 	public BlockTeleporterRecall()
 	{
 		super(Material.wood);
-		isBlockContainer = true;
 		setBlockBounds(0F, 0F, 0F, 1F, 1F / 8F, 1F);
 	}
 	
