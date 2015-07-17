@@ -7,7 +7,6 @@ public enum XPTChatMessages
 {
 	CANT_CREATE_A_LINK("cant_link"),
 	LINK_BROKEN("link_broken"),
-	TELEPORTED_TO("tp_to"),
 	LINK_CREATED("link_created"),
 	NEED_XP_LEVEL_TP("need_xp_level_tp"),
 	NEED_FOOD_LEVEL_TP("need_food_level_tp"),

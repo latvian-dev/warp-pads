@@ -65,7 +65,6 @@ public class ItemMagicalMirror extends ItemLinkCard // ItemBow
 			if(w1.getBlock(coords[0], coords[1], coords[2]) == XPT.teleporter_recall)
 			{
 				XPTConfig.consumeLevels(ep, levels);
-				XPTChatMessages.TELEPORTED_TO.print(ep);
 				w.playSoundEffect(ep.posX, ep.posY + 1.5D, ep.posZ, "mob.endermen.portal", 1F, 1F);
 				Teleporter.teleportPlayer((EntityPlayerMP)ep, coords[0] + 0.5D, coords[1] + 0.2D, coords[2] + 0.5D, coords[3]);
 				w.playSoundEffect(coords[0] + 0.5D, coords[1] + 1.5D, coords[2] + 0.5D, "mob.endermen.portal", 1F, 1F);

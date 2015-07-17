@@ -13,6 +13,8 @@ public class Teleporter
 	{
 		if(ep == null) return false;
 		
+		ep.fallDistance = 0F;
+		
 		if(ep.worldObj.provider.dimensionId == dim)
 		{
 			ep.playerNetServerHandler.setPlayerLocation(x, y, z, ep.rotationYaw, ep.rotationPitch);

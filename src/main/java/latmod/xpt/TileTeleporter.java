@@ -254,8 +254,6 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 					XPTConfig.consumeLevels(ep, levels);
 					cooldown = maxCooldown = t.cooldown = t.maxCooldown = XPTConfig.cooldown_seconds * 20;
 					
-					ep.motionY = 01.05D;
-					XPTChatMessages.TELEPORTED_TO.print(ep, getName());
 					markDirty();
 					t.markDirty();
 					
