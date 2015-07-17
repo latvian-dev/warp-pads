@@ -3,6 +3,7 @@ import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.*;
+import net.minecraft.entity.boss.*;
 import net.minecraft.entity.player.*;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -88,4 +89,7 @@ public class BlockTeleporter extends BlockContainer
 	
 	public boolean renderAsNormalBlock()
 	{ return false; }
+	
+	public boolean canEntityDestroy(IBlockAccess world, int x, int y, int z, Entity entity)
+	{ return !(entity instanceof EntityDragon || entity instanceof EntityWither); }
 }
