@@ -18,10 +18,13 @@ public class BlockTeleporter extends BlockContainer
 {
 	public BlockTeleporter()
 	{
-		super(Material.wood);
+		super(Material.iron);
 		isBlockContainer = true;
 		setBlockBounds(0F, 0F, 0F, 1F, 1F / 8F, 1F);
 	}
+	
+	public boolean canHarvestBlock(EntityPlayer player, int meta)
+	{ return true; }
 	
 	public TileEntity createNewTileEntity(World w, int m)
 	{ return new TileTeleporter(); }

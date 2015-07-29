@@ -18,9 +18,12 @@ public class BlockTeleporterRecall extends Block
 {
 	public BlockTeleporterRecall()
 	{
-		super(Material.wood);
+		super(Material.iron);
 		setBlockBounds(0F, 0F, 0F, 1F, 1F / 8F, 1F);
 	}
+	
+	public boolean canHarvestBlock(EntityPlayer player, int meta)
+	{ return true; }
 	
 	public void loadRecipes()
 	{
