@@ -132,6 +132,8 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 		{
 			if(ItemLinkCard.hasData(is))
 			{
+				XPTChatMessages msg = XPTChatMessages.INVALID_BLOCK;
+				
 				int[] pos = is.getTagCompound().getIntArray(ItemLinkCard.NBT_TAG);
 				
 				TileTeleporter t = getTileXPT(pos[0], pos[1], pos[2], pos[3]);
@@ -143,19 +145,19 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 					
 					if(!XPTConfig.canConsumeLevels(ep, levels))
 					{
-						XPTChatMessages.getNeedLevel(false).print(ep, "" + levels);
+						XPTChatMessages.NEED_XP_LEVEL_LINK.print(ep, "" + levels);
 						return;
 					}
 					
-					if(createLink(t, true))
+					msg = createLink(t, true);
+					if(msg == XPTChatMessages.LINK_CREATED)
 					{
 						is.stackSize--;
 						XPTConfig.consumeLevels(ep, levels);
-						XPTChatMessages.LINK_CREATED.print(ep);
 					}
-					else XPTChatMessages.CANT_CREATE_A_LINK.print(ep);
 				}
-				else XPTChatMessages.CANT_CREATE_A_LINK.print(ep);
+				
+				msg.print(ep);
 			}
 			else if(yCoord > 0)
 			{
@@ -181,11 +183,11 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 		}
 	}
 	
-	public boolean createLink(TileTeleporter t, boolean updateLink)
+	public XPTChatMessages createLink(TileTeleporter t, boolean updateLink)
 	{
-		if(t == null || !isServer()) return false;
-		if(t.xCoord == linkedX && t.yCoord == linkedY && t.zCoord == linkedZ && t.getDim() == linkedDim) return false;
-		if(t.xCoord == xCoord && t.yCoord == yCoord && t.zCoord == zCoord && t.getDim() == getDim()) return false;
+		if(t == null || !isServer()) return XPTChatMessages.INVALID_BLOCK;
+		if(t.xCoord == linkedX && t.yCoord == linkedY && t.zCoord == linkedZ && t.getDim() == linkedDim) return XPTChatMessages.ALREADY_LINKED;
+		if(t.xCoord == xCoord && t.yCoord == yCoord && t.zCoord == zCoord && t.getDim() == getDim()) return XPTChatMessages.ALREADY_LINKED;
 		
 		TileTeleporter t0 = getLinkedTile();
 		if(t0 != null)
@@ -206,7 +208,7 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 		}
 		
 		markDirty();
-		return true;
+		return XPTChatMessages.LINK_CREATED;
 	}
 	
 	public static TileTeleporter getTileXPT(int x, int y, int z, int dim)
@@ -243,7 +245,7 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 				
 				if(!XPTConfig.canConsumeLevels(ep, levels))
 				{
-					XPTChatMessages.getNeedLevel(true).print(ep, "" + levels);
+					XPTChatMessages.NEED_XP_LEVEL_TP.print(ep, "" + levels);
 					return;
 				}
 				

@@ -55,6 +55,13 @@ public class XPT
 	}
 	
 	@Mod.EventHandler
+	public void init(FMLInitializationEvent e)
+	{
+		if(Loader.isModLoaded(FTBUIntegration.MOD_ID))
+			FMLInterModComms.sendMessage(FTBUIntegration.MOD_ID, "register", "latmod.xpt.FTBUIntegration:registerHandlers");
+	}
+	
+	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent e)
 	{
 		if(XPTConfig.enable_crafting)

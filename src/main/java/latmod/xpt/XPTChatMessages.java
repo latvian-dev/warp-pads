@@ -5,13 +5,12 @@ import net.minecraft.util.ChatComponentTranslation;
 
 public enum XPTChatMessages
 {
-	CANT_CREATE_A_LINK("cant_link"),
+	INVALID_BLOCK("invalid_block"),
+	ALREADY_LINKED("already_linked"),
 	LINK_BROKEN("link_broken"),
 	LINK_CREATED("link_created"),
 	NEED_XP_LEVEL_TP("need_xp_level_tp"),
-	NEED_FOOD_LEVEL_TP("need_food_level_tp"),
 	NEED_XP_LEVEL_LINK("need_xp_level_link"),
-	NEED_FOOD_LEVEL_LINK("need_food_level_link"),
 	RECALL_DISABLED("recall_disabled");
 	
 	public final String id;
@@ -21,19 +20,11 @@ public enum XPTChatMessages
 		id = s;
 	}
 	
-	public static XPTChatMessages getNeedLevel(boolean tp)
+	/*public static XPTChatMessages getNeedLevel(boolean tp)
 	{
-		if(tp)
-		{
-			if(XPTConfig.use_food_levels > 0)
-				return NEED_FOOD_LEVEL_TP;
-			return NEED_XP_LEVEL_TP;
-		}
-		
-		if(XPTConfig.use_food_levels > 0)
-			return NEED_FOOD_LEVEL_LINK;
+		if(tp) return NEED_XP_LEVEL_TP;
 		return NEED_XP_LEVEL_LINK;
-	}
+	}*/
 	
 	public void print(ICommandSender ics, Object... o)
 	{

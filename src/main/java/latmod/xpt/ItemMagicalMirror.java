@@ -54,7 +54,7 @@ public class ItemMagicalMirror extends ItemLinkCard // ItemBow
 			
 			if(!XPTConfig.canConsumeLevels(ep, levels))
 			{
-				XPTChatMessages.getNeedLevel(true).print(ep, "" + levels);
+				XPTChatMessages.NEED_XP_LEVEL_TP.print(ep, "" + levels);
 				return is;
 			}
 			

@@ -77,7 +77,7 @@ public class BlockTeleporterRecall extends Block
 				int levels = XPTConfig.only_linking_uses_xp ? XPTConfig.levels_for_recall : 0;
 				
 				if(!XPTConfig.canConsumeLevels(ep, levels))
-					XPTChatMessages.getNeedLevel(false).print(ep, "" + levels);
+					XPTChatMessages.NEED_XP_LEVEL_LINK.print(ep, "" + levels);
 				else
 				{
 					XPTConfig.consumeLevels(ep, levels);
@@ -86,7 +86,7 @@ public class BlockTeleporterRecall extends Block
 					XPTChatMessages.LINK_CREATED.print(ep);
 				}
 			}
-			else XPTChatMessages.CANT_CREATE_A_LINK.print(ep);
+			else XPTChatMessages.ALREADY_LINKED.print(ep);
 		}
 		
 		return true;
