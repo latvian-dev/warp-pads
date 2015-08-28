@@ -14,7 +14,7 @@ public class FTBUIntegration implements IFTBUReloadable
 	@Optional.Method(modid = FTBUIntegration.MOD_ID)
 	public static void registerHandlers()
 	{
-		FTBUReloadableRegistry.add(instance);
+		FTBUApi.add(instance);
 	}
 	
 	public void onReloaded(Side s, ICommandSender sender) throws Exception
