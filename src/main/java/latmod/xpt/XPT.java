@@ -1,4 +1,5 @@
 package latmod.xpt;
+import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -52,13 +53,8 @@ public class XPT
 		GameRegistry.registerTileEntity(TileTeleporter.class, "xpt.teleporter");
 		
 		proxy.load();
-	}
-	
-	@Mod.EventHandler
-	public void init(FMLInitializationEvent e)
-	{
-		if(Loader.isModLoaded(FTBUIntegration.MOD_ID))
-			FMLInterModComms.sendMessage(FTBUIntegration.MOD_ID, "register", "latmod.xpt.FTBUIntegration:registerHandlers");
+		
+		MinecraftForge.EVENT_BUS.register(new XPTEventHandler());
 	}
 	
 	@Mod.EventHandler
