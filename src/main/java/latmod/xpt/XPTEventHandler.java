@@ -1,7 +1,7 @@
 package latmod.xpt;
 
-import latmod.ftbu.core.api.EventFTBUReload;
 import cpw.mods.fml.common.Optional;
+import latmod.ftbu.core.api.EventFTBUReload;
 
 public class XPTEventHandler
 {

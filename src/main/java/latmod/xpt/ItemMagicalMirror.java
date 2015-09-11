@@ -2,14 +2,14 @@ package latmod.xpt;
 
 import java.util.List;
 
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.*;
 import net.minecraft.entity.player.*;
 import net.minecraft.init.*;
 import net.minecraft.item.*;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.oredict.ShapedOreRecipe;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.*;
 
 public class ItemMagicalMirror extends ItemLinkCard // ItemBow
 {

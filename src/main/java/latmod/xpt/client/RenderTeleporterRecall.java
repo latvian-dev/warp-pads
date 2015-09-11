@@ -1,15 +1,14 @@
 package latmod.xpt.client;
 
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.relauncher.*;
 import latmod.xpt.XPT;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.IItemRenderer;
-
-import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public class RenderTeleporterRecall implements IItemRenderer

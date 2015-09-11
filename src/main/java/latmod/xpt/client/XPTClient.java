@@ -1,9 +1,9 @@
 package latmod.xpt.client;
+import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.relauncher.*;
 import latmod.xpt.*;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.MinecraftForgeClient;
-import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public class XPTClient extends XPTCommon

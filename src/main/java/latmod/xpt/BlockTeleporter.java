@@ -1,4 +1,6 @@
 package latmod.xpt;
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.*;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -11,8 +13,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.*;
 import net.minecraftforge.oredict.ShapedOreRecipe;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.*;
 
 public class BlockTeleporter extends BlockContainer
 {

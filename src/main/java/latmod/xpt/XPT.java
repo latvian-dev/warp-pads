@@ -1,8 +1,8 @@
 package latmod.xpt;
-import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraftforge.common.MinecraftForge;
 
 @Mod(modid = XPT.MOD_ID, name = "XP Teleporters", version = "@VERSION@")
 public class XPT

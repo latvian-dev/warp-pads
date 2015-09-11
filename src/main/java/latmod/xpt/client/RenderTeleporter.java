@@ -2,6 +2,9 @@ package latmod.xpt.client;
 
 import java.awt.Color;
 
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.relauncher.*;
 import latmod.xpt.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
@@ -11,10 +14,6 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.client.IItemRenderer;
-
-import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public class RenderTeleporter extends TileEntitySpecialRenderer implements IItemRenderer

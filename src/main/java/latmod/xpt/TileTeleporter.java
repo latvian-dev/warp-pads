@@ -1,4 +1,5 @@
 package latmod.xpt;
+import cpw.mods.fml.relauncher.*;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.*;
 import net.minecraft.init.Items;
@@ -11,7 +12,6 @@ import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.FakePlayer;
-import cpw.mods.fml.relauncher.*;
 
 public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 {

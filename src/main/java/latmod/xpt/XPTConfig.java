@@ -1,9 +1,9 @@
 package latmod.xpt;
 import java.io.File;
 
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.config.Configuration;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
 public class XPTConfig // XPT
 {
