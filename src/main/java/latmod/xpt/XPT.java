@@ -4,7 +4,7 @@ import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraftforge.common.MinecraftForge;
 
-@Mod(modid = XPT.MOD_ID, name = "XP Teleporters", version = "@VERSION@")
+@Mod(modid = XPT.MOD_ID, name = "XPTeleporters", version = "@VERSION@")
 public class XPT
 {
 	protected static final String MOD_ID = "XPT";
