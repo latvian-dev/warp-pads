@@ -1,12 +1,12 @@
 package latmod.xpt;
 
 import cpw.mods.fml.common.Optional;
-import latmod.ftbu.api.EventFTBUReload;
+import ftb.lib.api.EventFTBReload;
 
 public class XPTEventHandler
 {
-	@Optional.Method(modid = "FTBU")
-	public void onReloaded(EventFTBUReload e)
+	@Optional.Method(modid = "FTBL")
+	public void onReloaded(EventFTBReload e)
 	{
 		if(e.side.isServer())
 		{
