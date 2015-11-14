@@ -4,6 +4,7 @@ import java.util.List;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.LMDimUtils;
 import net.minecraft.entity.player.*;
 import net.minecraft.init.*;
 import net.minecraft.item.*;
@@ -66,7 +67,7 @@ public class ItemMagicalMirror extends ItemLinkCard // ItemBow
 			{
 				XPTConfig.consumeLevels(ep, levels);
 				w.playSoundEffect(ep.posX, ep.posY + 1.5D, ep.posZ, "mob.endermen.portal", 1F, 1F);
-				Teleporter.teleportPlayer((EntityPlayerMP)ep, coords[0] + 0.5D, coords[1] + 0.2D, coords[2] + 0.5D, coords[3]);
+				LMDimUtils.teleportPlayer((EntityPlayerMP)ep, coords[0] + 0.5D, coords[1] + 0.2D, coords[2] + 0.5D, coords[3]);
 				w.playSoundEffect(coords[0] + 0.5D, coords[1] + 1.5D, coords[2] + 0.5D, "mob.endermen.portal", 1F, 1F);
 			}
 			else XPTChatMessages.LINK_BROKEN.print(ep);
@@ -99,9 +100,7 @@ public class ItemMagicalMirror extends ItemLinkCard // ItemBow
 			sb.append(", ");
 			sb.append(coords[2]);
 			sb.append(" @ ");
-			World w = DimensionManager.getWorld(coords[3]);
-			if(w != null) sb.append(w.provider.getDimensionName());
-			else sb.append("DIM" + coords[3]);
+			sb.append(LMDimUtils.getDimName(coords[3]));
 			l.add(sb.toString());
 		}
 	}

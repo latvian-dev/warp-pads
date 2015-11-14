@@ -4,11 +4,11 @@ import java.util.List;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.LMDimUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.*;
 import net.minecraft.world.World;
-import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 public class ItemLinkCard extends Item
@@ -63,20 +63,7 @@ public class ItemLinkCard extends Item
 			sb.append(", ");
 			sb.append(coords[2]);
 			sb.append(" @ ");
-			
-			if(coords[3] == 0)
-				sb.append("Overworld");
-			else if(coords[3] == 1)
-				sb.append("The End");
-			else if(coords[3] == -1)
-				sb.append("Nether");
-			else
-			{
-				World w = DimensionManager.getWorld(coords[3]);
-				if(w != null) sb.append(w.provider.getDimensionName());
-				else sb.append("DIM" + coords[3]);
-			}
-			
+			sb.append(LMDimUtils.getDimName(coords[3]));
 			l.add(sb.toString());
 		}
 	}

@@ -1,5 +1,6 @@
 package latmod.xpt;
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.LMDimUtils;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.*;
 import net.minecraft.init.Items;
@@ -251,7 +252,7 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 				
 				worldObj.playSoundEffect(xCoord + 0.5D, yCoord + 1.5D, zCoord + 0.5D, "mob.endermen.portal", 1F, 1F);
 				
-				if(Teleporter.teleportPlayer(ep, linkedX + 0.5D, linkedY + 0.3D, linkedZ + 0.5D, linkedDim))
+				if(LMDimUtils.teleportPlayer(ep, linkedX + 0.5D, linkedY + 0.3D, linkedZ + 0.5D, linkedDim))
 				{
 					XPTConfig.consumeLevels(ep, levels);
 					cooldown = maxCooldown = t.cooldown = t.maxCooldown = XPTConfig.cooldown_seconds * 20;

@@ -1,11 +1,11 @@
 package latmod.xpt;
 
-import cpw.mods.fml.common.Optional;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import ftb.lib.api.EventFTBReload;
 
 public class XPTEventHandler
 {
-	@Optional.Method(modid = "FTBL")
+	@SubscribeEvent
 	public void onReloaded(EventFTBReload e)
 	{
 		if(e.side.isServer())
