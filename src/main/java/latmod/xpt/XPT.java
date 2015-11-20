@@ -2,9 +2,9 @@ package latmod.xpt;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.registry.GameRegistry;
-import net.minecraftforge.common.MinecraftForge;
+import ftb.lib.EventBusHelper;
 
-@Mod(modid = XPT.MOD_ID, name = "XPTeleporters", version = "@VERSION@")
+@Mod(modid = XPT.MOD_ID, name = "XPTeleporters", version = "@VERSION@", dependencies = "required-after:FTBL")
 public class XPT
 {
 	protected static final String MOD_ID = "XPT";
@@ -54,7 +54,7 @@ public class XPT
 		
 		proxy.load();
 		
-		MinecraftForge.EVENT_BUS.register(new XPTEventHandler());
+		EventBusHelper.register(new XPTEventHandler());
 	}
 	
 	@Mod.EventHandler
