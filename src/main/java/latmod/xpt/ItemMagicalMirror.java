@@ -22,7 +22,7 @@ public class ItemMagicalMirror extends ItemLinkCard // ItemBow
 	
 	public void loadRecipes()
 	{
-		if(XPTConfig.levels_for_recall > 0)
+		if(XPTConfig.levels_for_recall.get() > 0)
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this), "GGL", "GSG", "LGG",
 					'L', XPT.link_card,
 					'G', Blocks.glass_pane,
@@ -40,7 +40,7 @@ public class ItemMagicalMirror extends ItemLinkCard // ItemBow
 	{
 		if(ep instanceof EntityPlayerMP)
 		{
-			if(XPTConfig.levels_for_recall == -1)
+			if(XPTConfig.levels_for_recall.get() == -1)
 			{
 				XPTChatMessages.RECALL_DISABLED.print(ep);
 				return is;
@@ -51,7 +51,7 @@ public class ItemMagicalMirror extends ItemLinkCard // ItemBow
 				return is;
 			}
 			
-			int levels = XPTConfig.only_linking_uses_xp ? 0 : XPTConfig.levels_for_recall;
+			int levels = XPTConfig.only_linking_uses_xp.get() ? 0 : XPTConfig.levels_for_recall.get();
 			
 			if(!XPTConfig.canConsumeLevels(ep, levels))
 			{

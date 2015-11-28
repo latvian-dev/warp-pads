@@ -27,7 +27,7 @@ public class BlockTeleporterRecall extends Block
 	
 	public void loadRecipes()
 	{
-		if(XPTConfig.levels_for_recall > 0)
+		if(XPTConfig.levels_for_recall.get() > 0)
 		GameRegistry.addRecipe(new ShapedOreRecipe(this, "IEI", "IPI",
 				'E', "blockEmerald",
 				'I', "ingotGold",
@@ -39,7 +39,7 @@ public class BlockTeleporterRecall extends Block
 	
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World w, int x, int y, int z)
 	{
-		if(XPTConfig.soft_blocks) return null;
+		if(XPTConfig.soft_blocks.get()) return null;
 		setBlockBoundsBasedOnState(w, x, y, z);
 		return super.getCollisionBoundingBoxFromPool(w, x, y, z);
 	}
@@ -51,7 +51,7 @@ public class BlockTeleporterRecall extends Block
 		
 		if(is.getItem() == XPT.mirror)
 		{
-			if(XPTConfig.levels_for_recall == -1)
+			if(XPTConfig.levels_for_recall.get() == -1)
 			{
 				XPTChatMessages.RECALL_DISABLED.print(ep);
 				return true;
@@ -74,7 +74,7 @@ public class BlockTeleporterRecall extends Block
 			
 			if(prevLinkedX != x || prevLinkedY != y || prevLinkedZ != z || prevLinkedDim != w.provider.dimensionId)
 			{
-				int levels = XPTConfig.only_linking_uses_xp ? XPTConfig.levels_for_recall : 0;
+				int levels = XPTConfig.only_linking_uses_xp.get() ? XPTConfig.levels_for_recall.get() : 0;
 				
 				if(!XPTConfig.canConsumeLevels(ep, levels))
 					XPTChatMessages.NEED_XP_LEVEL_LINK.print(ep, "" + levels);

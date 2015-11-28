@@ -42,7 +42,7 @@ public class BlockTeleporter extends BlockContainer
 	
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World w, int x, int y, int z)
 	{
-		if(XPTConfig.soft_blocks) return null;
+		if(XPTConfig.soft_blocks.get()) return null;
 		setBlockBoundsBasedOnState(w, x, y, z);
 		return super.getCollisionBoundingBoxFromPool(w, x, y, z);
 	}

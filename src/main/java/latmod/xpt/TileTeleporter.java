@@ -142,7 +142,7 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 				if(t != null)
 				{
 					boolean crossdim = pos[3] != getDim();
-					int levels = XPTConfig.only_linking_uses_xp ? getLevels(t, crossdim) : 0;
+					int levels = XPTConfig.only_linking_uses_xp.get() ? getLevels(t, crossdim) : 0;
 					
 					if(!XPTConfig.canConsumeLevels(ep, levels))
 					{
@@ -242,7 +242,7 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 				if(t.linkedY <= 0) t.createLink(this, false);
 				
 				boolean crossdim = linkedDim != getDim();
-				int levels = XPTConfig.only_linking_uses_xp ? 0 : getLevels(t, crossdim);
+				int levels = XPTConfig.only_linking_uses_xp.get() ? 0 : getLevels(t, crossdim);
 				
 				if(!XPTConfig.canConsumeLevels(ep, levels))
 				{
@@ -255,7 +255,7 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 				if(LMDimUtils.teleportPlayer(ep, linkedX + 0.5D, linkedY + 0.3D, linkedZ + 0.5D, linkedDim))
 				{
 					XPTConfig.consumeLevels(ep, levels);
-					cooldown = maxCooldown = t.cooldown = t.maxCooldown = XPTConfig.cooldown_seconds * 20;
+					cooldown = maxCooldown = t.cooldown = t.maxCooldown = XPTConfig.cooldown_seconds.get() * 20;
 					
 					markDirty();
 					t.markDirty();
@@ -263,7 +263,7 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 					t.worldObj.playSoundEffect(linkedX + 0.5D, linkedY + 1.5D, linkedZ + 0.5D, "mob.endermen.portal", 1F, 1F);
 				}
 			}
-			else if(XPTConfig.unlink_broken)
+			else if(XPTConfig.unlink_broken.get())
 			{
 				XPTChatMessages.LINK_BROKEN.print(ep);
 				if(t != null) { linkedY = 0; markDirty(); }
@@ -273,9 +273,9 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 	
 	private int getLevels(TileTeleporter t, boolean crossdim)
 	{
-		if(crossdim) return XPTConfig.levels_for_crossdim;
+		if(crossdim) return XPTConfig.levels_for_crossdim.get();
 		double dist = crossdim ? 0D : Math.sqrt(getDistanceFrom(t.xCoord + 0.5D, t.yCoord + 0.5D, t.zCoord + 0.5D));
-		return (XPTConfig.levels_for_1000_blocks > 0) ? MathHelper.ceiling_double_int(XPTConfig.levels_for_1000_blocks * dist / 1000D) : 0;
+		return (XPTConfig.levels_for_1000_blocks.get() > 0) ? MathHelper.ceiling_double_int(XPTConfig.levels_for_1000_blocks.get() * dist / 1000D) : 0;
 	}
 	
 	public void onPlacedBy(EntityPlayer el, ItemStack is)
@@ -309,7 +309,7 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 
 	public void onBroken()
 	{
-		if(XPTConfig.unlink_broken)
+		if(XPTConfig.unlink_broken.get())
 			createLink(null, true);
 	}
 }

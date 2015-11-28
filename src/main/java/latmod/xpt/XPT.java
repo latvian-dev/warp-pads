@@ -2,7 +2,6 @@ package latmod.xpt;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.registry.GameRegistry;
-import ftb.lib.EventBusHelper;
 
 @Mod(modid = XPT.MOD_ID, name = "XPTeleporters", version = "@VERSION@", dependencies = "required-after:FTBL")
 public class XPT
@@ -24,7 +23,7 @@ public class XPT
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent e)
 	{
-		XPTConfig.load(e);
+		XPTConfig.load();
 		
 		teleporter.setBlockName("xpt:teleporter");
 		teleporter.setHardness(1F);
@@ -53,14 +52,12 @@ public class XPT
 		GameRegistry.registerTileEntity(TileTeleporter.class, "xpt.teleporter");
 		
 		proxy.load();
-		
-		EventBusHelper.register(new XPTEventHandler());
 	}
 	
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent e)
 	{
-		if(XPTConfig.enable_crafting)
+		if(XPTConfig.enable_crafting.get())
 		{
 			teleporter.loadRecipes();
 			teleporter_recall.loadRecipes();

@@ -22,7 +22,7 @@ public class ItemLinkCard extends Item
 	
 	public void loadRecipes()
 	{
-		if(XPTConfig.enable_crafting)
+		if(XPTConfig.enable_crafting.get())
 		GameRegistry.addRecipe(new ShapelessOreRecipe(this, "gemDiamond", "gemEmerald", Items.paper, Items.ender_pearl));
 	}
 	
