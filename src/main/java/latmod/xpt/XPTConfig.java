@@ -19,7 +19,7 @@ public class XPTConfig // XPT
 	public static final ConfigEntryBool enable_crafting = new ConfigEntryBool("enable_crafting", true).setInfo("Enable crafting recipes");
 	public static final ConfigEntryBool unlink_broken = new ConfigEntryBool("unlink_broken", false).setInfo("Unlink teleporters when one is broken");
 	public static final ConfigEntryBool only_linking_uses_xp = new ConfigEntryBool("only_linking_uses_xp", false).setInfo("Only linking will cost levels, teleporting will be free");
-	public static final ConfigEntryBool soft_blocks = new ConfigEntryBool("soft_blocks", true).setInfo("Soft blocks are like torches - you can walk trough them, BUT it solved the 'getting stuck in block' issue");
+	public static final ConfigEntryBool soft_blocks = new ConfigEntryBool("soft_blocks", true).sync().setInfo("Soft blocks are like torches - you can walk trough them, BUT it solved the 'getting stuck in block' issue");
 	public static final ConfigEntryInt levels_for_recall = new ConfigEntryInt("levels_for_recall", new IntBounds(-1, -1, 200)).setInfo("-1 - Disabled\n0+ - Enables Recall Remote crafting and usage");
 	
 	public static void load()
