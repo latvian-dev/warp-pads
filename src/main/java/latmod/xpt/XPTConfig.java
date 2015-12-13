@@ -2,7 +2,7 @@ package latmod.xpt;
 import java.io.File;
 
 import ftb.lib.FTBLib;
-import ftb.lib.api.config.ConfigListRegistry;
+import ftb.lib.api.config.ConfigRegistry;
 import latmod.lib.LMFileUtils;
 import latmod.lib.config.*;
 import latmod.lib.util.IntBounds;
@@ -12,7 +12,6 @@ import net.minecraftforge.common.config.Configuration;
 public class XPTConfig // XPT
 {
 	private static ConfigFile configFile;
-	public static final ConfigGroup group = new ConfigGroup("general");
 	public static final ConfigEntryInt levels_for_1000_blocks = new ConfigEntryInt("levels_for_1000_blocks", new IntBounds(20, 0, 200)).setInfo("Levels required to teleport in same dimension");
 	public static final ConfigEntryInt levels_for_crossdim = new ConfigEntryInt("levels_for_crossdim", new IntBounds(30, 0, 200)).setInfo("Levels required to teleport to another dimension");
 	public static final ConfigEntryInt cooldown_seconds = new ConfigEntryInt("cooldown_seconds", new IntBounds(3, 1, 3600)).setInfo("Teleporter cooldown");
@@ -42,10 +41,9 @@ public class XPTConfig // XPT
 		
 		file = new File(FTBLib.folderConfig, "/LatMod/XPT.json");
 		configFile = new ConfigFile("xpt", file);
-		configFile.configList.setName("XPTeleporters");
-		group.addAll(XPTConfig.class);
-		configFile.add(group);
-		ConfigListRegistry.instance.add(configFile);
+		configFile.configGroup.setName("XPTeleporters");
+		configFile.add(new ConfigGroup("general").addAll(XPTConfig.class));
+		ConfigRegistry.add(configFile);
 		configFile.load();
 	}
 	
