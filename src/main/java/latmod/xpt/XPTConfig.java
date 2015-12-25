@@ -1,5 +1,4 @@
 package latmod.xpt;
-import java.io.File;
 
 import ftb.lib.FTBLib;
 import ftb.lib.api.config.ConfigRegistry;
@@ -8,6 +7,8 @@ import latmod.lib.config.*;
 import latmod.lib.util.IntBounds;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.config.Configuration;
+
+import java.io.File;
 
 public class XPTConfig // XPT
 {

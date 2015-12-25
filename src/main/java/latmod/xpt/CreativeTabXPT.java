@@ -1,10 +1,10 @@
 package latmod.xpt;
 
-import java.util.List;
-
 import cpw.mods.fml.relauncher.*;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.*;
+
+import java.util.List;
 
 public class CreativeTabXPT extends CreativeTabs
 {
