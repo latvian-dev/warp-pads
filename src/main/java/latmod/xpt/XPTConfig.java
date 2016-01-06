@@ -15,7 +15,7 @@ public class XPTConfig // XPT
 	private static ConfigFile configFile;
 	public static final ConfigEntryInt levels_for_1000_blocks = new ConfigEntryInt("levels_for_1000_blocks", new IntBounds(20, 0, 200)).setInfo("Levels required to teleport in same dimension");
 	public static final ConfigEntryInt levels_for_crossdim = new ConfigEntryInt("levels_for_crossdim", new IntBounds(30, 0, 200)).setInfo("Levels required to teleport to another dimension");
-	public static final ConfigEntryInt cooldown_seconds = new ConfigEntryInt("cooldown_seconds", new IntBounds(3, 1, 3600)).setInfo("Teleporter cooldown");
+	public static final ConfigEntryInt cooldown_seconds = new ConfigEntryInt("cooldown_seconds", new IntBounds(3, 1, 3600)).sync().setInfo("Teleporter cooldown");
 	public static final ConfigEntryBool enable_crafting = new ConfigEntryBool("enable_crafting", true).setInfo("Enable crafting recipes");
 	public static final ConfigEntryBool unlink_broken = new ConfigEntryBool("unlink_broken", false).setInfo("Unlink teleporters when one is broken");
 	public static final ConfigEntryBool only_linking_uses_xp = new ConfigEntryBool("only_linking_uses_xp", false).setInfo("Only linking will cost levels, teleporting will be free");
@@ -59,4 +59,7 @@ public class XPTConfig // XPT
 		if(levels <= 0 || ep.capabilities.isCreativeMode) return;
 		ep.addExperienceLevel(-levels);
 	}
+
+	public static int cooldownTicks()
+	{ return cooldown_seconds.get() * 20; }
 }

@@ -41,7 +41,7 @@ public class RenderTeleporter extends TileEntitySpecialRenderer implements IItem
 		
 		//if(te.getWorldObj().rand.nextInt(100) > 97) return;
 		
-		double cooldown = (t.cooldown > 0) ? (1D - (t.cooldown / (double)t.maxCooldown)) : 1D;
+		double cooldown = (t.cooldown > 0) ? (1D - (t.cooldown / (double)XPTConfig.cooldownTicks())) : 1D;
 		
 		GlStateManager.pushMatrix();
 		GlStateManager.pushAttrib();
