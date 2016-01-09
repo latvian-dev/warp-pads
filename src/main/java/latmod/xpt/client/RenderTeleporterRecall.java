@@ -27,7 +27,7 @@ public class RenderTeleporterRecall implements IItemRenderer
 	
 	public void renderItem(ItemRenderType type, ItemStack item, Object... data)
 	{
-		RenderBlocks rb = (RenderBlocks)data[0];
+		RenderBlocks rb = (RenderBlocks) data[0];
 		
 		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
 		

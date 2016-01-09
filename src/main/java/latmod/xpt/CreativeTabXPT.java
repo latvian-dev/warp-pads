@@ -17,11 +17,11 @@ public class CreativeTabXPT extends CreativeTabs
 	
 	@SuppressWarnings("all")
 	@SideOnly(Side.CLIENT)
-    public void displayAllReleventItems(List l)
-    {
+	public void displayAllReleventItems(List l)
+	{
 		l.add(new ItemStack(XPT.teleporter));
 		l.add(new ItemStack(XPT.teleporter_recall));
 		l.add(new ItemStack(XPT.link_card));
 		l.add(new ItemStack(XPT.mirror));
-    }
+	}
 }

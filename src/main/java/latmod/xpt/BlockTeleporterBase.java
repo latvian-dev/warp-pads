@@ -29,13 +29,11 @@ public class BlockTeleporterBase extends BlockContainer
 	public void loadRecipes()
 	{
 		if(XPTConfig.levels_for_recall.get() > 0)
-		GameRegistry.addRecipe(new ShapedOreRecipe(this, "IEI", "IPI",
-				'E', "blockEmerald",
-				'I', "ingotGold",
-				'P', Items.ender_eye));
+			GameRegistry.addRecipe(new ShapedOreRecipe(this, "IEI", "IPI", 'E', "blockEmerald", 'I', "ingotGold", 'P', Items.ender_eye));
 	}
 	
 	public void setBlockBoundsForItemRender() { }
+
 	public void setBlockBoundsBasedOnState(IBlockAccess iba, int x, int y, int z) { }
 	
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World w, int x, int y, int z)

@@ -1,4 +1,5 @@
 package latmod.xpt;
+
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -18,10 +19,7 @@ public class BlockTeleporterRecall extends BlockTeleporterBase
 	public void loadRecipes()
 	{
 		if(XPTConfig.levels_for_recall.get() > 0)
-		GameRegistry.addRecipe(new ShapedOreRecipe(this, "IEI", "IPI",
-				'E', "blockEmerald",
-				'I', "ingotGold",
-				'P', Items.ender_eye));
+			GameRegistry.addRecipe(new ShapedOreRecipe(this, "IEI", "IPI", 'E', "blockEmerald", 'I', "ingotGold", 'P', Items.ender_eye));
 	}
 	
 	public boolean onBlockActivated(World w, int x, int y, int z, EntityPlayer ep, int s, float x1, float y1, float z1)
@@ -56,13 +54,12 @@ public class BlockTeleporterRecall extends BlockTeleporterBase
 			{
 				int levels = XPTConfig.only_linking_uses_xp.get() ? XPTConfig.levels_for_recall.get() : 0;
 				
-				if(!XPTConfig.canConsumeLevels(ep, levels))
-					XPTChatMessages.NEED_XP_LEVEL_LINK.print(ep, "" + levels);
+				if(!XPTConfig.canConsumeLevels(ep, levels)) XPTChatMessages.NEED_XP_LEVEL_LINK.print(ep, "" + levels);
 				else
 				{
 					XPTConfig.consumeLevels(ep, levels);
 					is.setTagCompound(new NBTTagCompound());
-					is.getTagCompound().setIntArray(ItemLinkCard.NBT_TAG, new int[] { x, y, z, w.provider.dimensionId });
+					is.getTagCompound().setIntArray(ItemLinkCard.NBT_TAG, new int[] {x, y, z, w.provider.dimensionId});
 					XPTChatMessages.LINK_CREATED.print(ep);
 				}
 			}

@@ -22,26 +22,29 @@ public class RenderTeleporter extends TileEntitySpecialRenderer implements IItem
 	public void renderTileEntityAt(TileEntity te, double rx, double ry, double rz, float pt)
 	{
 		if(te == null || te.isInvalid() || !(te instanceof TileTeleporter)) return;
-		TileTeleporter t = (TileTeleporter)te;
+		TileTeleporter t = (TileTeleporter) te;
 		
 		int ID = t.getType();
 		if(ID == 0) return;
 		
 		Minecraft mc = Minecraft.getMinecraft();
 		//double dist = mc.thePlayer.getDistance(t.xCoord + 0.5D, t.yCoord + 0.125D, t.zCoord + 0.5D);
-		double dx = t.xCoord + 0.5D - RenderManager.instance.viewerPosX; dx = dx * dx;
-		double dy = t.yCoord + 0.125D - RenderManager.instance.viewerPosY; dy = dy * dy;
-		double dz = t.zCoord + 0.5D - RenderManager.instance.viewerPosZ; dz = dz * dz;
+		double dx = t.xCoord + 0.5D - RenderManager.instance.viewerPosX;
+		dx = dx * dx;
+		double dy = t.yCoord + 0.125D - RenderManager.instance.viewerPosY;
+		dy = dy * dy;
+		double dz = t.zCoord + 0.5D - RenderManager.instance.viewerPosZ;
+		dz = dz * dz;
 		double dist = Math.sqrt(dx + dy + dz);
 		if(dx <= 0D && dz <= 0D) return;
 		
-		float alpha = (float)getAlpha(dist);
+		float alpha = (float) getAlpha(dist);
 		if(alpha <= 0F) return;
 		if(alpha > 1F) alpha = 1F;
 		
 		//if(te.getWorldObj().rand.nextInt(100) > 97) return;
 		
-		double cooldown = (t.cooldown > 0) ? (1D - (t.cooldown / (double)XPTConfig.cooldownTicks())) : 1D;
+		double cooldown = (t.cooldown > 0) ? (1D - (t.cooldown / (double) XPTConfig.cooldownTicks())) : 1D;
 		
 		GlStateManager.pushMatrix();
 		GlStateManager.pushAttrib();
@@ -53,7 +56,7 @@ public class RenderTeleporter extends TileEntitySpecialRenderer implements IItem
 		
 		GlStateManager.translate(rx + 0.5D, ry + 0.0D, rz + 0.5D);
 		GlStateManager.scale(-1F, -1F, 1F);
-		GlStateManager.rotate((float)(-Math.atan2((te.xCoord + 0.5D) - RenderManager.instance.viewerPosX, (te.zCoord + 0.5D) - RenderManager.instance.viewerPosZ) * 180D / Math.PI), 0F, 1F, 0F);
+		GlStateManager.rotate((float) (-Math.atan2((te.xCoord + 0.5D) - RenderManager.instance.viewerPosX, (te.zCoord + 0.5D) - RenderManager.instance.viewerPosZ) * 180D / Math.PI), 0F, 1F, 0F);
 		
 		GlStateManager.disableLighting();
 		GlStateManager.disableCull();
@@ -126,7 +129,7 @@ public class RenderTeleporter extends TileEntitySpecialRenderer implements IItem
 			float f1 = 0.02F;
 			GlStateManager.scale(-f1, -f1, f1);
 			
-			GlStateManager.rotate((float)(-Math.atan2((te.xCoord + 0.5D) - RenderManager.instance.viewerPosX, (te.zCoord + 0.5D) - RenderManager.instance.viewerPosZ) * 180D / Math.PI), 0F, 1F, 0F);
+			GlStateManager.rotate((float) (-Math.atan2((te.xCoord + 0.5D) - RenderManager.instance.viewerPosX, (te.zCoord + 0.5D) - RenderManager.instance.viewerPosZ) * 180D / Math.PI), 0F, 1F, 0F);
 			
 			GlStateManager.color(1F, 1F, 1F, 1F);
 			mc.fontRenderer.drawString(t.name, -(mc.fontRenderer.getStringWidth(t.name) / 2), -8, LMColorUtils.getRGBAF(1F, 1F, 1F, alpha));
@@ -175,7 +178,7 @@ public class RenderTeleporter extends TileEntitySpecialRenderer implements IItem
 		GlStateManager.pushMatrix();
 		GlStateManager.pushAttrib();
 		
-		RenderBlocks rb = (RenderBlocks)data[0];
+		RenderBlocks rb = (RenderBlocks) data[0];
 		
 		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
 		

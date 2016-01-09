@@ -1,4 +1,5 @@
 package latmod.xpt.client;
+
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.relauncher.*;
 import latmod.xpt.*;

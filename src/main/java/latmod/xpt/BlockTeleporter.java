@@ -1,4 +1,5 @@
 package latmod.xpt;
+
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.entity.*;
@@ -9,7 +10,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
-public class BlockTeleporter extends BlockTeleporterBase 
+public class BlockTeleporter extends BlockTeleporterBase
 {
 	public BlockTeleporter()
 	{
@@ -23,15 +24,12 @@ public class BlockTeleporter extends BlockTeleporterBase
 	
 	public void loadRecipes()
 	{
-		GameRegistry.addRecipe(new ShapedOreRecipe(this, "IEI", "IPI",
-				'E', "blockEmerald",
-				'I', "ingotIron",
-				'P', Items.ender_pearl));
+		GameRegistry.addRecipe(new ShapedOreRecipe(this, "IEI", "IPI", 'E', "blockEmerald", 'I', "ingotIron", 'P', Items.ender_pearl));
 	}
 	
 	public boolean onBlockActivated(World w, int x, int y, int z, EntityPlayer ep, int s, float x1, float y1, float z1)
 	{
-		TileTeleporter t = (TileTeleporter)w.getTileEntity(x, y, z);
+		TileTeleporter t = (TileTeleporter) w.getTileEntity(x, y, z);
 		if(t != null) t.onRightClick(ep, ep.getHeldItem());
 		return true;
 	}
@@ -40,8 +38,8 @@ public class BlockTeleporter extends BlockTeleporterBase
 	{
 		if(e != null && !e.isDead && e instanceof EntityPlayerMP)
 		{
-			TileTeleporter t = (TileTeleporter)w.getTileEntity(x, y, z);
-			if(t != null) t.onPlayerCollided((EntityPlayerMP)e);
+			TileTeleporter t = (TileTeleporter) w.getTileEntity(x, y, z);
+			if(t != null) t.onPlayerCollided((EntityPlayerMP) e);
 		}
 	}
 	
@@ -49,8 +47,8 @@ public class BlockTeleporter extends BlockTeleporterBase
 	{
 		if(!w.isRemote && el instanceof EntityPlayer && is != null)
 		{
-			TileTeleporter t = (TileTeleporter)w.getTileEntity(x, y, z);
-			if(t != null) t.onPlacedBy((EntityPlayer)el, is);
+			TileTeleporter t = (TileTeleporter) w.getTileEntity(x, y, z);
+			if(t != null) t.onPlacedBy((EntityPlayer) el, is);
 		}
 	}
 	
@@ -58,7 +56,7 @@ public class BlockTeleporter extends BlockTeleporterBase
 	{
 		if(!w.isRemote)
 		{
-			TileTeleporter t = (TileTeleporter)w.getTileEntity(x, y, z);
+			TileTeleporter t = (TileTeleporter) w.getTileEntity(x, y, z);
 			if(t != null) t.onBroken();
 		}
 		

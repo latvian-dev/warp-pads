@@ -23,10 +23,7 @@ public class ItemMagicalMirror extends ItemLinkCard // ItemBow
 	public void loadRecipes()
 	{
 		if(XPTConfig.levels_for_recall.get() > 0)
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this), "GGL", "GSG", "LGG",
-					'L', XPT.link_card,
-					'G', Blocks.glass_pane,
-					'S', Items.nether_star));
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this), "GGL", "GSG", "LGG", 'L', XPT.link_card, 'G', Blocks.glass_pane, 'S', Items.nether_star));
 	}
 	
 	public int getItemStackLimit(ItemStack is)
@@ -67,7 +64,7 @@ public class ItemMagicalMirror extends ItemLinkCard // ItemBow
 			{
 				XPTConfig.consumeLevels(ep, levels);
 				w.playSoundEffect(ep.posX, ep.posY + 1.5D, ep.posZ, "mob.endermen.portal", 1F, 1F);
-				LMDimUtils.teleportPlayer((EntityPlayerMP)ep, coords[0] + 0.5D, coords[1] + 0.2D, coords[2] + 0.5D, coords[3]);
+				LMDimUtils.teleportPlayer((EntityPlayerMP) ep, coords[0] + 0.5D, coords[1] + 0.2D, coords[2] + 0.5D, coords[3]);
 				w.playSoundEffect(coords[0] + 0.5D, coords[1] + 1.5D, coords[2] + 0.5D, "mob.endermen.portal", 1F, 1F);
 			}
 			else XPTChatMessages.LINK_BROKEN.print(ep);
@@ -83,7 +80,10 @@ public class ItemMagicalMirror extends ItemLinkCard // ItemBow
 	{ return EnumAction.bow; }
 	
 	public ItemStack onItemRightClick(ItemStack is, World w, EntityPlayer ep)
-	{ ep.setItemInUse(is, getMaxItemUseDuration(is)); return is; }
+	{
+		ep.setItemInUse(is, getMaxItemUseDuration(is));
+		return is;
+	}
 	
 	@SuppressWarnings("all")
 	@SideOnly(Side.CLIENT)
