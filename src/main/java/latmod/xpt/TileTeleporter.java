@@ -25,12 +25,12 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 	public void readFromNBT(NBTTagCompound tag)
 	{
 		super.readFromNBT(tag);
-
+		
 		if(tag.hasKey("Link") && tag.hasKey("Timer"))
 		{
 			int[] link = tag.getIntArray("Link");
 			cooldown = (tag.func_150299_b("Timer") == LMNBTUtils.INT) ? tag.getInteger("Timer") : tag.getIntArray("Timer")[0];
-
+			
 			if(link.length >= 4)
 			{
 				linked = new EntityPos();
@@ -54,9 +54,9 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 	{
 		NBTTagCompound tag = new NBTTagCompound();
 		IntMap data = new IntMap();
-
+		
 		data.put(0, cooldown);
-
+		
 		if(linked != null)
 		{
 			data.put(1, linked.intX());
@@ -64,7 +64,7 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 			data.put(3, linked.intZ());
 			data.put(4, linked.dim);
 		}
-
+		
 		tag.setIntArray("D", data.toIntArray());
 		tag.setString("N", name);
 		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, tag);
@@ -74,23 +74,23 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 	{
 		NBTTagCompound tag = pkt.func_148857_g();
 		IntMap data = IntMap.fromIntArrayS(tag.getIntArray("D"));
-
+		
 		cooldown = data.get(0);
-
+		
 		if(data.keys.contains(1))
 		{
 			linked = new EntityPos();
 			linked.setPos(data.get(1), data.get(2), data.get(3), data.get(4));
 		}
 		else linked = null;
-
+		
 		name = tag.getString("N");
 		worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
 	}
 	
 	public int getDim()
 	{ return (worldObj == null) ? 0 : worldObj.provider.dimensionId; }
-
+	
 	public int getType()
 	{
 		if(worldObj != null && linked != null) return (linked.dim == getDim()) ? 1 : 2;
@@ -189,7 +189,7 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 			}
 		}
 	}
-
+	
 	public ChunkCoordinates getPos()
 	{ return new ChunkCoordinates(xCoord, yCoord, zCoord); }
 	
@@ -206,9 +206,9 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 			t0.linked = null;
 			t0.markDirty();
 		}
-
+		
 		linked = new EntityPos(t.xCoord, t.yCoord, t.zCoord, t.getDim());
-
+		
 		if(updateLink)
 		{
 			t = getLinkedTile();
@@ -222,7 +222,7 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 	public static TileTeleporter getTileXPT(int x, int y, int z, int dim)
 	{
 		if(y < 0 || y > 256) return null;
-
+		
 		World w = LMDimUtils.getWorld(dim);
 		
 		if(w != null)
@@ -262,7 +262,7 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 				}
 				
 				worldObj.playSoundEffect(xCoord + 0.5D, yCoord + 1.5D, zCoord + 0.5D, "mob.endermen.portal", 1F, 1F);
-
+				
 				if(LMDimUtils.teleportPlayer(ep, linked.center()))
 				{
 					XPTConfig.consumeLevels(ep, levels);
@@ -323,7 +323,7 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 	@SideOnly(Side.CLIENT)
 	public double getMaxRenderDistanceSquared()
 	{ return 64D; }
-
+	
 	public void onBroken()
 	{
 		if(XPTConfig.unlink_broken.get()) createLink(null, true);

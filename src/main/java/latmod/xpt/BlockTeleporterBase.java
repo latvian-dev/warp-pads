@@ -33,7 +33,7 @@ public class BlockTeleporterBase extends BlockContainer
 	}
 	
 	public void setBlockBoundsForItemRender() { }
-
+	
 	public void setBlockBoundsBasedOnState(IBlockAccess iba, int x, int y, int z) { }
 	
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World w, int x, int y, int z)

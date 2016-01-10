@@ -59,7 +59,7 @@ public class XPTConfig // XPT
 		if(levels <= 0 || ep.capabilities.isCreativeMode) return;
 		ep.addExperienceLevel(-levels);
 	}
-
+	
 	public static int cooldownTicks()
 	{ return cooldown_seconds.get() * 20; }
 }
