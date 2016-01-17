@@ -1,109 +1,67 @@
 package latmod.xpt;
 
-import cpw.mods.fml.relauncher.*;
 import ftb.lib.*;
-import latmod.lib.IntMap;
+import ftb.lib.api.tile.TileLM;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.*;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.*;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.fml.relauncher.*;
 
-public class TileTeleporter extends TileEntity // TileLM // BlockXPT
+public class TileTeleporter extends TileLM // TileLM // BlockXPT
 {
+	private String customName = "";
 	public EntityPos linked = null;
 	public int cooldown = 0;
-	public String name = "";
-	private boolean created = false;
 	
-	public void readFromNBT(NBTTagCompound tag)
+	public void readTileData(NBTTagCompound tag)
 	{
-		super.readFromNBT(tag);
-		
-		if(tag.hasKey("Link") && tag.hasKey("Timer"))
-		{
-			int[] link = tag.getIntArray("Link");
-			cooldown = (tag.func_150299_b("Timer") == LMNBTUtils.INT) ? tag.getInteger("Timer") : tag.getIntArray("Timer")[0];
-			
-			if(link.length >= 4)
-			{
-				linked = new EntityPos();
-				linked.setPos(link[0], link[1], link[2], link[3]);
-			}
-			else linked = null;
-		}
+		super.readTileData(tag);
 		cooldown = tag.getInteger("Cooldown");
-		name = tag.getString("Name");
 	}
 	
-	public void writeToNBT(NBTTagCompound tag)
+	public void writeTileData(NBTTagCompound tag)
 	{
-		super.writeToNBT(tag);
-		tag.setIntArray("Link", (linked != null) ? new int[] {linked.intX(), linked.intY(), linked.intZ(), linked.dim} : new int[0]);
-		tag.setInteger("Timer", cooldown);
-		tag.setString("Name", name);
+		super.writeTileData(tag);
+		tag.setInteger("Cooldown", cooldown);
 	}
 	
-	public final Packet getDescriptionPacket()
+	public void readTileClientData(NBTTagCompound tag)
 	{
-		NBTTagCompound tag = new NBTTagCompound();
-		IntMap data = new IntMap();
-		
-		data.put(0, cooldown);
-		
-		if(linked != null)
-		{
-			data.put(1, linked.intX());
-			data.put(2, linked.intY());
-			data.put(3, linked.intZ());
-			data.put(4, linked.dim);
-		}
-		
-		tag.setIntArray("D", data.toIntArray());
-		tag.setString("N", name);
-		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, tag);
+		customName = tag.getString("N");
+		cooldown = tag.getInteger("C");
+		security.readFromNBT(tag, "S");
+		int[] ai = tag.getIntArray("L");
+		if(ai.length == 0) linked = null;
+		else linked = new EntityPos(ai[0], ai[1], ai[2], ai[3]);
 	}
 	
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
+	public void writeTileClientData(NBTTagCompound tag)
 	{
-		NBTTagCompound tag = pkt.func_148857_g();
-		IntMap data = IntMap.fromIntArrayS(tag.getIntArray("D"));
-		
-		cooldown = data.get(0);
-		
-		if(data.keys.contains(1))
-		{
-			linked = new EntityPos();
-			linked.setPos(data.get(1), data.get(2), data.get(3), data.get(4));
-		}
-		else linked = null;
-		
-		name = tag.getString("N");
-		worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
+		if(!customName.isEmpty()) tag.setString("N", customName);
+		if(cooldown > 0) tag.setInteger("C", cooldown);
+		security.writeToNBT(tag, "S");
+		if(linked != null) tag.setIntArray("L", new int[] {linked.intX(), linked.intY(), linked.intZ(), linked.dim});
 	}
 	
-	public int getDim()
-	{ return (worldObj == null) ? 0 : worldObj.provider.dimensionId; }
+	public void setName(String s)
+	{ customName = s; }
+	
+	public String getName()
+	{ return customName.isEmpty() ? (getPos().getX() + ", " + getPos().getY() + ", " + getPos().getZ() + " @ " + worldObj.provider.getDimensionName()) : customName; }
 	
 	public int getType()
 	{
-		if(worldObj != null && linked != null) return (linked.dim == getDim()) ? 1 : 2;
+		if(worldObj != null && linked != null) return (linked.dim == getDimension()) ? 1 : 2;
 		return 0;
 	}
 	
-	public void markDirty()
-	{ worldObj.markBlockForUpdate(xCoord, yCoord, zCoord); }
-	
-	public boolean isServer()
-	{ return !worldObj.isRemote; }
-	
-	public void updateEntity()
+	public void onUpdate()
 	{
 		if(cooldown < 0) cooldown = 0;
 		
@@ -113,31 +71,25 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 			
 			if(cooldown == 0 && isServer()) markDirty();
 		}
-		
-		if(!created && isServer())
-		{
-			created = true;
-			markDirty();
-		}
 	}
 	
-	public void onRightClick(EntityPlayer ep, ItemStack is)
+	public boolean onRightClick(EntityPlayer ep, ItemStack is, EnumFacing side, float x, float y, float z)
 	{
-		if(worldObj.isRemote || is == null) return;
+		if(worldObj.isRemote || is == null) return true;
 		
 		if(is.getItem() == Items.name_tag)
 		{
-			if(!is.hasDisplayName()) return;
+			if(!is.hasDisplayName()) return true;
 			
-			name = is.getDisplayName();
+			setName(is.getDisplayName());
 			
 			if(!ep.capabilities.isCreativeMode) is.stackSize--;
 			
 			markDirty();
 			
-			return;
+			return true;
 		}
-		else if(is.getItem() == XPT.link_card)
+		else if(is.getItem() == XPTItems.link_card)
 		{
 			if(ItemLinkCard.hasData(is))
 			{
@@ -145,17 +97,17 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 				
 				int[] pos = is.getTagCompound().getIntArray(ItemLinkCard.NBT_TAG);
 				
-				TileTeleporter t = getTileXPT(pos[0], pos[1], pos[2], pos[3]);
+				TileTeleporter t = getTileXPT(new BlockPos(pos[0], pos[1], pos[2]), pos[3]);
 				
 				if(t != null)
 				{
-					boolean crossdim = pos[3] != getDim();
+					boolean crossdim = pos[3] != getDimension();
 					int levels = XPTConfig.only_linking_uses_xp.get() ? getLevels(t, crossdim) : 0;
 					
 					if(!XPTConfig.canConsumeLevels(ep, levels))
 					{
 						XPTChatMessages.NEED_XP_LEVEL_LINK.print(ep, "" + levels);
-						return;
+						return true;
 					}
 					
 					msg = createLink(t, true);
@@ -168,15 +120,15 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 				
 				msg.print(ep);
 			}
-			else if(yCoord > 0)
+			else if(pos.getY() > 0)
 			{
 				if(is.stackSize > 1)
 				{
 					if(!ep.capabilities.isCreativeMode) is.stackSize--;
 					
-					ItemStack is1 = new ItemStack(XPT.link_card);
+					ItemStack is1 = new ItemStack(XPTItems.link_card);
 					is1.setTagCompound(new NBTTagCompound());
-					is1.getTagCompound().setIntArray(ItemLinkCard.NBT_TAG, new int[] {xCoord, yCoord, zCoord, worldObj.provider.dimensionId});
+					is1.getTagCompound().setIntArray(ItemLinkCard.NBT_TAG, new int[] {getPos().getX(), getPos().getY(), getPos().getZ(), worldObj.provider.getDimensionId()});
 					
 					if(ep.inventory.addItemStackToInventory(is1)) ep.openContainer.detectAndSendChanges();
 					else worldObj.spawnEntityInWorld(new EntityItem(worldObj, ep.posX, ep.posY, ep.posZ, is1));
@@ -184,21 +136,19 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 				else
 				{
 					is.setTagCompound(new NBTTagCompound());
-					is.getTagCompound().setIntArray(ItemLinkCard.NBT_TAG, new int[] {xCoord, yCoord, zCoord, worldObj.provider.dimensionId});
+					is.getTagCompound().setIntArray(ItemLinkCard.NBT_TAG, new int[] {getPos().getX(), getPos().getY(), getPos().getZ(), worldObj.provider.getDimensionId()});
 				}
 			}
 		}
+		
+		return true;
 	}
-	
-	public ChunkCoordinates getPos()
-	{ return new ChunkCoordinates(xCoord, yCoord, zCoord); }
 	
 	public XPTChatMessages createLink(TileTeleporter t, boolean updateLink)
 	{
 		if(t == null || !isServer()) return XPTChatMessages.INVALID_BLOCK;
 		if(linked != null && linked.equalsIntPos(t.linked)) return XPTChatMessages.ALREADY_LINKED;
-		if(t.xCoord == xCoord && t.yCoord == yCoord && t.zCoord == zCoord && t.getDim() == getDim())
-			return XPTChatMessages.ALREADY_LINKED;
+		if(t.getPos().equals(getPos()) && t.getDimension() == getDimension()) return XPTChatMessages.ALREADY_LINKED;
 		
 		TileTeleporter t0 = getLinkedTile();
 		if(t0 != null)
@@ -207,7 +157,7 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 			t0.markDirty();
 		}
 		
-		linked = new EntityPos(t.xCoord, t.yCoord, t.zCoord, t.getDim());
+		linked = new EntityPos(t.getPos(), t.getDimension());
 		
 		if(updateLink)
 		{
@@ -219,15 +169,15 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 		return XPTChatMessages.LINK_CREATED;
 	}
 	
-	public static TileTeleporter getTileXPT(int x, int y, int z, int dim)
+	public static TileTeleporter getTileXPT(BlockPos pos, int dim)
 	{
-		if(y < 0 || y > 256) return null;
+		if(pos.getY() < 0 || pos.getY() >= 256) return null;
 		
 		World w = LMDimUtils.getWorld(dim);
 		
 		if(w != null)
 		{
-			TileEntity te = w.getTileEntity(x, y, z);
+			TileEntity te = w.getTileEntity(pos);
 			
 			if(te != null && te instanceof TileTeleporter) return (TileTeleporter) te;
 		}
@@ -238,7 +188,7 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 	public TileTeleporter getLinkedTile()
 	{
 		if(linked == null) return null;
-		return getTileXPT(linked.intX(), linked.intY(), linked.intZ(), linked.dim);
+		return getTileXPT(linked.toBlockPos(), linked.dim);
 	}
 	
 	public void onPlayerCollided(EntityPlayerMP ep)
@@ -252,7 +202,7 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 			{
 				if(t.linked == null) t.createLink(this, false);
 				
-				boolean crossdim = linked.dim != getDim();
+				boolean crossdim = linked.dim != getDimension();
 				int levels = XPTConfig.only_linking_uses_xp.get() ? 0 : getLevels(t, crossdim);
 				
 				if(!XPTConfig.canConsumeLevels(ep, levels))
@@ -261,7 +211,7 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 					return;
 				}
 				
-				worldObj.playSoundEffect(xCoord + 0.5D, yCoord + 1.5D, zCoord + 0.5D, "mob.endermen.portal", 1F, 1F);
+				FTBLib.playSoundEffect(worldObj, getPos().up(), "mob.endermen.portal", 1F, 1F);
 				
 				if(LMDimUtils.teleportPlayer(ep, linked.center()))
 				{
@@ -271,7 +221,7 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 					markDirty();
 					t.markDirty();
 					
-					t.worldObj.playSoundEffect(linked.intX() + 0.5D, linked.intY() + 1.5D, linked.intZ() + 0.5D, "mob.endermen.portal", 1F, 1F);
+					FTBLib.playSoundEffect(worldObj, linked.toBlockPos().up(), "mob.endermen.portal", 1F, 1F);
 				}
 			}
 			else if(XPTConfig.unlink_broken.get())
@@ -289,35 +239,24 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 	private int getLevels(TileTeleporter t, boolean crossdim)
 	{
 		if(crossdim) return XPTConfig.levels_for_crossdim.get();
-		double dist = crossdim ? 0D : Math.sqrt(getDistanceFrom(t.xCoord + 0.5D, t.yCoord + 0.5D, t.zCoord + 0.5D));
+		double dist = crossdim ? 0D : Math.sqrt(getDistanceSq(t.getPos().getX() + 0.5D, t.getPos().getY() + 0.5D, t.getPos().getZ() + 0.5D));
 		return (XPTConfig.levels_for_1000_blocks.get() > 0) ? MathHelper.ceiling_double_int(XPTConfig.levels_for_1000_blocks.get() * dist / 1000D) : 0;
 	}
 	
 	public void onPlacedBy(EntityPlayer el, ItemStack is)
 	{
-		if(is.hasDisplayName()) name = is.getDisplayName();
+		if(is.hasDisplayName()) setName(is.getDisplayName());
 		markDirty();
 	}
-	
-	public boolean equals(Object o)
-	{
-		if(o == null || o.getClass() != TileTeleporter.class) return false;
-		TileTeleporter t = (TileTeleporter) o;
-		if(t.xCoord != xCoord) return false;
-		if(t.yCoord != yCoord) return false;
-		if(t.zCoord != zCoord) return false;
-		if(t.getDim() != getDim()) return false;
-		return true;
-	}
-	
-	public String getName()
-	{ return name.isEmpty() ? (xCoord + ", " + yCoord + ", " + zCoord + " @ " + worldObj.provider.getDimensionName()) : name; }
 	
 	@SideOnly(Side.CLIENT)
 	public AxisAlignedBB getRenderBoundingBox()
 	{
 		double d = 0.5D;
-		return AxisAlignedBB.getBoundingBox(xCoord - d, yCoord, zCoord - d, xCoord + 1D + d, yCoord + 2D, zCoord + 1D + d);
+		double x = getPos().getX();
+		double y = getPos().getY();
+		double z = getPos().getZ();
+		return new AxisAlignedBB(x - d, y, z - d, x + 1D + d, y + 2D, z + 1D + d);
 	}
 	
 	@SideOnly(Side.CLIENT)

@@ -1,33 +1,41 @@
 package latmod.xpt;
 
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.*;
-import ftb.lib.LMDimUtils;
+import ftb.lib.*;
+import ftb.lib.api.item.ItemLM;
+import ftb.lib.item.ODItems;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
-import net.minecraft.item.*;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
+import net.minecraftforge.fml.relauncher.*;
 
 import java.util.List;
 
-public class ItemLinkCard extends Item
+public class ItemLinkCard extends ItemLM
 {
 	public static final String NBT_TAG = "Coords";
 	
-	public ItemLinkCard()
+	public ItemLinkCard(String s)
 	{
-		setMaxStackSize(16);
+		super(s);
+		setMaxStackSize(1);
 	}
+	
+	public LMMod getMod()
+	{ return XPT.mod; }
+	
+	@SideOnly(Side.CLIENT)
+	public CreativeTabs getCreativeTab()
+	{ return XPT.inst.creativeTab; }
 	
 	public void loadRecipes()
 	{
-		if(XPTConfig.enable_crafting.get())
-			GameRegistry.addRecipe(new ShapelessOreRecipe(this, "gemDiamond", "gemEmerald", Items.paper, Items.ender_pearl));
+		getMod().recipes.addShapelessRecipe(new ItemStack(this), ODItems.DIAMOND, ODItems.EMERALD, Items.paper, Items.ender_pearl);
 	}
 	
 	public static boolean hasData(ItemStack is)
-	{ return is.hasTagCompound() && is.stackTagCompound.hasKey(NBT_TAG); }
+	{ return is.hasTagCompound() && is.getTagCompound().hasKey(NBT_TAG); }
 	
 	@SideOnly(Side.CLIENT)
 	public boolean hasEffect(ItemStack is, int pass)
@@ -40,20 +48,19 @@ public class ItemLinkCard extends Item
 	{
 		if(!w.isRemote && ep.isSneaking() && hasData(is))
 		{
-			is.stackTagCompound.removeTag(NBT_TAG);
-			if(is.stackTagCompound.hasNoTags()) is.setTagCompound(null);
+			is.getTagCompound().removeTag(NBT_TAG);
+			if(is.getTagCompound().hasNoTags()) is.setTagCompound(null);
 		}
 		
 		return is;
 	}
 	
-	@SuppressWarnings("all")
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack is, EntityPlayer ep, List l, boolean b)
+	public void addInformation(ItemStack is, EntityPlayer ep, List<String> l, boolean b)
 	{
 		if(hasData(is))
 		{
-			int[] coords = is.stackTagCompound.getIntArray(NBT_TAG);
+			int[] coords = is.getTagCompound().getIntArray(NBT_TAG);
 			StringBuilder sb = new StringBuilder();
 			sb.append("Linked to: ");
 			sb.append(coords[0]);

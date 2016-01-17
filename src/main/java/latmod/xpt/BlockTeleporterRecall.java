@@ -1,25 +1,26 @@
 package latmod.xpt;
 
-import cpw.mods.fml.common.registry.GameRegistry;
+import ftb.lib.api.tile.TileLM;
+import ftb.lib.item.ODItems;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import net.minecraftforge.oredict.ShapedOreRecipe;
 
 public class BlockTeleporterRecall extends BlockTeleporterBase
 {
-	public BlockTeleporterRecall()
+	public BlockTeleporterRecall(String s)
 	{
-		super();
-		textureName = "teleporter_recall";
+		super(s);
+		isBlockContainer = false;
 	}
+	
+	public TileLM createNewTileEntity(World w, int m)
+	{ return null; }
 	
 	public void loadRecipes()
 	{
-		if(XPTConfig.levels_for_recall.get() > 0)
-			GameRegistry.addRecipe(new ShapedOreRecipe(this, "IEI", "IPI", 'E', "blockEmerald", 'I', "ingotGold", 'P', Items.ender_eye));
+		getMod().recipes.addRecipe(new ItemStack(this), "GIG", "ITI", 'T', XPTItems.teleporter, 'I', ODItems.GOLD, 'G', ODItems.GLOWSTONE);
 	}
 	
 	public boolean onBlockActivated(World w, int x, int y, int z, EntityPlayer ep, int s, float x1, float y1, float z1)
@@ -27,7 +28,7 @@ public class BlockTeleporterRecall extends BlockTeleporterBase
 		ItemStack is = ep.getHeldItem();
 		if(w.isRemote || is == null) return true;
 		
-		if(is.getItem() == XPT.mirror)
+		if(is.getItem() == XPTItems.mirror)
 		{
 			if(XPTConfig.levels_for_recall.get() == -1)
 			{
@@ -50,7 +51,7 @@ public class BlockTeleporterRecall extends BlockTeleporterBase
 				prevLinkedDim = pos[3];
 			}
 			
-			if(prevLinkedX != x || prevLinkedY != y || prevLinkedZ != z || prevLinkedDim != w.provider.dimensionId)
+			if(prevLinkedX != x || prevLinkedY != y || prevLinkedZ != z || prevLinkedDim != w.provider.getDimensionId())
 			{
 				int levels = XPTConfig.only_linking_uses_xp.get() ? XPTConfig.levels_for_recall.get() : 0;
 				
@@ -59,7 +60,7 @@ public class BlockTeleporterRecall extends BlockTeleporterBase
 				{
 					XPTConfig.consumeLevels(ep, levels);
 					is.setTagCompound(new NBTTagCompound());
-					is.getTagCompound().setIntArray(ItemLinkCard.NBT_TAG, new int[] {x, y, z, w.provider.dimensionId});
+					is.getTagCompound().setIntArray(ItemLinkCard.NBT_TAG, new int[] {x, y, z, w.provider.getDimensionId()});
 					XPTChatMessages.LINK_CREATED.print(ep);
 				}
 			}

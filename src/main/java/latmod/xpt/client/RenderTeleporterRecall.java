@@ -1,20 +1,13 @@
 package latmod.xpt.client;
 
-import cpw.mods.fml.relauncher.*;
-import ftb.lib.client.GlStateManager;
-import latmod.xpt.XPT;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.IItemRenderer;
-import org.lwjgl.opengl.GL11;
+import net.minecraftforge.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
-public class RenderTeleporterRecall implements IItemRenderer
+public class RenderTeleporterRecall // implements IItemRenderer
 {
 	public static final RenderTeleporterRecall instance = new RenderTeleporterRecall();
 	
+	/*
 	public boolean handleRenderType(ItemStack item, ItemRenderType type)
 	{
 		return type == ItemRenderType.INVENTORY;
@@ -78,4 +71,5 @@ public class RenderTeleporterRecall implements IItemRenderer
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		GlStateManager.depthMask(true);
 	}
+	*/
 }

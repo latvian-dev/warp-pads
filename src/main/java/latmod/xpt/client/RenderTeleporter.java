@@ -1,39 +1,34 @@
 package latmod.xpt.client;
 
-import cpw.mods.fml.relauncher.*;
-import ftb.lib.client.GlStateManager;
+import ftb.lib.api.client.*;
 import latmod.lib.LMColorUtils;
 import latmod.xpt.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.client.IItemRenderer;
+import net.minecraftforge.fml.relauncher.*;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class RenderTeleporter extends TileEntitySpecialRenderer implements IItemRenderer
+public class RenderTeleporter extends TileRenderer<TileTeleporter>
 {
 	public static final RenderTeleporter instance = new RenderTeleporter();
 	
-	public void renderTileEntityAt(TileEntity te, double rx, double ry, double rz, float pt)
+	public void renderTile(TileTeleporter t, double rx, double ry, double rz, float pt, int l)
 	{
-		if(te == null || te.isInvalid() || !(te instanceof TileTeleporter)) return;
-		TileTeleporter t = (TileTeleporter) te;
-		
 		int ID = t.getType();
 		if(ID == 0) return;
 		
+		double tx = t.getPos().getX() + 0.5D;
+		double ty = t.getPos().getY() + 0.125D;
+		double tz = t.getPos().getZ() + 0.5D;
+		
 		Minecraft mc = Minecraft.getMinecraft();
 		//double dist = mc.thePlayer.getDistance(t.xCoord + 0.5D, t.yCoord + 0.125D, t.zCoord + 0.5D);
-		double dx = t.xCoord + 0.5D - RenderManager.instance.viewerPosX;
+		double dx = tx - LMFrustrumUtils.playerX;
 		dx = dx * dx;
-		double dy = t.yCoord + 0.125D - RenderManager.instance.viewerPosY;
+		double dy = ty - LMFrustrumUtils.playerY;
 		dy = dy * dy;
-		double dz = t.zCoord + 0.5D - RenderManager.instance.viewerPosZ;
+		double dz = tz - LMFrustrumUtils.playerZ;
 		dz = dz * dz;
 		double dist = Math.sqrt(dx + dy + dz);
 		if(dx <= 0D && dz <= 0D) return;
@@ -42,12 +37,10 @@ public class RenderTeleporter extends TileEntitySpecialRenderer implements IItem
 		if(alpha <= 0F) return;
 		if(alpha > 1F) alpha = 1F;
 		
-		//if(te.getWorldObj().rand.nextInt(100) > 97) return;
-		
 		double cooldown = (t.cooldown > 0) ? (1D - (t.cooldown / (double) XPTConfig.cooldownTicks())) : 1D;
 		
 		GlStateManager.pushMatrix();
-		GlStateManager.pushAttrib();
+		//GlStateManager.pushAttrib();
 		
 		float lastBrightnessX = OpenGlHelper.lastBrightnessX;
 		float lastBrightnessY = OpenGlHelper.lastBrightnessY;
@@ -56,12 +49,12 @@ public class RenderTeleporter extends TileEntitySpecialRenderer implements IItem
 		
 		GlStateManager.translate(rx + 0.5D, ry + 0.0D, rz + 0.5D);
 		GlStateManager.scale(-1F, -1F, 1F);
-		GlStateManager.rotate((float) (-Math.atan2((te.xCoord + 0.5D) - RenderManager.instance.viewerPosX, (te.zCoord + 0.5D) - RenderManager.instance.viewerPosZ) * 180D / Math.PI), 0F, 1F, 0F);
+		GlStateManager.rotate((float) (-Math.atan2(tx - LMFrustrumUtils.playerX, tz - LMFrustrumUtils.playerZ) * 180D / Math.PI), 0F, 1F, 0F);
 		
 		GlStateManager.disableLighting();
 		GlStateManager.disableCull();
 		GlStateManager.depthMask(false);
-		GlStateManager.disableTexture();
+		GlStateManager.disableTexture2D();
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
@@ -112,28 +105,28 @@ public class RenderTeleporter extends TileEntitySpecialRenderer implements IItem
 		GlStateManager.depthMask(true);
 		
 		GlStateManager.popMatrix();
-		GlStateManager.popAttrib();
+		//GlStateManager.popAttrib();
 		
-		if(alpha > 0.05F && !t.name.isEmpty())
+		if(alpha > 0.05F && !t.hasCustomName())
 		{
 			GlStateManager.pushMatrix();
-			GlStateManager.pushAttrib();
+			//GlStateManager.pushAttrib();
 			GlStateManager.translate(rx + 0.5D, ry + 1.6D, rz + 0.5D);
 			GL11.glNormal3f(0F, 1F, 0F);
 			//OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
 			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-			GlStateManager.enableTexture();
+			GlStateManager.enableTexture2D();
 			GlStateManager.enableBlend();
 			GlStateManager.disableCull();
 			GlStateManager.disableLighting();
 			float f1 = 0.02F;
 			GlStateManager.scale(-f1, -f1, f1);
 			
-			GlStateManager.rotate((float) (-Math.atan2((te.xCoord + 0.5D) - RenderManager.instance.viewerPosX, (te.zCoord + 0.5D) - RenderManager.instance.viewerPosZ) * 180D / Math.PI), 0F, 1F, 0F);
+			GlStateManager.rotate((float) (-Math.atan2(tx - LMFrustrumUtils.playerX, tz - LMFrustrumUtils.playerZ) * 180D / Math.PI), 0F, 1F, 0F);
 			
 			GlStateManager.color(1F, 1F, 1F, 1F);
-			mc.fontRenderer.drawString(t.name, -(mc.fontRenderer.getStringWidth(t.name) / 2), -8, LMColorUtils.getRGBAF(1F, 1F, 1F, alpha));
-			GlStateManager.popAttrib();
+			mc.fontRendererObj.drawString(t.getName(), -(mc.fontRendererObj.getStringWidth(t.getName()) / 2), -8, LMColorUtils.getRGBAF(1F, 1F, 1F, alpha));
+			//GlStateManager.popAttrib();
 			GlStateManager.popMatrix();
 		}
 		
@@ -162,6 +155,8 @@ public class RenderTeleporter extends TileEntitySpecialRenderer implements IItem
 		if(dist > maxDist + 3D) return 0F;
 		return (maxDist + 3D - dist) / (maxDist - 3D);
 	}
+	
+	/*
 	
 	public boolean handleRenderType(ItemStack item, ItemRenderType type)
 	{
@@ -228,4 +223,6 @@ public class RenderTeleporter extends TileEntitySpecialRenderer implements IItem
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		GlStateManager.depthMask(true);
 	}
+	
+	*/
 }

@@ -1,33 +1,28 @@
 package latmod.xpt;
 
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.*;
 import ftb.lib.LMDimUtils;
+import ftb.lib.item.ODItems;
 import net.minecraft.entity.player.*;
-import net.minecraft.init.*;
+import net.minecraft.init.Items;
 import net.minecraft.item.*;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraftforge.fml.relauncher.*;
 
 import java.util.List;
 
 public class ItemMagicalMirror extends ItemLinkCard // ItemBow
 {
-	public ItemMagicalMirror()
+	public ItemMagicalMirror(String s)
 	{
-		super();
-		setMaxStackSize(1);
+		super(s);
 	}
 	
 	public void loadRecipes()
 	{
-		if(XPTConfig.levels_for_recall.get() > 0)
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this), "GGL", "GSG", "LGG", 'L', XPT.link_card, 'G', Blocks.glass_pane, 'S', Items.nether_star));
+		getMod().recipes.addRecipe(new ItemStack(this), "GGL", "GSG", "LGG", 'L', XPTItems.link_card, 'G', ODItems.GLASS_PANE_ANY, 'S', Items.nether_star);
 	}
-	
-	public int getItemStackLimit(ItemStack is)
-	{ return 1; }
 	
 	public void onPlayerStoppedUsing(ItemStack is, World w, EntityPlayer ep, int p_77615_4_)
 	{
@@ -52,15 +47,15 @@ public class ItemMagicalMirror extends ItemLinkCard // ItemBow
 			
 			if(!XPTConfig.canConsumeLevels(ep, levels))
 			{
-				XPTChatMessages.NEED_XP_LEVEL_TP.print(ep, "" + levels);
+				XPTChatMessages.NEED_XP_LEVEL_TP.print(ep, Integer.toString(levels));
 				return is;
 			}
 			
-			int[] coords = is.stackTagCompound.getIntArray(NBT_TAG);
+			int[] coords = is.getTagCompound().getIntArray(NBT_TAG);
 			
 			World w1 = DimensionManager.getWorld(coords[3]);
 			
-			if(w1.getBlock(coords[0], coords[1], coords[2]) == XPT.teleporter_recall)
+			if(w1.getBlockState(new BlockPos(coords[0], coords[1], coords[2])).getBlock() == XPTItems.teleporter_recall)
 			{
 				XPTConfig.consumeLevels(ep, levels);
 				w.playSoundEffect(ep.posX, ep.posY + 1.5D, ep.posZ, "mob.endermen.portal", 1F, 1F);
@@ -77,7 +72,7 @@ public class ItemMagicalMirror extends ItemLinkCard // ItemBow
 	{ return 28; }
 	
 	public EnumAction getItemUseAction(ItemStack p_77661_1_)
-	{ return EnumAction.bow; }
+	{ return EnumAction.BOW; }
 	
 	public ItemStack onItemRightClick(ItemStack is, World w, EntityPlayer ep)
 	{
@@ -85,13 +80,12 @@ public class ItemMagicalMirror extends ItemLinkCard // ItemBow
 		return is;
 	}
 	
-	@SuppressWarnings("all")
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack is, EntityPlayer ep, List l, boolean b)
+	public void addInformation(ItemStack is, EntityPlayer ep, List<String> l, boolean b)
 	{
 		if(hasData(is))
 		{
-			int[] coords = is.stackTagCompound.getIntArray(NBT_TAG);
+			int[] coords = is.getTagCompound().getIntArray(NBT_TAG);
 			StringBuilder sb = new StringBuilder();
 			sb.append("Linked to: ");
 			sb.append(coords[0]);
