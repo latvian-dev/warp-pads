@@ -3,8 +3,8 @@ item.xpt:link_card.name=XPT Link Card
 item.xpt:mirror.name=Recall Mirror
 
 ## Blocks ##
-tile.xpt:teleporter.name=XP Teleporter
-tile.xpt:teleporter_recall.name=Recall XP Teleporter
+tile.xpt:teleporter.name=XPTeleporter
+tile.xpt:teleporter_recall.name=Recall XPTeleporter
 
 ## Misc ##
 itemGroup.xpt=XPTeleporters

@@ -32,12 +32,13 @@ public class XPT
 		
 		creativeTab = mod.createTab("xpt", new ItemStack(XPTItems.teleporter));
 		
-		proxy.load();
+		mod.onPostLoaded();
 	}
 	
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent e)
 	{
 		if(XPTConfig.enable_crafting.get()) mod.loadRecipes();
+		proxy.load();
 	}
 }

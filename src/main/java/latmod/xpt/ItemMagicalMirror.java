@@ -1,7 +1,7 @@
 package latmod.xpt;
 
 import ftb.lib.LMDimUtils;
-import ftb.lib.item.ODItems;
+import ftb.lib.api.item.ODItems;
 import net.minecraft.entity.player.*;
 import net.minecraft.init.Items;
 import net.minecraft.item.*;

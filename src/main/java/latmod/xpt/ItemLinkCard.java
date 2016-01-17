@@ -1,8 +1,7 @@
 package latmod.xpt;
 
 import ftb.lib.*;
-import ftb.lib.api.item.ItemLM;
-import ftb.lib.item.ODItems;
+import ftb.lib.api.item.*;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
