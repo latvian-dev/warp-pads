@@ -19,6 +19,7 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 {
 	public EntityPos linked = null;
 	public int cooldown = 0;
+	public int pcooldown = 0;
 	public String name = "";
 	private boolean created = false;
 	
@@ -38,7 +39,7 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 			}
 			else linked = null;
 		}
-		cooldown = tag.getInteger("Cooldown");
+		pcooldown = cooldown = tag.getInteger("Cooldown");
 		name = tag.getString("Name");
 	}
 	
@@ -75,7 +76,7 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 		NBTTagCompound tag = pkt.func_148857_g();
 		IntMap data = IntMap.fromIntArrayS(tag.getIntArray("D"));
 		
-		cooldown = data.get(0);
+		pcooldown = cooldown = data.get(0);
 		
 		if(data.keys.contains(1))
 		{
@@ -105,6 +106,7 @@ public class TileTeleporter extends TileEntity // TileLM // BlockXPT
 	
 	public void updateEntity()
 	{
+		pcooldown = cooldown;
 		if(cooldown < 0) cooldown = 0;
 		
 		if(cooldown > 0)

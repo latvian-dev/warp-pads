@@ -1,7 +1,7 @@
 package latmod.xpt.client;
 
 import cpw.mods.fml.relauncher.*;
-import ftb.lib.client.GlStateManager;
+import ftb.lib.api.client.GlStateManager;
 import latmod.lib.LMColorUtils;
 import latmod.xpt.*;
 import net.minecraft.client.Minecraft;
@@ -44,7 +44,7 @@ public class RenderTeleporter extends TileEntitySpecialRenderer implements IItem
 		
 		//if(te.getWorldObj().rand.nextInt(100) > 97) return;
 		
-		double cooldown = (t.cooldown > 0) ? (1D - (t.cooldown / (double) XPTConfig.cooldownTicks())) : 1D;
+		double cooldown = (t.cooldown > 0) ? (1D - ((t.cooldown + (t.cooldown - t.pcooldown) * pt) / (double) XPTConfig.cooldownTicks())) : 1D;
 		
 		GlStateManager.pushMatrix();
 		GlStateManager.pushAttrib();
@@ -61,7 +61,7 @@ public class RenderTeleporter extends TileEntitySpecialRenderer implements IItem
 		GlStateManager.disableLighting();
 		GlStateManager.disableCull();
 		GlStateManager.depthMask(false);
-		GlStateManager.disableTexture();
+		GlStateManager.disableTexture2D();
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
@@ -93,7 +93,7 @@ public class RenderTeleporter extends TileEntitySpecialRenderer implements IItem
 			double w = 1D;
 			double h = 1D / 4D;
 			double x = -w / 2D;
-			double y = -2D - h / 2D;
+			double y = -2D + h * 0.1D;
 			
 			drawRect(x, y, w, b / 2D, 0D);
 			drawRect(x, y + h - b / 2D, w, b / 2D, 0D);
@@ -122,7 +122,7 @@ public class RenderTeleporter extends TileEntitySpecialRenderer implements IItem
 			GL11.glNormal3f(0F, 1F, 0F);
 			//OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
 			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-			GlStateManager.enableTexture();
+			GlStateManager.enableTexture2D();
 			GlStateManager.enableBlend();
 			GlStateManager.disableCull();
 			GlStateManager.disableLighting();
@@ -199,7 +199,7 @@ public class RenderTeleporter extends TileEntitySpecialRenderer implements IItem
 		GlStateManager.disableLighting();
 		GlStateManager.disableCull();
 		GlStateManager.depthMask(false);
-		GlStateManager.disableTexture();
+		GlStateManager.disableTexture2D();
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);

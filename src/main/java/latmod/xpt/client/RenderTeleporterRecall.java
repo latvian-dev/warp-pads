@@ -1,7 +1,7 @@
 package latmod.xpt.client;
 
 import cpw.mods.fml.relauncher.*;
-import ftb.lib.client.GlStateManager;
+import ftb.lib.api.client.GlStateManager;
 import latmod.xpt.XPT;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
@@ -49,7 +49,7 @@ public class RenderTeleporterRecall implements IItemRenderer
 		GlStateManager.disableLighting();
 		GlStateManager.disableCull();
 		GlStateManager.depthMask(false);
-		GlStateManager.disableTexture();
+		GlStateManager.disableTexture2D();
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
