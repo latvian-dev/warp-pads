@@ -1,10 +1,14 @@
-package latmod.xpt;
+package latmod.xpt.blocks;
 
 import ftb.lib.api.item.ODItems;
 import ftb.lib.api.tile.TileLM;
+import latmod.xpt.*;
+import latmod.xpt.items.ItemLinkCard;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 
 public class BlockTeleporterRecall extends BlockTeleporterBase
@@ -20,10 +24,10 @@ public class BlockTeleporterRecall extends BlockTeleporterBase
 	
 	public void loadRecipes()
 	{
-		getMod().recipes.addRecipe(new ItemStack(this), "GIG", "ITI", 'T', XPTItems.teleporter, 'I', ODItems.GOLD, 'G', ODItems.GLOWSTONE);
+		XPT.mod.recipes.addRecipe(new ItemStack(this), "GIG", "ITI", 'T', XPTItems.teleporter, 'I', ODItems.GOLD, 'G', ODItems.GLOWSTONE);
 	}
 	
-	public boolean onBlockActivated(World w, int x, int y, int z, EntityPlayer ep, int s, float x1, float y1, float z1)
+	public boolean onBlockActivated(World w, BlockPos pos0, IBlockState state, EntityPlayer ep, EnumFacing s, float x1, float y1, float z1)
 	{
 		ItemStack is = ep.getHeldItem();
 		if(w.isRemote || is == null) return true;
@@ -36,22 +40,9 @@ public class BlockTeleporterRecall extends BlockTeleporterBase
 				return true;
 			}
 			
-			int prevLinkedX = 0;
-			int prevLinkedY = 0;
-			int prevLinkedZ = 0;
-			int prevLinkedDim = ep.dimension;
+			LinkedPos link = ItemLinkCard.getLink(is);
 			
-			if(ItemLinkCard.hasData(is))
-			{
-				int[] pos = is.getTagCompound().getIntArray(ItemLinkCard.NBT_TAG);
-				
-				prevLinkedX = pos[0];
-				prevLinkedY = pos[1];
-				prevLinkedZ = pos[2];
-				prevLinkedDim = pos[3];
-			}
-			
-			if(prevLinkedX != x || prevLinkedY != y || prevLinkedZ != z || prevLinkedDim != w.provider.getDimensionId())
+			if(link == null || !link.pos.equals(pos0) || link.dim != w.provider.getDimensionId())
 			{
 				int levels = XPTConfig.only_linking_uses_xp.get() ? XPTConfig.levels_for_recall.get() : 0;
 				
@@ -59,8 +50,8 @@ public class BlockTeleporterRecall extends BlockTeleporterBase
 				else
 				{
 					XPTConfig.consumeLevels(ep, levels);
-					is.setTagCompound(new NBTTagCompound());
-					is.getTagCompound().setIntArray(ItemLinkCard.NBT_TAG, new int[] {x, y, z, w.provider.getDimensionId()});
+					if(!is.hasTagCompound()) is.setTagCompound(new NBTTagCompound());
+					is.getTagCompound().setIntArray(ItemLinkCard.NBT_TAG, new LinkedPos(pos0, w.provider.getDimensionId()).toArray());
 					XPTChatMessages.LINK_CREATED.print(ep);
 				}
 			}

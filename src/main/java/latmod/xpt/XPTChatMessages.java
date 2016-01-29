@@ -28,6 +28,6 @@ public enum XPTChatMessages
 	
 	public void print(ICommandSender ics, Object... o)
 	{
-		ics.addChatMessage(new ChatComponentTranslation("xpt.lang." + id, o));
+		ics.addChatMessage(new ChatComponentTranslation("xpt:lang." + id, o));
 	}
 }

@@ -1,8 +1,9 @@
-package latmod.xpt;
+package latmod.xpt.items;
 
-import ftb.lib.*;
-import ftb.lib.api.item.*;
-import net.minecraft.creativetab.CreativeTabs;
+import ftb.lib.LMDimUtils;
+import ftb.lib.api.item.ODItems;
+import latmod.xpt.XPT;
+import latmod.xpt.blocks.LinkedPos;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -11,7 +12,7 @@ import net.minecraftforge.fml.relauncher.*;
 
 import java.util.List;
 
-public class ItemLinkCard extends ItemLM
+public class ItemLinkCard extends ItemXPT
 {
 	public static final String NBT_TAG = "Coords";
 	
@@ -21,27 +22,22 @@ public class ItemLinkCard extends ItemLM
 		setMaxStackSize(1);
 	}
 	
-	public LMMod getMod()
-	{ return XPT.mod; }
-	
-	@SideOnly(Side.CLIENT)
-	public CreativeTabs getCreativeTab()
-	{ return XPT.inst.creativeTab; }
-	
 	public void loadRecipes()
 	{
-		getMod().recipes.addShapelessRecipe(new ItemStack(this), ODItems.DIAMOND, ODItems.EMERALD, Items.paper, Items.ender_pearl);
+		XPT.mod.recipes.addShapelessRecipe(new ItemStack(this), ODItems.DIAMOND, ODItems.EMERALD, Items.paper, Items.ender_pearl);
 	}
 	
 	public static boolean hasData(ItemStack is)
 	{ return is.hasTagCompound() && is.getTagCompound().hasKey(NBT_TAG); }
 	
-	@SideOnly(Side.CLIENT)
-	public boolean hasEffect(ItemStack is, int pass)
-	{ return hasData(is); }
+	public static LinkedPos getLink(ItemStack is)
+	{
+		return hasData(is) ? new LinkedPos(is.getTagCompound().getIntArray(NBT_TAG)) : null;
+	}
 	
-	public int getItemStackLimit(ItemStack is)
-	{ return hasData(is) ? 1 : 16; }
+	@SideOnly(Side.CLIENT)
+	public boolean hasEffect(ItemStack is)
+	{ return hasData(is); }
 	
 	public ItemStack onItemRightClick(ItemStack is, World w, EntityPlayer ep)
 	{
@@ -57,18 +53,19 @@ public class ItemLinkCard extends ItemLM
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack is, EntityPlayer ep, List<String> l, boolean b)
 	{
-		if(hasData(is))
+		LinkedPos link = getLink(is);
+		
+		if(link != null)
 		{
-			int[] coords = is.getTagCompound().getIntArray(NBT_TAG);
 			StringBuilder sb = new StringBuilder();
 			sb.append("Linked to: ");
-			sb.append(coords[0]);
+			sb.append(link.pos.getX());
 			sb.append(", ");
-			sb.append(coords[1]);
+			sb.append(link.pos.getY());
 			sb.append(", ");
-			sb.append(coords[2]);
+			sb.append(link.pos.getZ());
 			sb.append(" @ ");
-			sb.append(LMDimUtils.getDimName(coords[3]));
+			sb.append(LMDimUtils.getDimName(link.dim));
 			l.add(sb.toString());
 		}
 	}

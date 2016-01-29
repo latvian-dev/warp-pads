@@ -1,16 +1,14 @@
-package latmod.xpt;
+package latmod.xpt.items;
 
 import ftb.lib.LMDimUtils;
 import ftb.lib.api.item.ODItems;
+import latmod.xpt.*;
 import net.minecraft.entity.player.*;
 import net.minecraft.init.Items;
 import net.minecraft.item.*;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.fml.relauncher.*;
-
-import java.util.List;
 
 public class ItemMagicalMirror extends ItemLinkCard // ItemBow
 {
@@ -21,7 +19,7 @@ public class ItemMagicalMirror extends ItemLinkCard // ItemBow
 	
 	public void loadRecipes()
 	{
-		getMod().recipes.addRecipe(new ItemStack(this), "GGL", "GSG", "LGG", 'L', XPTItems.link_card, 'G', ODItems.GLASS_PANE_ANY, 'S', Items.nether_star);
+		XPT.mod.recipes.addRecipe(new ItemStack(this), "GGL", "GSG", "LGG", 'L', XPTItems.link_card, 'G', ODItems.GLASS_PANE_ANY, 'S', Items.nether_star);
 	}
 	
 	public void onPlayerStoppedUsing(ItemStack is, World w, EntityPlayer ep, int p_77615_4_)
@@ -78,24 +76,5 @@ public class ItemMagicalMirror extends ItemLinkCard // ItemBow
 	{
 		ep.setItemInUse(is, getMaxItemUseDuration(is));
 		return is;
-	}
-	
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack is, EntityPlayer ep, List<String> l, boolean b)
-	{
-		if(hasData(is))
-		{
-			int[] coords = is.getTagCompound().getIntArray(NBT_TAG);
-			StringBuilder sb = new StringBuilder();
-			sb.append("Linked to: ");
-			sb.append(coords[0]);
-			sb.append(", ");
-			sb.append(coords[1]);
-			sb.append(", ");
-			sb.append(coords[2]);
-			sb.append(" @ ");
-			sb.append(LMDimUtils.getDimName(coords[3]));
-			l.add(sb.toString());
-		}
 	}
 }

@@ -1,19 +1,23 @@
-package latmod.xpt;
+package latmod.xpt.blocks;
 
 import ftb.lib.LMMod;
-import ftb.lib.api.block.BlockLM;
+import ftb.lib.api.block.*;
 import ftb.lib.api.tile.TileLM;
+import latmod.xpt.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.boss.*;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
 import net.minecraft.world.*;
 import net.minecraftforge.fml.relauncher.*;
 
-public class BlockTeleporterBase extends BlockLM
+import java.util.List;
+
+public abstract class BlockTeleporterBase extends BlockLM
 {
 	public BlockTeleporterBase(String s)
 	{
@@ -34,7 +38,7 @@ public class BlockTeleporterBase extends BlockLM
 	public boolean canHarvestBlock(IBlockAccess w, BlockPos pos, EntityPlayer player)
 	{ return true; }
 	
-	public void loadRecipes()
+	public void onPostLoaded()
 	{
 	}
 	
@@ -51,9 +55,20 @@ public class BlockTeleporterBase extends BlockLM
 	public boolean isOpaqueCube()
 	{ return false; }
 	
+	public boolean isFullCube()
+	{ return false; }
+	
 	public boolean canEntityDestroy(IBlockAccess world, BlockPos pos, Entity entity)
 	{ return !(entity instanceof EntityDragon || entity instanceof EntityWither); }
 	
 	public TileLM createNewTileEntity(World w, int m)
 	{ return null; }
+	
+	public Class<? extends ItemBlockLM> getItemBlock()
+	{ return ItemBlockLM.class; }
+	
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack is, EntityPlayer ep, List<String> l, boolean adv)
+	{
+	}
 }

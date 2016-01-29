@@ -18,7 +18,6 @@ public class XPT
 	@SidedProxy(clientSide = "latmod.xpt.client.XPTClient", serverSide = "latmod.xpt.XPTCommon")
 	public static XPTCommon proxy;
 	
-	@LMMod.Instance(XPT.MOD_ID)
 	public static LMMod mod;
 	
 	public CreativeTabs creativeTab;
@@ -26,7 +25,7 @@ public class XPT
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent e)
 	{
-		LMMod.init(this);
+		mod = LMMod.create(XPT.MOD_ID);
 		XPTConfig.load();
 		XPTItems.init();
 		
@@ -39,6 +38,6 @@ public class XPT
 	public void postInit(FMLPostInitializationEvent e)
 	{
 		if(XPTConfig.enable_crafting.get()) mod.loadRecipes();
-		proxy.load();
+		proxy.postInit();
 	}
 }

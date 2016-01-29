@@ -1,21 +1,21 @@
 ## Items ##
-item.xpt:link_card.name=XPT Link Card
-item.xpt:mirror.name=Recall Mirror
+xpt:item.link_card.name=XPT Link Card
+xpt:item.mirror.name=Recall Mirror
 
 ## Blocks ##
-tile.xpt:teleporter.name=XPTeleporter
-tile.xpt:teleporter_recall.name=Recall XPTeleporter
+xpt:tile.teleporter.name=XPTeleporter
+xpt:tile.teleporter_recall.name=Recall XPTeleporter
 
 ## Misc ##
 itemGroup.xpt=XPTeleporters
 
-xpt.lang.invalid_block=Invalid block!
-xpt.lang.already_linked=Already linked to this block!
-xpt.lang.tp_to=Teleported!
-xpt.lang.link_broken=Link is broken!
-xpt.lang.link_created=Link created!
-xpt.lang.need_xp_level_tp=You need XP level %s to teleport!
-xpt.lang.need_food_level_tp=You need food level %s to teleport!
-xpt.lang.need_xp_level_link=You need XP level %s to create a link!
-xpt.lang.need_food_level_link=You need food level %s to create a link!
-xpt.lang.recall_disabled=Recall feature is disabled!
+xpt:lang.invalid_block=Invalid block!
+xpt:lang.already_linked=Already linked to this block!
+xpt:lang.tp_to=Teleported!
+xpt:lang.link_broken=Link is broken!
+xpt:lang.link_created=Link created!
+xpt:lang.need_xp_level_tp=You need XP level %s to teleport!
+xpt:lang.need_food_level_tp=You need food level %s to teleport!
+xpt:lang.need_xp_level_link=You need XP level %s to create a link!
+xpt:lang.need_food_level_link=You need food level %s to create a link!
+xpt:lang.recall_disabled=Recall feature is disabled!

@@ -2,7 +2,8 @@ package latmod.xpt.client;
 
 import ftb.lib.api.client.*;
 import latmod.lib.LMColorUtils;
-import latmod.xpt.*;
+import latmod.xpt.XPTConfig;
+import latmod.xpt.blocks.TileTeleporter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraftforge.fml.relauncher.*;
@@ -114,7 +115,7 @@ public class RenderTeleporter extends TileRenderer<TileTeleporter>
 			GlStateManager.translate(rx + 0.5D, ry + 1.6D, rz + 0.5D);
 			GL11.glNormal3f(0F, 1F, 0F);
 			//OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
-			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			GlStateManager.enableTexture2D();
 			GlStateManager.enableBlend();
 			GlStateManager.disableCull();
@@ -131,6 +132,7 @@ public class RenderTeleporter extends TileRenderer<TileTeleporter>
 		}
 		
 		GlStateManager.color(1F, 1F, 1F, 1F);
+		GlStateManager.enableTexture2D();
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
 	}
 	
