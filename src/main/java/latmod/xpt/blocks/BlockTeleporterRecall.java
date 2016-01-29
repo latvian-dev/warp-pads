@@ -1,5 +1,6 @@
 package latmod.xpt.blocks;
 
+import ftb.lib.BlockDimPos;
 import ftb.lib.api.item.ODItems;
 import ftb.lib.api.tile.TileLM;
 import latmod.xpt.*;
@@ -40,9 +41,9 @@ public class BlockTeleporterRecall extends BlockTeleporterBase
 				return true;
 			}
 			
-			LinkedPos link = ItemLinkCard.getLink(is);
+			BlockDimPos link = ItemLinkCard.getLink(is);
 			
-			if(link == null || !link.pos.equals(pos0) || link.dim != w.provider.getDimensionId())
+			if(link == null || !link.equals(new BlockDimPos(pos0, w.provider.getDimensionId())))
 			{
 				int levels = XPTConfig.only_linking_uses_xp.get() ? XPTConfig.levels_for_recall.get() : 0;
 				
@@ -51,7 +52,7 @@ public class BlockTeleporterRecall extends BlockTeleporterBase
 				{
 					XPTConfig.consumeLevels(ep, levels);
 					if(!is.hasTagCompound()) is.setTagCompound(new NBTTagCompound());
-					is.getTagCompound().setIntArray(ItemLinkCard.NBT_TAG, new LinkedPos(pos0, w.provider.getDimensionId()).toArray());
+					is.getTagCompound().setIntArray(ItemLinkCard.NBT_TAG, new BlockDimPos(pos0, w.provider.getDimensionId()).toIntArray());
 					XPTChatMessages.LINK_CREATED.print(ep);
 				}
 			}

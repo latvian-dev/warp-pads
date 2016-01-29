@@ -19,7 +19,7 @@ import net.minecraftforge.fml.relauncher.*;
 public class TileTeleporter extends TileLM // TileLM // BlockXPT
 {
 	private String customName = "";
-	public LinkedPos linked = null;
+	public BlockDimPos linked = null;
 	public int cooldown = 0;
 	
 	public void readTileData(NBTTagCompound tag)
@@ -28,14 +28,14 @@ public class TileTeleporter extends TileLM // TileLM // BlockXPT
 		cooldown = tag.getInteger("Cooldown");
 		int[] ai = tag.getIntArray("Link");
 		if(ai.length == 0) linked = null;
-		else linked = new LinkedPos(ai);
+		else linked = new BlockDimPos(ai);
 	}
 	
 	public void writeTileData(NBTTagCompound tag)
 	{
 		super.writeTileData(tag);
 		tag.setInteger("Cooldown", cooldown);
-		if(linked != null) tag.setIntArray("Link", linked.toArray());
+		if(linked != null) tag.setIntArray("Link", linked.toIntArray());
 	}
 	
 	public void readTileClientData(NBTTagCompound tag)
@@ -45,7 +45,7 @@ public class TileTeleporter extends TileLM // TileLM // BlockXPT
 		security.readFromNBT(tag, "S");
 		int[] ai = tag.getIntArray("L");
 		if(ai.length == 0) linked = null;
-		else linked = new LinkedPos(ai);
+		else linked = new BlockDimPos(ai);
 	}
 	
 	public void writeTileClientData(NBTTagCompound tag)
@@ -53,7 +53,7 @@ public class TileTeleporter extends TileLM // TileLM // BlockXPT
 		if(!customName.isEmpty()) tag.setString("N", customName);
 		if(cooldown > 0) tag.setInteger("C", cooldown);
 		security.writeToNBT(tag, "S");
-		if(linked != null) tag.setIntArray("L", linked.toArray());
+		if(linked != null) tag.setIntArray("L", linked.toIntArray());
 	}
 	
 	public void setName(String s)
@@ -104,7 +104,7 @@ public class TileTeleporter extends TileLM // TileLM // BlockXPT
 				
 				int[] pos = is.getTagCompound().getIntArray(ItemLinkCard.NBT_TAG);
 				
-				TileTeleporter t = getTileXPT(new LinkedPos(pos));
+				TileTeleporter t = getTileXPT(new BlockDimPos(pos));
 				
 				if(t != null)
 				{
@@ -164,7 +164,7 @@ public class TileTeleporter extends TileLM // TileLM // BlockXPT
 			t0.markDirty();
 		}
 		
-		linked = new LinkedPos(t.getPos(), t.getDimension());
+		linked = new BlockDimPos(t.getPos(), t.getDimension());
 		
 		if(updateLink)
 		{
@@ -176,15 +176,15 @@ public class TileTeleporter extends TileLM // TileLM // BlockXPT
 		return XPTChatMessages.LINK_CREATED;
 	}
 	
-	public static TileTeleporter getTileXPT(LinkedPos link)
+	public static TileTeleporter getTileXPT(BlockDimPos link)
 	{
-		if(link == null || link.pos.getY() < 0 || link.pos.getY() >= 256) return null;
+		if(link == null || !link.isValid()) return null;
 		
 		World w = LMDimUtils.getWorld(link.dim);
 		
 		if(w != null)
 		{
-			TileEntity te = w.getTileEntity(link.pos);
+			TileEntity te = w.getTileEntity(link.toBlockPos());
 			
 			if(te != null && te instanceof TileTeleporter) return (TileTeleporter) te;
 		}
@@ -218,7 +218,7 @@ public class TileTeleporter extends TileLM // TileLM // BlockXPT
 				
 				FTBLib.playSoundEffect(worldObj, getPos().up(), "mob.endermen.portal", 1F, 1F);
 				
-				if(LMDimUtils.teleportPlayer(ep, linked.entityPos()))
+				if(LMDimUtils.teleportPlayer(ep, linked))
 				{
 					XPTConfig.consumeLevels(ep, levels);
 					cooldown = t.cooldown = XPTConfig.cooldownTicks();
@@ -226,7 +226,7 @@ public class TileTeleporter extends TileLM // TileLM // BlockXPT
 					markDirty();
 					t.markDirty();
 					
-					FTBLib.playSoundEffect(worldObj, linked.pos.up(), "mob.endermen.portal", 1F, 1F);
+					FTBLib.playSoundEffect(worldObj, linked.toBlockPos().up(), "mob.endermen.portal", 1F, 1F);
 				}
 			}
 			else if(XPTConfig.unlink_broken.get())
