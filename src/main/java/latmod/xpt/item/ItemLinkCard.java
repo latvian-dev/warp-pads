@@ -1,29 +1,37 @@
-package latmod.xpt;
+package latmod.xpt.item;
 
-import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.*;
-import ftb.lib.LMDimUtils;
+import ftb.lib.*;
+import ftb.lib.api.item.*;
+import latmod.xpt.XPT;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
-import net.minecraft.item.*;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 import java.util.List;
 
-public class ItemLinkCard extends Item
+public class ItemLinkCard extends ItemLM
 {
 	public static final String NBT_TAG = "Coords";
 	
-	public ItemLinkCard()
+	public ItemLinkCard(String s)
 	{
-		setMaxStackSize(16);
+		super(s);
+		setMaxStackSize(1);
 	}
+	
+	public LMMod getMod()
+	{ return XPT.mod; }
+	
+	@SideOnly(Side.CLIENT)
+	public CreativeTabs getCreativeTab()
+	{ return XPT.creativeTab; }
 	
 	public void loadRecipes()
 	{
-		if(XPTConfig.enable_crafting.get())
-			GameRegistry.addRecipe(new ShapelessOreRecipe(this, "gemDiamond", "gemEmerald", Items.paper, Items.ender_pearl));
+		XPT.mod.recipes.addShapelessRecipe(new ItemStack(this), ODItems.DIAMOND, ODItems.EMERALD, Items.paper, Items.ender_pearl);
 	}
 	
 	public static boolean hasData(ItemStack is)
@@ -32,9 +40,6 @@ public class ItemLinkCard extends Item
 	@SideOnly(Side.CLIENT)
 	public boolean hasEffect(ItemStack is, int pass)
 	{ return hasData(is); }
-	
-	public int getItemStackLimit(ItemStack is)
-	{ return hasData(is) ? 1 : 16; }
 	
 	public ItemStack onItemRightClick(ItemStack is, World w, EntityPlayer ep)
 	{

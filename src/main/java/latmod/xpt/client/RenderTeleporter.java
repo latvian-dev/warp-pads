@@ -1,9 +1,10 @@
 package latmod.xpt.client;
 
 import cpw.mods.fml.relauncher.*;
-import ftb.lib.api.client.GlStateManager;
+import ftb.lib.api.client.*;
 import latmod.lib.LMColorUtils;
 import latmod.xpt.*;
+import latmod.xpt.block.TileTeleporter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -29,11 +30,11 @@ public class RenderTeleporter extends TileEntitySpecialRenderer implements IItem
 		
 		Minecraft mc = Minecraft.getMinecraft();
 		//double dist = mc.thePlayer.getDistance(t.xCoord + 0.5D, t.yCoord + 0.125D, t.zCoord + 0.5D);
-		double dx = t.xCoord + 0.5D - RenderManager.instance.viewerPosX;
+		double dx = t.xCoord + 0.5D - LMFrustrumUtils.playerX;
 		dx = dx * dx;
-		double dy = t.yCoord + 0.125D - RenderManager.instance.viewerPosY;
+		double dy = t.yCoord + 0.125D - LMFrustrumUtils.playerY;
 		dy = dy * dy;
-		double dz = t.zCoord + 0.5D - RenderManager.instance.viewerPosZ;
+		double dz = t.zCoord + 0.5D - LMFrustrumUtils.playerZ;
 		dz = dz * dz;
 		double dist = Math.sqrt(dx + dy + dz);
 		if(dx <= 0D && dz <= 0D) return;
@@ -49,8 +50,7 @@ public class RenderTeleporter extends TileEntitySpecialRenderer implements IItem
 		GlStateManager.pushMatrix();
 		GlStateManager.pushAttrib();
 		
-		float lastBrightnessX = OpenGlHelper.lastBrightnessX;
-		float lastBrightnessY = OpenGlHelper.lastBrightnessY;
+		FTBLibClient.pushMaxBrightness();
 		
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
 		
@@ -138,7 +138,8 @@ public class RenderTeleporter extends TileEntitySpecialRenderer implements IItem
 		}
 		
 		GlStateManager.color(1F, 1F, 1F, 1F);
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
+		FTBLibClient.popMaxBrightness();
+		GlStateManager.enableTexture2D();
 	}
 	
 	private void drawQuad(double x1, double y1, double x2, double y2, double z)
@@ -182,9 +183,9 @@ public class RenderTeleporter extends TileEntitySpecialRenderer implements IItem
 		
 		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
 		
-		XPT.teleporter.setBlockBoundsForItemRender();
-		rb.setRenderBoundsFromBlock(XPT.teleporter);
-		rb.renderBlockAsItem(XPT.teleporter, 0, 1F);
+		XPTItems.teleporter.setBlockBoundsForItemRender();
+		rb.setRenderBoundsFromBlock(XPTItems.teleporter);
+		rb.renderBlockAsItem(XPTItems.teleporter, 0, 1F);
 		
 		float lastBrightnessX = OpenGlHelper.lastBrightnessX;
 		float lastBrightnessY = OpenGlHelper.lastBrightnessY;

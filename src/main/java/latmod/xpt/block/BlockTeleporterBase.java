@@ -1,27 +1,39 @@
-package latmod.xpt;
+package latmod.xpt.block;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.*;
-import net.minecraft.block.BlockContainer;
+import ftb.lib.LMMod;
+import ftb.lib.api.block.BlockLM;
+import ftb.lib.api.tile.TileLM;
+import latmod.xpt.*;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.boss.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.*;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
-public class BlockTeleporterBase extends BlockContainer
+public class BlockTeleporterBase extends BlockLM
 {
-	public BlockTeleporterBase()
+	public BlockTeleporterBase(String s)
 	{
-		super(Material.iron);
+		super(s, Material.iron);
 		setBlockBounds(0F, 0F, 0F, 1F, 1F / 8F, 1F);
 		isBlockContainer = false;
+		setHardness(1F);
+		setResistance(100000F);
+		setCreativeTab(XPT.creativeTab);
 	}
+	
+	public LMMod getMod()
+	{ return XPT.mod; }
+	
+	@SideOnly(Side.CLIENT)
+	public CreativeTabs getCreativeTabToDisplayOn()
+	{ return XPT.creativeTab; }
 	
 	public boolean canHarvestBlock(EntityPlayer player, int meta)
 	{ return true; }
@@ -43,14 +55,9 @@ public class BlockTeleporterBase extends BlockContainer
 		return super.getCollisionBoundingBoxFromPool(w, x, y, z);
 	}
 	
-	public boolean onBlockActivated(World w, int x, int y, int z, EntityPlayer ep, int s, float x1, float y1, float z1)
-	{
-		return true;
-	}
-	
 	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister ir)
-	{ blockIcon = ir.registerIcon("xpt:" + textureName); }
+	protected String getTextureName()
+	{ return getMod().assets + blockName; }
 	
 	public boolean isOpaqueCube()
 	{ return false; }
@@ -64,6 +71,6 @@ public class BlockTeleporterBase extends BlockContainer
 	public boolean hasTileEntity(int metadata)
 	{ return isBlockContainer; }
 	
-	public TileEntity createNewTileEntity(World w, int m)
+	public TileLM createNewTileEntity(World w, int m)
 	{ return null; }
 }

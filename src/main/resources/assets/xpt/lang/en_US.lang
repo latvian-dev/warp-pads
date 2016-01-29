@@ -1,13 +1,13 @@
 ## Items ##
-item.xpt:link_card.name=XPT Link Card
-item.xpt:mirror.name=Recall Mirror
+xpt:item.link_card.name=XPT Link Card
+xpt:item.mirror.name=Recall Mirror
 
 ## Blocks ##
-tile.xpt:teleporter.name=XP Teleporter
-tile.xpt:teleporter_recall.name=Recall XP Teleporter
+xpt:tile.teleporter.name=XP Teleporter
+xpt:tile.teleporter_recall.name=Recall XP Teleporter
 
 ## Misc ##
-itemGroup.xpt=XPTeleporters
+itemGroup.xpt:tab=XPTeleporters
 
 xpt.lang.invalid_block=Invalid block!
 xpt.lang.already_linked=Already linked to this block!

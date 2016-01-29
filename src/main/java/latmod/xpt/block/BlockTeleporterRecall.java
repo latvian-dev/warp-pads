@@ -1,25 +1,23 @@
-package latmod.xpt;
+package latmod.xpt.block;
 
-import cpw.mods.fml.common.registry.GameRegistry;
+import ftb.lib.api.item.ODItems;
+import latmod.xpt.*;
+import latmod.xpt.item.ItemLinkCard;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import net.minecraftforge.oredict.ShapedOreRecipe;
 
 public class BlockTeleporterRecall extends BlockTeleporterBase
 {
-	public BlockTeleporterRecall()
+	public BlockTeleporterRecall(String s)
 	{
-		super();
-		textureName = "teleporter_recall";
+		super(s);
 	}
 	
 	public void loadRecipes()
 	{
-		if(XPTConfig.levels_for_recall.get() > 0)
-			GameRegistry.addRecipe(new ShapedOreRecipe(this, "IEI", "IPI", 'E', "blockEmerald", 'I', "ingotGold", 'P', Items.ender_eye));
+		XPT.mod.recipes.addRecipe(new ItemStack(this), "GIG", "ITI", 'T', XPTItems.teleporter, 'I', ODItems.GOLD, 'G', ODItems.GLOWSTONE);
 	}
 	
 	public boolean onBlockActivated(World w, int x, int y, int z, EntityPlayer ep, int s, float x1, float y1, float z1)
@@ -27,7 +25,7 @@ public class BlockTeleporterRecall extends BlockTeleporterBase
 		ItemStack is = ep.getHeldItem();
 		if(w.isRemote || is == null) return true;
 		
-		if(is.getItem() == XPT.mirror)
+		if(is.getItem() == XPTItems.mirror)
 		{
 			if(XPTConfig.levels_for_recall.get() == -1)
 			{

@@ -1,33 +1,28 @@
-package latmod.xpt;
+package latmod.xpt.item;
 
-import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.LMDimUtils;
+import ftb.lib.api.item.ODItems;
+import latmod.xpt.*;
 import net.minecraft.entity.player.*;
-import net.minecraft.init.*;
+import net.minecraft.init.Items;
 import net.minecraft.item.*;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import java.util.List;
 
 public class ItemMagicalMirror extends ItemLinkCard // ItemBow
 {
-	public ItemMagicalMirror()
+	public ItemMagicalMirror(String s)
 	{
-		super();
-		setMaxStackSize(1);
+		super(s);
 	}
 	
 	public void loadRecipes()
 	{
-		if(XPTConfig.levels_for_recall.get() > 0)
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(this), "GGL", "GSG", "LGG", 'L', XPT.link_card, 'G', Blocks.glass_pane, 'S', Items.nether_star));
+		XPT.mod.recipes.addRecipe(new ItemStack(this), "GGL", "GSG", "LGG", 'L', XPTItems.link_card, 'G', ODItems.GLASS_PANE_ANY, 'S', Items.nether_star);
 	}
-	
-	public int getItemStackLimit(ItemStack is)
-	{ return 1; }
 	
 	public void onPlayerStoppedUsing(ItemStack is, World w, EntityPlayer ep, int p_77615_4_)
 	{
@@ -60,11 +55,11 @@ public class ItemMagicalMirror extends ItemLinkCard // ItemBow
 			
 			World w1 = DimensionManager.getWorld(coords[3]);
 			
-			if(w1.getBlock(coords[0], coords[1], coords[2]) == XPT.teleporter_recall)
+			if(w1.getBlock(coords[0], coords[1], coords[2]) == XPTItems.teleporter_recall)
 			{
 				XPTConfig.consumeLevels(ep, levels);
 				w.playSoundEffect(ep.posX, ep.posY + 1.5D, ep.posZ, "mob.endermen.portal", 1F, 1F);
-				LMDimUtils.teleportPlayer((EntityPlayerMP) ep, coords[0] + 0.5D, coords[1] + 0.2D, coords[2] + 0.5D, coords[3]);
+				LMDimUtils.teleportPlayer(ep, coords[0] + 0.5D, coords[1] + 0.2D, coords[2] + 0.5D, coords[3]);
 				w.playSoundEffect(coords[0] + 0.5D, coords[1] + 1.5D, coords[2] + 0.5D, "mob.endermen.portal", 1F, 1F);
 			}
 			else XPTChatMessages.LINK_BROKEN.print(ep);

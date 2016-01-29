@@ -2,7 +2,7 @@ package latmod.xpt.client;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.client.GlStateManager;
-import latmod.xpt.XPT;
+import latmod.xpt.XPTItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -31,9 +31,9 @@ public class RenderTeleporterRecall implements IItemRenderer
 		
 		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
 		
-		XPT.teleporter_recall.setBlockBoundsForItemRender();
-		rb.setRenderBoundsFromBlock(XPT.teleporter_recall);
-		rb.renderBlockAsItem(XPT.teleporter_recall, 0, 1F);
+		XPTItems.teleporter_recall.setBlockBoundsForItemRender();
+		rb.setRenderBoundsFromBlock(XPTItems.teleporter_recall);
+		rb.renderBlockAsItem(XPTItems.teleporter_recall, 0, 1F);
 		
 		float lastBrightnessX = OpenGlHelper.lastBrightnessX;
 		float lastBrightnessY = OpenGlHelper.lastBrightnessY;
