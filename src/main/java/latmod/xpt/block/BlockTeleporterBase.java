@@ -55,10 +55,6 @@ public class BlockTeleporterBase extends BlockLM
 		return super.getCollisionBoundingBoxFromPool(w, x, y, z);
 	}
 	
-	@SideOnly(Side.CLIENT)
-	protected String getTextureName()
-	{ return getMod().assets + blockName; }
-	
 	public boolean isOpaqueCube()
 	{ return false; }
 	
