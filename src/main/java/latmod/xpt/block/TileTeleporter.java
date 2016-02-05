@@ -3,7 +3,7 @@ package latmod.xpt.block;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.*;
 import ftb.lib.api.tile.TileLM;
-import latmod.lib.IntMap;
+import latmod.lib.*;
 import latmod.xpt.*;
 import latmod.xpt.item.ItemLinkCard;
 import net.minecraft.entity.item.EntityItem;
@@ -15,6 +15,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
+
+import java.util.HashMap;
 
 public class TileTeleporter extends TileLM
 {
@@ -49,20 +51,20 @@ public class TileTeleporter extends TileLM
 	
 	public void readTileClientData(NBTTagCompound tag)
 	{
-		IntMap data = IntMap.fromIntArrayS(tag.getIntArray("D"));
+		HashMap<Integer, Integer> data = new HashMap<>();
+		LMMapUtils.fromIntArray(data, tag.getIntArray("D"));
 		
-		pcooldown = cooldown = data.get(0);
+		pcooldown = cooldown = Converter.nonNull(data.get(0));
 		
-		if(data.keys.contains(1)) linked = new BlockDimPos(data.get(1), data.get(2), data.get(3), data.get(4));
+		if(data.containsKey(1)) linked = new BlockDimPos(data.get(1), data.get(2), data.get(3), data.get(4));
 		else linked = null;
 		
 		name = tag.getString("N");
-		worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
 	}
 	
 	public void writeTileClientData(NBTTagCompound tag)
 	{
-		IntMap data = new IntMap();
+		HashMap<Integer, Integer> data = new HashMap<>();
 		
 		data.put(0, cooldown);
 		
@@ -74,7 +76,7 @@ public class TileTeleporter extends TileLM
 			data.put(4, linked.dim);
 		}
 		
-		tag.setIntArray("D", data.toIntArray());
+		tag.setIntArray("D", LMMapUtils.toIntArray(data));
 		if(!name.isEmpty()) tag.setString("N", name);
 	}
 	
