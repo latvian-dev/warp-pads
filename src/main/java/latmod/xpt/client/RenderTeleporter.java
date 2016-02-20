@@ -16,10 +16,8 @@ import net.minecraftforge.client.IItemRenderer;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class RenderTeleporter extends TileEntitySpecialRenderer implements IItemRenderer
+public class RenderTeleporter extends TileEntitySpecialRenderer
 {
-	public static final RenderTeleporter instance = new RenderTeleporter();
-	
 	public void renderTileEntityAt(TileEntity te, double rx, double ry, double rz, float pt)
 	{
 		if(te == null || te.isInvalid() || !(te instanceof TileTeleporter)) return;
@@ -114,27 +112,32 @@ public class RenderTeleporter extends TileEntitySpecialRenderer implements IItem
 		GlStateManager.popMatrix();
 		GlStateManager.popAttrib();
 		
-		if(alpha > 0.05F && !t.name.isEmpty())
+		if(alpha > 0.05F)
 		{
-			GlStateManager.pushMatrix();
-			GlStateManager.pushAttrib();
-			GlStateManager.translate(rx + 0.5D, ry + 1.6D, rz + 0.5D);
-			GL11.glNormal3f(0F, 1F, 0F);
-			//OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
-			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-			GlStateManager.enableTexture2D();
-			GlStateManager.enableBlend();
-			GlStateManager.disableCull();
-			GlStateManager.disableLighting();
-			float f1 = 0.02F;
-			GlStateManager.scale(-f1, -f1, f1);
+			String name = t.getName();
 			
-			GlStateManager.rotate((float) (-Math.atan2((te.xCoord + 0.5D) - RenderManager.instance.viewerPosX, (te.zCoord + 0.5D) - RenderManager.instance.viewerPosZ) * 180D / Math.PI), 0F, 1F, 0F);
-			
-			GlStateManager.color(1F, 1F, 1F, 1F);
-			mc.fontRenderer.drawString(t.name, -(mc.fontRenderer.getStringWidth(t.name) / 2), -8, LMColorUtils.getRGBAF(1F, 1F, 1F, alpha));
-			GlStateManager.popAttrib();
-			GlStateManager.popMatrix();
+			if(!name.isEmpty())
+			{
+				GlStateManager.pushMatrix();
+				GlStateManager.pushAttrib();
+				GlStateManager.translate(rx + 0.5D, ry + 1.6D, rz + 0.5D);
+				GL11.glNormal3f(0F, 1F, 0F);
+				//OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
+				GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+				GlStateManager.enableTexture2D();
+				GlStateManager.enableBlend();
+				GlStateManager.disableCull();
+				GlStateManager.disableLighting();
+				float f1 = 0.02F;
+				GlStateManager.scale(-f1, -f1, f1);
+				
+				GlStateManager.rotate((float) (-Math.atan2((te.xCoord + 0.5D) - RenderManager.instance.viewerPosX, (te.zCoord + 0.5D) - RenderManager.instance.viewerPosZ) * 180D / Math.PI), 0F, 1F, 0F);
+				
+				GlStateManager.color(1F, 1F, 1F, 1F);
+				mc.fontRenderer.drawString(name, -(mc.fontRenderer.getStringWidth(name) / 2), -8, LMColorUtils.getRGBAF(1F, 1F, 1F, alpha));
+				GlStateManager.popAttrib();
+				GlStateManager.popMatrix();
+			}
 		}
 		
 		GlStateManager.color(1F, 1F, 1F, 1F);
@@ -144,12 +147,13 @@ public class RenderTeleporter extends TileEntitySpecialRenderer implements IItem
 	
 	private void drawQuad(double x1, double y1, double x2, double y2, double z)
 	{
-		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glVertex3d(x1, y1, z);
-		GL11.glVertex3d(x2, y1, z);
-		GL11.glVertex3d(x2, y2, z);
-		GL11.glVertex3d(x1, y2, z);
-		GL11.glEnd();
+		Tessellator tessellator = Tessellator.instance;
+		tessellator.startDrawingQuads();
+		tessellator.addVertex(x1, y1, z);
+		tessellator.addVertex(x2, y1, z);
+		tessellator.addVertex(x2, y2, z);
+		tessellator.addVertex(x1, y2, z);
+		tessellator.draw();
 	}
 	
 	private void drawRect(double x, double y, double w, double h, double z)
@@ -164,69 +168,72 @@ public class RenderTeleporter extends TileEntitySpecialRenderer implements IItem
 		return (maxDist + 3D - dist) / (maxDist - 3D);
 	}
 	
-	public boolean handleRenderType(ItemStack item, ItemRenderType type)
+	public static class Item implements IItemRenderer
 	{
-		return type == ItemRenderType.INVENTORY;
-	}
-	
-	public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper)
-	{
-		return true;
-	}
-	
-	public void renderItem(ItemRenderType type, ItemStack item, Object... data)
-	{
-		GlStateManager.pushMatrix();
-		GlStateManager.pushAttrib();
+		public boolean handleRenderType(ItemStack item, ItemRenderType type)
+		{
+			return type == ItemRenderType.INVENTORY;
+		}
 		
-		RenderBlocks rb = (RenderBlocks) data[0];
+		public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper)
+		{
+			return true;
+		}
 		
-		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
-		
-		XPTItems.teleporter.setBlockBoundsForItemRender();
-		rb.setRenderBoundsFromBlock(XPTItems.teleporter);
-		rb.renderBlockAsItem(XPTItems.teleporter, 0, 1F);
-		
-		float lastBrightnessX = OpenGlHelper.lastBrightnessX;
-		float lastBrightnessY = OpenGlHelper.lastBrightnessY;
-		
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
-		
-		GlStateManager.translate(0F, -0.6F, 0F);
-		float sc = 1F;
-		GlStateManager.scale(-sc, -sc, sc);
-		GlStateManager.rotate(45F, 0F, 1F, 0F);
-		
-		GlStateManager.disableLighting();
-		GlStateManager.disableCull();
-		GlStateManager.depthMask(false);
-		GlStateManager.disableTexture2D();
-		GlStateManager.color(1F, 1F, 1F, 1F);
-		GlStateManager.enableBlend();
-		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-		GlStateManager.disableAlpha();
-		GlStateManager.shadeModel(GL11.GL_SMOOTH);
-		
-		GlStateManager.color(0F, 1F, 1F, 0F);
-		GL11.glBegin(GL11.GL_QUADS);
-		float s = 0.75F;
-		float s1 = 0.12F;
-		GL11.glVertex3d(-s, -1.5F, 0F);
-		GL11.glVertex3d(s, -1.5F, 0F);
-		
-		GlStateManager.color(0.2F, 0.4F, 1F, 1F);
-		
-		GL11.glVertex3f(s1, -0.125F, 0F);
-		GL11.glVertex3f(-s1, -0.125F, 0F);
-		GL11.glEnd();
-		
-		GlStateManager.popAttrib();
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
-		GlStateManager.popMatrix();
-		
-		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		GlStateManager.shadeModel(GL11.GL_FLAT);
-		GlStateManager.color(1F, 1F, 1F, 1F);
-		GlStateManager.depthMask(true);
+		public void renderItem(ItemRenderType type, ItemStack item, Object... data)
+		{
+			GlStateManager.pushMatrix();
+			GlStateManager.pushAttrib();
+			
+			RenderBlocks rb = (RenderBlocks) data[0];
+			
+			Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
+			
+			XPTItems.teleporter.setBlockBoundsForItemRender();
+			rb.setRenderBoundsFromBlock(XPTItems.teleporter);
+			rb.renderBlockAsItem(XPTItems.teleporter, 0, 1F);
+			
+			float lastBrightnessX = OpenGlHelper.lastBrightnessX;
+			float lastBrightnessY = OpenGlHelper.lastBrightnessY;
+			
+			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
+			
+			GlStateManager.translate(0F, -0.6F, 0F);
+			float sc = 1F;
+			GlStateManager.scale(-sc, -sc, sc);
+			GlStateManager.rotate(45F, 0F, 1F, 0F);
+			
+			GlStateManager.disableLighting();
+			GlStateManager.disableCull();
+			GlStateManager.depthMask(false);
+			GlStateManager.disableTexture2D();
+			GlStateManager.color(1F, 1F, 1F, 1F);
+			GlStateManager.enableBlend();
+			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+			GlStateManager.disableAlpha();
+			GlStateManager.shadeModel(GL11.GL_SMOOTH);
+			
+			GlStateManager.color(0F, 1F, 1F, 0F);
+			GL11.glBegin(GL11.GL_QUADS);
+			float s = 0.75F;
+			float s1 = 0.12F;
+			GL11.glVertex3d(-s, -1.5F, 0F);
+			GL11.glVertex3d(s, -1.5F, 0F);
+			
+			GlStateManager.color(0.2F, 0.4F, 1F, 1F);
+			
+			GL11.glVertex3f(s1, -0.125F, 0F);
+			GL11.glVertex3f(-s1, -0.125F, 0F);
+			GL11.glEnd();
+			
+			GlStateManager.popAttrib();
+			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
+			GlStateManager.popMatrix();
+			
+			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			GlStateManager.shadeModel(GL11.GL_FLAT);
+			GlStateManager.color(1F, 1F, 1F, 1F);
+			GlStateManager.depthMask(true);
+		}
 	}
 }

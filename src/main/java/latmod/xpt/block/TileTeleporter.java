@@ -3,7 +3,6 @@ package latmod.xpt.block;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.*;
 import ftb.lib.api.tile.TileLM;
-import latmod.lib.*;
 import latmod.xpt.*;
 import latmod.xpt.item.ItemLinkCard;
 import net.minecraft.entity.item.EntityItem;
@@ -16,68 +15,41 @@ import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 
-import java.util.HashMap;
-
 public class TileTeleporter extends TileLM
 {
 	public BlockDimPos linked = null;
 	public int cooldown = 0;
 	public int pcooldown = 0;
-	public String name = "";
+	private String name;
 	
 	public void readTileData(NBTTagCompound tag)
 	{
 		super.readTileData(tag);
-		
-		if(tag.hasKey("Link") && tag.hasKey("Timer"))
-		{
-			BlockDimPos link = new BlockDimPos(tag.getIntArray("Link"));
-			cooldown = (tag.func_150299_b("Timer") == LMNBTUtils.INT) ? tag.getInteger("Timer") : tag.getIntArray("Timer")[0];
-			
-			if(link.isValid()) linked = link;
-			else linked = null;
-		}
+		linked = tag.hasKey("Link") ? new BlockDimPos(tag.getIntArray("Link")) : null;
 		pcooldown = cooldown = tag.getInteger("Cooldown");
-		
-		if(tag.hasKey("Name")) name = tag.getString("Name");
+		name = tag.hasKey("Name") ? tag.getString("Name") : null;
 	}
 	
 	public void writeTileData(NBTTagCompound tag)
 	{
 		super.writeTileData(tag);
-		tag.setIntArray("Link", (linked != null) ? linked.toIntArray() : new int[0]);
-		tag.setInteger("Timer", cooldown);
+		if(linked != null) tag.setIntArray("Link", linked.toIntArray());
+		if(cooldown > 0) tag.setInteger("Cooldown", cooldown);
+		if(name != null) tag.setString("Name", name);
 	}
 	
 	public void readTileClientData(NBTTagCompound tag)
 	{
-		HashMap<Integer, Integer> data = new HashMap<>();
-		LMMapUtils.fromIntArray(data, tag.getIntArray("D"));
-		
-		pcooldown = cooldown = Converter.nonNull(data.get(0));
-		
-		if(data.containsKey(1)) linked = new BlockDimPos(data.get(1), data.get(2), data.get(3), data.get(4));
-		else linked = null;
-		
-		name = tag.getString("N");
+		linked = tag.hasKey("L") ? new BlockDimPos(tag.getIntArray("L")) : null;
+		pcooldown = cooldown = tag.getInteger("C");
+		name = tag.hasKey("N") ? tag.getString("N") : null;
 	}
 	
 	public void writeTileClientData(NBTTagCompound tag)
 	{
-		HashMap<Integer, Integer> data = new HashMap<>();
-		
-		data.put(0, cooldown);
-		
-		if(linked != null)
-		{
-			data.put(1, linked.x);
-			data.put(2, linked.y);
-			data.put(3, linked.z);
-			data.put(4, linked.dim);
-		}
-		
-		tag.setIntArray("D", LMMapUtils.toIntArray(data));
-		if(!name.isEmpty()) tag.setString("N", name);
+		if(linked != null) tag.setIntArray("L", linked.toIntArray());
+		if(cooldown > 0) tag.setInteger("C", cooldown);
+		if(name != null) tag.setString("N", name);
 	}
 	
 	public int getType()
@@ -85,9 +57,6 @@ public class TileTeleporter extends TileLM
 		if(worldObj != null && linked != null) return (linked.dim == getDimension()) ? 1 : 2;
 		return 0;
 	}
-	
-	public void markDirty()
-	{ worldObj.markBlockForUpdate(xCoord, yCoord, zCoord); }
 	
 	public void onUpdate()
 	{
@@ -110,7 +79,7 @@ public class TileTeleporter extends TileLM
 		{
 			if(!is.hasDisplayName()) return true;
 			
-			name = is.getDisplayName();
+			setName(is.getDisplayName());
 			
 			if(!ep.capabilities.isCreativeMode) is.stackSize--;
 			
@@ -172,9 +141,6 @@ public class TileTeleporter extends TileLM
 		
 		return true;
 	}
-	
-	public ChunkCoordinates getPos()
-	{ return new ChunkCoordinates(xCoord, yCoord, zCoord); }
 	
 	public XPTChatMessages createLink(TileTeleporter t, boolean updateLink)
 	{
@@ -271,7 +237,10 @@ public class TileTeleporter extends TileLM
 	
 	public void onPlacedBy(EntityPlayer el, ItemStack is)
 	{
-		if(is.hasDisplayName()) name = is.getDisplayName();
+		if(is.hasDisplayName())
+		{
+			setName(is.getDisplayName());
+		}
 		markDirty();
 	}
 	
@@ -290,4 +259,13 @@ public class TileTeleporter extends TileLM
 	{
 		super.onBroken();
 	}
+	
+	public void setName(String s)
+	{
+		if(s == null || s.isEmpty()) name = null;
+		else name = s;
+	}
+	
+	public String getName()
+	{ return name == null ? "" : name; }
 }

@@ -11,9 +11,9 @@ import net.minecraftforge.client.IItemRenderer;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class RenderTeleporterRecall implements IItemRenderer
+public class RenderTeleporterItemRecall implements IItemRenderer
 {
-	public static final RenderTeleporterRecall instance = new RenderTeleporterRecall();
+	public static final RenderTeleporterItemRecall instance = new RenderTeleporterItemRecall();
 	
 	public boolean handleRenderType(ItemStack item, ItemRenderType type)
 	{

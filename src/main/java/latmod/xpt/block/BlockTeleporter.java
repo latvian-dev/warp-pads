@@ -1,14 +1,15 @@
 package latmod.xpt.block;
 
-import ftb.lib.api.tile.TileLM;
 import latmod.xpt.XPT;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
-public class BlockTeleporter extends BlockTeleporterBase
+public class BlockTeleporter extends BlockTeleporterBase implements ITileEntityProvider
 {
 	public BlockTeleporter(String s)
 	{
@@ -17,7 +18,7 @@ public class BlockTeleporter extends BlockTeleporterBase
 		textureName = "teleporter";
 	}
 	
-	public TileLM createNewTileEntity(World w, int m)
+	public TileEntity createNewTileEntity(World w, int m)
 	{ return new TileTeleporter(); }
 	
 	public void onPostLoaded()

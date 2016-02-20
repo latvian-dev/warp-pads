@@ -4,7 +4,6 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.LMMod;
 import ftb.lib.api.block.BlockLM;
-import ftb.lib.api.tile.TileLM;
 import latmod.xpt.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -22,7 +21,6 @@ public class BlockTeleporterBase extends BlockLM
 	{
 		super(s, Material.iron);
 		setBlockBounds(0F, 0F, 0F, 1F, 1F / 8F, 1F);
-		isBlockContainer = false;
 		setHardness(1F);
 		setResistance(100000F);
 		setCreativeTab(XPT.creativeTab);
@@ -63,10 +61,4 @@ public class BlockTeleporterBase extends BlockLM
 	
 	public boolean canEntityDestroy(IBlockAccess world, int x, int y, int z, Entity entity)
 	{ return !(entity instanceof EntityDragon || entity instanceof EntityWither); }
-	
-	public boolean hasTileEntity(int metadata)
-	{ return isBlockContainer; }
-	
-	public TileLM createNewTileEntity(World w, int m)
-	{ return null; }
 }
