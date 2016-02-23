@@ -1,6 +1,6 @@
-package latmod.xpt.items;
+package latmod.xpt.item;
 
-import ftb.lib.*;
+import ftb.lib.LMDimUtils;
 import ftb.lib.api.item.ODItems;
 import latmod.xpt.XPT;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,11 +29,6 @@ public class ItemLinkCard extends ItemXPT
 	public static boolean hasData(ItemStack is)
 	{ return is.hasTagCompound() && is.getTagCompound().hasKey(NBT_TAG); }
 	
-	public static BlockDimPos getLink(ItemStack is)
-	{
-		return hasData(is) ? new BlockDimPos(is.getTagCompound().getIntArray(NBT_TAG)) : null;
-	}
-	
 	@SideOnly(Side.CLIENT)
 	public boolean hasEffect(ItemStack is)
 	{ return hasData(is); }
@@ -52,20 +47,10 @@ public class ItemLinkCard extends ItemXPT
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack is, EntityPlayer ep, List<String> l, boolean b)
 	{
-		BlockDimPos link = getLink(is);
-		
-		if(link != null)
+		if(hasData(is))
 		{
-			StringBuilder sb = new StringBuilder();
-			sb.append("Linked to: ");
-			sb.append(link.x);
-			sb.append(", ");
-			sb.append(link.y);
-			sb.append(", ");
-			sb.append(link.z);
-			sb.append(" @ ");
-			sb.append(LMDimUtils.getDimName(link.dim));
-			l.add(sb.toString());
+			int[] coords = is.getTagCompound().getIntArray(NBT_TAG);
+			l.add("Linked to: " + coords[0] + ", " + coords[1] + ", " + coords[2] + " @ " + LMDimUtils.getDimName(coords[3]));
 		}
 	}
 }

@@ -3,31 +3,35 @@ package latmod.xpt.client;
 import ftb.lib.api.client.*;
 import latmod.lib.LMColorUtils;
 import latmod.xpt.XPTConfig;
-import latmod.xpt.blocks.TileTeleporter;
+import latmod.xpt.block.TileTeleporter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.relauncher.*;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class RenderTeleporter extends TileRenderer<TileTeleporter>
+public class RenderTeleporter extends TileEntitySpecialRenderer// implements IItemRenderer
 {
 	public static final RenderTeleporter instance = new RenderTeleporter();
 	
-	public void renderTile(TileTeleporter t, double rx, double ry, double rz, float pt, int l)
+	public void renderTileEntityAt(TileEntity te, double rx, double ry, double rz, float pt, int dmg)
 	{
+		if(te == null || te.isInvalid() || !(te instanceof TileTeleporter)) return;
+		TileTeleporter t = (TileTeleporter) te;
+		
 		int ID = t.getType();
 		if(ID == 0) return;
 		
-		double tx = t.getPos().getX() + 0.5D;
-		double ty = t.getPos().getY() + 0.125D;
-		double tz = t.getPos().getZ() + 0.5D;
+		double tx = te.getPos().getX() + 0.5D;
+		double tz = te.getPos().getX() + 0.5D;
 		
 		Minecraft mc = Minecraft.getMinecraft();
 		//double dist = mc.thePlayer.getDistance(t.xCoord + 0.5D, t.yCoord + 0.125D, t.zCoord + 0.5D);
 		double dx = tx - LMFrustrumUtils.playerX;
 		dx = dx * dx;
-		double dy = ty - LMFrustrumUtils.playerY;
+		double dy = te.getPos().getY() - LMFrustrumUtils.playerY;
 		dy = dy * dy;
 		double dz = tz - LMFrustrumUtils.playerZ;
 		dz = dz * dz;
@@ -38,18 +42,20 @@ public class RenderTeleporter extends TileRenderer<TileTeleporter>
 		if(alpha <= 0F) return;
 		if(alpha > 1F) alpha = 1F;
 		
-		double cooldown = (t.cooldown > 0) ? (1D - (t.cooldown / (double) XPTConfig.cooldownTicks())) : 1D;
+		//if(te.getWorldObj().rand.nextInt(100) > 97) return;
+		
+		double cooldown = (t.cooldown > 0) ? (1D - ((t.cooldown + (t.cooldown - t.pcooldown) * pt) / (double) XPTConfig.cooldownTicks())) : 1D;
 		
 		GlStateManager.pushMatrix();
-		//GlStateManager.pushAttrib();
+		GlStateManager.pushAttrib();
 		
-		float lastBrightnessX = OpenGlHelper.lastBrightnessX;
-		float lastBrightnessY = OpenGlHelper.lastBrightnessY;
+		FTBLibClient.pushMaxBrightness();
 		
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
 		
 		GlStateManager.translate(rx + 0.5D, ry + 0.0D, rz + 0.5D);
 		GlStateManager.scale(-1F, -1F, 1F);
+		
 		GlStateManager.rotate((float) (-Math.atan2(tx - LMFrustrumUtils.playerX, tz - LMFrustrumUtils.playerZ) * 180D / Math.PI), 0F, 1F, 0F);
 		
 		GlStateManager.disableLighting();
@@ -87,7 +93,7 @@ public class RenderTeleporter extends TileRenderer<TileTeleporter>
 			double w = 1D;
 			double h = 1D / 4D;
 			double x = -w / 2D;
-			double y = -2D - h / 2D;
+			double y = -2D + h * 0.1D;
 			
 			drawRect(x, y, w, b / 2D, 0D);
 			drawRect(x, y + h - b / 2D, w, b / 2D, 0D);
@@ -106,16 +112,16 @@ public class RenderTeleporter extends TileRenderer<TileTeleporter>
 		GlStateManager.depthMask(true);
 		
 		GlStateManager.popMatrix();
-		//GlStateManager.popAttrib();
+		GlStateManager.popAttrib();
 		
-		if(alpha > 0.05F && !t.hasCustomName())
+		if(alpha > 0.05F && !t.name.isEmpty())
 		{
 			GlStateManager.pushMatrix();
-			//GlStateManager.pushAttrib();
+			GlStateManager.pushAttrib();
 			GlStateManager.translate(rx + 0.5D, ry + 1.6D, rz + 0.5D);
 			GL11.glNormal3f(0F, 1F, 0F);
 			//OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
-			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 			GlStateManager.enableTexture2D();
 			GlStateManager.enableBlend();
 			GlStateManager.disableCull();
@@ -126,14 +132,14 @@ public class RenderTeleporter extends TileRenderer<TileTeleporter>
 			GlStateManager.rotate((float) (-Math.atan2(tx - LMFrustrumUtils.playerX, tz - LMFrustrumUtils.playerZ) * 180D / Math.PI), 0F, 1F, 0F);
 			
 			GlStateManager.color(1F, 1F, 1F, 1F);
-			mc.fontRendererObj.drawString(t.getName(), -(mc.fontRendererObj.getStringWidth(t.getName()) / 2), -8, LMColorUtils.getRGBAF(1F, 1F, 1F, alpha));
-			//GlStateManager.popAttrib();
+			mc.fontRendererObj.drawString(t.name, -(mc.fontRendererObj.getStringWidth(t.name) / 2), -8, LMColorUtils.getRGBAF(1F, 1F, 1F, alpha));
+			GlStateManager.popAttrib();
 			GlStateManager.popMatrix();
 		}
 		
 		GlStateManager.color(1F, 1F, 1F, 1F);
+		FTBLibClient.popMaxBrightness();
 		GlStateManager.enableTexture2D();
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
 	}
 	
 	private void drawQuad(double x1, double y1, double x2, double y2, double z)
@@ -159,7 +165,6 @@ public class RenderTeleporter extends TileRenderer<TileTeleporter>
 	}
 	
 	/*
-	
 	public boolean handleRenderType(ItemStack item, ItemRenderType type)
 	{
 		return type == ItemRenderType.INVENTORY;
@@ -179,9 +184,9 @@ public class RenderTeleporter extends TileRenderer<TileTeleporter>
 		
 		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
 		
-		XPT.teleporter.setBlockBoundsForItemRender();
-		rb.setRenderBoundsFromBlock(XPT.teleporter);
-		rb.renderBlockAsItem(XPT.teleporter, 0, 1F);
+		XPTItems.teleporter.setBlockBoundsForItemRender();
+		rb.setRenderBoundsFromBlock(XPTItems.teleporter);
+		rb.renderBlockAsItem(XPTItems.teleporter, 0, 1F);
 		
 		float lastBrightnessX = OpenGlHelper.lastBrightnessX;
 		float lastBrightnessY = OpenGlHelper.lastBrightnessY;
@@ -196,7 +201,7 @@ public class RenderTeleporter extends TileRenderer<TileTeleporter>
 		GlStateManager.disableLighting();
 		GlStateManager.disableCull();
 		GlStateManager.depthMask(false);
-		GlStateManager.disableTexture();
+		GlStateManager.disableTexture2D();
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
@@ -225,6 +230,5 @@ public class RenderTeleporter extends TileRenderer<TileTeleporter>
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		GlStateManager.depthMask(true);
 	}
-	
 	*/
 }

@@ -1,12 +1,11 @@
-package latmod.xpt.items;
+package latmod.xpt.item;
 
-import ftb.lib.LMDimUtils;
+import ftb.lib.*;
 import ftb.lib.api.item.ODItems;
 import latmod.xpt.*;
 import net.minecraft.entity.player.*;
 import net.minecraft.init.Items;
 import net.minecraft.item.*;
-import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 
@@ -26,7 +25,7 @@ public class ItemMagicalMirror extends ItemLinkCard // ItemBow
 	{
 	}
 	
-	public ItemStack onEaten(ItemStack is, World w, EntityPlayer ep)
+	public ItemStack onItemUseFinish(ItemStack is, World w, EntityPlayer ep)
 	{
 		if(ep instanceof EntityPlayerMP)
 		{
@@ -45,20 +44,20 @@ public class ItemMagicalMirror extends ItemLinkCard // ItemBow
 			
 			if(!XPTConfig.canConsumeLevels(ep, levels))
 			{
-				XPTChatMessages.NEED_XP_LEVEL_TP.print(ep, Integer.toString(levels));
+				XPTChatMessages.NEED_XP_LEVEL_TP.print(ep, "" + levels);
 				return is;
 			}
 			
-			int[] coords = is.getTagCompound().getIntArray(NBT_TAG);
+			BlockDimPos pos = new BlockDimPos(is.getTagCompound().getIntArray(NBT_TAG));
 			
-			World w1 = DimensionManager.getWorld(coords[3]);
+			World w1 = DimensionManager.getWorld(pos.dim);
 			
-			if(w1.getBlockState(new BlockPos(coords[0], coords[1], coords[2])).getBlock() == XPTItems.teleporter_recall)
+			if(w1.getBlockState(pos.toBlockPos()).getBlock() == XPTItems.teleporter_recall)
 			{
 				XPTConfig.consumeLevels(ep, levels);
 				w.playSoundEffect(ep.posX, ep.posY + 1.5D, ep.posZ, "mob.endermen.portal", 1F, 1F);
-				LMDimUtils.teleportPlayer((EntityPlayerMP) ep, coords[0] + 0.5D, coords[1] + 0.2D, coords[2] + 0.5D, coords[3]);
-				w.playSoundEffect(coords[0] + 0.5D, coords[1] + 1.5D, coords[2] + 0.5D, "mob.endermen.portal", 1F, 1F);
+				LMDimUtils.teleportPlayer(ep, pos.x + 0.5D, pos.y + 0.2D, pos.z + 0.5D, pos.dim);
+				w.playSoundEffect(pos.x + 0.5D, pos.y + 1.5D, pos.z + 0.5D, "mob.endermen.portal", 1F, 1F);
 			}
 			else XPTChatMessages.LINK_BROKEN.print(ep);
 		}

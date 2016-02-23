@@ -1,23 +1,21 @@
-package latmod.xpt.blocks;
+package latmod.xpt.block;
 
 import ftb.lib.LMMod;
-import ftb.lib.api.block.*;
+import ftb.lib.api.block.BlockLM;
 import ftb.lib.api.tile.TileLM;
 import latmod.xpt.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.boss.*;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
+import net.minecraft.init.Items;
 import net.minecraft.util.*;
 import net.minecraft.world.*;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 
-import java.util.List;
-
-public abstract class BlockTeleporterBase extends BlockLM
+public class BlockTeleporterBase extends BlockLM
 {
 	public BlockTeleporterBase(String s)
 	{
@@ -26,49 +24,50 @@ public abstract class BlockTeleporterBase extends BlockLM
 		isBlockContainer = false;
 		setHardness(1F);
 		setResistance(100000F);
+		setCreativeTab(XPT.tab);
 	}
 	
 	public LMMod getMod()
 	{ return XPT.mod; }
 	
-	@SideOnly(Side.CLIENT)
-	public CreativeTabs getCreativeTabToDisplayOn()
-	{ return XPT.inst.creativeTab; }
-	
-	public boolean canHarvestBlock(IBlockAccess w, BlockPos pos, EntityPlayer player)
+	public boolean canHarvestBlock(IBlockAccess world, BlockPos pos, EntityPlayer player)
 	{ return true; }
 	
-	public void onPostLoaded()
+	public void loadRecipes()
 	{
+		if(XPTConfig.levels_for_recall.get() > 0)
+			GameRegistry.addRecipe(new ShapedOreRecipe(this, "IEI", "IPI", 'E', "blockEmerald", 'I', "ingotGold", 'P', Items.ender_eye));
 	}
 	
-	public void setBlockBoundsForItemRender() { }
+	public void setBlockBoundsForItemRender()
+	{
+		setBlockBounds(0F, 0F, 0F, 1F, 1F / 8F, 1F);
+	}
 	
-	public void setBlockBoundsBasedOnState(IBlockAccess worldIn, BlockPos pos) { }
+	public void setBlockBoundsBasedOnState(IBlockAccess worldIn, BlockPos pos)
+	{
+		setBlockBounds(0F, 0F, 0F, 1F, 1F / 8F, 1F);
+	}
 	
 	public AxisAlignedBB getCollisionBoundingBox(World w, BlockPos pos, IBlockState state)
 	{
 		if(XPTConfig.soft_blocks.get()) return null;
+		setBlockBoundsBasedOnState(w, pos);
 		return super.getCollisionBoundingBox(w, pos, state);
 	}
 	
 	public boolean isOpaqueCube()
 	{ return false; }
 	
-	public boolean isFullCube()
+	public boolean renderAsNormalBlock()
 	{ return false; }
 	
-	public boolean canEntityDestroy(IBlockAccess world, BlockPos pos, Entity entity)
+	public boolean canEntityDestroy(IBlockAccess world, int x, int y, int z, Entity entity)
 	{ return !(entity instanceof EntityDragon || entity instanceof EntityWither); }
+	
+	public boolean hasTileEntity(int metadata)
+	{ return isBlockContainer; }
 	
 	public TileLM createNewTileEntity(World w, int m)
 	{ return null; }
-	
-	public Class<? extends ItemBlockLM> getItemBlock()
-	{ return ItemBlockLM.class; }
-	
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack is, EntityPlayer ep, List<String> l, boolean adv)
-	{
-	}
 }

@@ -1,13 +1,11 @@
 package latmod.xpt;
 
-
-import ftb.lib.LMMod;
-import net.minecraft.creativetab.CreativeTabs;
+import ftb.lib.*;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.*;
 import net.minecraftforge.fml.common.event.*;
 
-@Mod(modid = XPT.MOD_ID, name = "XPTeleporters", version = "@VERSION@", dependencies = "required-after:FTBL", acceptedMinecraftVersions = "[1.8.8,1.9)")
+@Mod(modid = XPT.MOD_ID, name = "XPTeleporters", version = "@VERSION@", dependencies = "required-after:FTBL")
 public class XPT
 {
 	protected static final String MOD_ID = "XPT";
@@ -19,18 +17,17 @@ public class XPT
 	public static XPTCommon proxy;
 	
 	public static LMMod mod;
-	
-	public CreativeTabs creativeTab;
+	public static CreativeTabLM tab;
 	
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent e)
 	{
 		mod = LMMod.create(XPT.MOD_ID);
-		XPTConfig.load();
+		tab = new CreativeTabLM("xpt").setMod(mod);
 		XPTItems.init();
-		
-		creativeTab = mod.createTab("xpt", new ItemStack(XPTItems.teleporter));
-		
+		XPTConfig.load();
+		tab.addIcon(new ItemStack(XPTItems.teleporter));
+		proxy.load();
 		mod.onPostLoaded();
 	}
 	
@@ -38,6 +35,5 @@ public class XPT
 	public void postInit(FMLPostInitializationEvent e)
 	{
 		if(XPTConfig.enable_crafting.get()) mod.loadRecipes();
-		proxy.postInit();
 	}
 }
