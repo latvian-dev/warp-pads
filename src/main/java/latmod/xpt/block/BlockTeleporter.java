@@ -1,12 +1,12 @@
 package latmod.xpt.block;
 
-import ftb.lib.api.tile.TileLM;
 import latmod.xpt.XPT;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 
@@ -18,11 +18,15 @@ public class BlockTeleporter extends BlockTeleporterBase
 		isBlockContainer = true;
 	}
 	
-	public TileLM createNewTileEntity(World w, int m)
+	public boolean hasTileEntity(IBlockState state)
+	{ return true; }
+	
+	public TileEntity createTileEntity(World w, IBlockState state)
 	{ return new TileTeleporter(); }
 	
 	public void onPostLoaded()
 	{
+		super.onPostLoaded();
 		XPT.mod.addTile(TileTeleporter.class, "teleporter");
 	}
 	

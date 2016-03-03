@@ -2,7 +2,6 @@ package latmod.xpt.block;
 
 import ftb.lib.LMMod;
 import ftb.lib.api.block.BlockLM;
-import ftb.lib.api.tile.TileLM;
 import latmod.xpt.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -21,7 +20,6 @@ public class BlockTeleporterBase extends BlockLM
 	{
 		super(s, Material.iron);
 		setBlockBounds(0F, 0F, 0F, 1F, 1F / 8F, 1F);
-		isBlockContainer = false;
 		setHardness(1F);
 		setResistance(100000F);
 		setCreativeTab(XPT.tab);
@@ -36,7 +34,9 @@ public class BlockTeleporterBase extends BlockLM
 	public void loadRecipes()
 	{
 		if(XPTConfig.levels_for_recall.get() > 0)
+		{
 			GameRegistry.addRecipe(new ShapedOreRecipe(this, "IEI", "IPI", 'E', "blockEmerald", 'I', "ingotGold", 'P', Items.ender_eye));
+		}
 	}
 	
 	public void setBlockBoundsForItemRender()
@@ -64,10 +64,4 @@ public class BlockTeleporterBase extends BlockLM
 	
 	public boolean canEntityDestroy(IBlockAccess world, int x, int y, int z, Entity entity)
 	{ return !(entity instanceof EntityDragon || entity instanceof EntityWither); }
-	
-	public boolean hasTileEntity(int metadata)
-	{ return isBlockContainer; }
-	
-	public TileLM createNewTileEntity(World w, int m)
-	{ return null; }
 }
