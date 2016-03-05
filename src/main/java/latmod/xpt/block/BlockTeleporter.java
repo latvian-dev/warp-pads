@@ -27,7 +27,7 @@ public class BlockTeleporter extends BlockTeleporterBase
 	public void onPostLoaded()
 	{
 		super.onPostLoaded();
-		XPT.mod.addTile(TileTeleporter.class, "teleporter");
+		XPT.mod.addTile(TileTeleporter.class, blockName);
 	}
 	
 	public void loadRecipes()
