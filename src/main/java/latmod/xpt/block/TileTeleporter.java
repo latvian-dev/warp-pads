@@ -17,8 +17,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.relauncher.*;
 
-import java.util.HashMap;
-
 public class TileTeleporter extends TileLM
 {
 	public BlockDimPos linked = null;
@@ -47,8 +45,8 @@ public class TileTeleporter extends TileLM
 	
 	public void readTileClientData(NBTTagCompound tag)
 	{
-		HashMap<Integer, Integer> data = new HashMap<>();
-		LMMapUtils.fromIntArray(data, tag.getIntArray("D"));
+		IntMap data = new IntMap();
+		data.fromArray(tag.getIntArray("D"));
 		
 		pcooldown = cooldown = Converter.nonNull(data.get(0));
 		
@@ -60,7 +58,7 @@ public class TileTeleporter extends TileLM
 	
 	public void writeTileClientData(NBTTagCompound tag)
 	{
-		HashMap<Integer, Integer> data = new HashMap<>();
+		IntMap data = new IntMap();
 		
 		data.put(0, cooldown);
 		
@@ -72,7 +70,7 @@ public class TileTeleporter extends TileLM
 			data.put(4, linked.dim);
 		}
 		
-		tag.setIntArray("D", LMMapUtils.toIntArray(data));
+		tag.setIntArray("D", data.toArray());
 		if(!name.isEmpty()) tag.setString("N", name);
 	}
 	
