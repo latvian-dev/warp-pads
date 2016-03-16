@@ -4,34 +4,28 @@ import ftb.lib.api.client.*;
 import latmod.lib.LMColorUtils;
 import latmod.xpt.XPTConfig;
 import latmod.xpt.block.TileTeleporter;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.relauncher.*;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class RenderTeleporter extends TileEntitySpecialRenderer// implements IItemRenderer
+public class RenderTeleporter extends TileEntitySpecialRenderer<TileTeleporter>// implements IItemRenderer
 {
 	public static final RenderTeleporter instance = new RenderTeleporter();
 	
-	public void renderTileEntityAt(TileEntity te, double rx, double ry, double rz, float pt, int dmg)
+	public void renderTileEntityAt(TileTeleporter t, double rx, double ry, double rz, float pt, int dmg)
 	{
-		if(te == null || te.isInvalid() || !(te instanceof TileTeleporter)) return;
-		TileTeleporter t = (TileTeleporter) te;
-		
 		int ID = t.getType();
 		if(ID == 0) return;
 		
-		double tx = te.getPos().getX() + 0.5D;
-		double tz = te.getPos().getX() + 0.5D;
+		double tx = t.getPos().getX() + 0.5D;
+		double tz = t.getPos().getX() + 0.5D;
 		
-		Minecraft mc = Minecraft.getMinecraft();
 		//double dist = mc.thePlayer.getDistance(t.xCoord + 0.5D, t.yCoord + 0.125D, t.zCoord + 0.5D);
 		double dx = tx - LMFrustrumUtils.playerX;
 		dx = dx * dx;
-		double dy = te.getPos().getY() - LMFrustrumUtils.playerY;
+		double dy = t.getPos().getY() - LMFrustrumUtils.playerY;
 		dy = dy * dy;
 		double dz = tz - LMFrustrumUtils.playerZ;
 		dz = dz * dz;
@@ -132,7 +126,7 @@ public class RenderTeleporter extends TileEntitySpecialRenderer// implements IIt
 			GlStateManager.rotate((float) (-Math.atan2(tx - LMFrustrumUtils.playerX, tz - LMFrustrumUtils.playerZ) * 180D / Math.PI), 0F, 1F, 0F);
 			
 			GlStateManager.color(1F, 1F, 1F, 1F);
-			mc.fontRendererObj.drawString(t.name, -(mc.fontRendererObj.getStringWidth(t.name) / 2), -8, LMColorUtils.getRGBAF(1F, 1F, 1F, alpha));
+			FTBLibClient.mc.fontRendererObj.drawString(t.name, -(FTBLibClient.mc.fontRendererObj.getStringWidth(t.name) / 2), -8, LMColorUtils.getRGBAF(1F, 1F, 1F, alpha));
 			GlStateManager.popAttrib();
 			GlStateManager.popMatrix();
 		}

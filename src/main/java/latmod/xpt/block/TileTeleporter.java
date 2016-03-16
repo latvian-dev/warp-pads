@@ -89,7 +89,7 @@ public class TileTeleporter extends TileLM
 		{
 			cooldown--;
 			
-			if(cooldown == 0 && isServer()) markDirty();
+			if(cooldown == 0 && getSide().isServer()) markDirty();
 		}
 	}
 	
@@ -165,7 +165,7 @@ public class TileTeleporter extends TileLM
 	
 	public XPTChatMessages createLink(TileTeleporter t, boolean updateLink)
 	{
-		if(t == null || !isServer()) return XPTChatMessages.INVALID_BLOCK;
+		if(t == null || getSide().isClient()) return XPTChatMessages.INVALID_BLOCK;
 		if(linked != null && linked.equalsPos(t.linked)) return XPTChatMessages.ALREADY_LINKED;
 		if(t.equals(this)) return XPTChatMessages.ALREADY_LINKED;
 		
@@ -209,7 +209,7 @@ public class TileTeleporter extends TileLM
 	
 	public void onPlayerCollided(EntityPlayerMP ep)
 	{
-		if(linked != null && isServer() && cooldown <= 0 && ep.isSneaking() && !(ep instanceof FakePlayer))
+		if(linked != null && getSide().isServer() && cooldown <= 0 && ep.isSneaking() && !(ep instanceof FakePlayer))
 		{
 			ep.setSneaking(false);
 			
