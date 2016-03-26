@@ -2,8 +2,8 @@ package latmod.xpt;
 
 import ftb.lib.FTBLib;
 import ftb.lib.api.config.ConfigRegistry;
+import ftb.lib.api.config.old.*;
 import latmod.lib.Info;
-import latmod.lib.config.*;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.io.File;
