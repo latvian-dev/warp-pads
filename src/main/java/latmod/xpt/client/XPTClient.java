@@ -10,6 +10,6 @@ public class XPTClient extends XPTCommon
 {
 	public void load()
 	{
-		FTBLibClient.addTileRenderer(TileTeleporter.class, RenderTeleporter.instance);
+		FTBLibClient.addTileRenderer(TileTeleporter.class, new RenderTeleporter());
 	}
 }

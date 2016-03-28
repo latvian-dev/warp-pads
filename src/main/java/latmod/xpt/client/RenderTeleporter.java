@@ -10,10 +10,8 @@ import net.minecraftforge.fml.relauncher.*;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class RenderTeleporter extends TileEntitySpecialRenderer<TileTeleporter>// implements IItemRenderer
+public class RenderTeleporter extends TileEntitySpecialRenderer<TileTeleporter>
 {
-	public static final RenderTeleporter instance = new RenderTeleporter();
-	
 	public void renderTileEntityAt(TileTeleporter t, double rx, double ry, double rz, float pt, int dmg)
 	{
 		int ID = t.getType();
@@ -157,72 +155,4 @@ public class RenderTeleporter extends TileEntitySpecialRenderer<TileTeleporter>/
 		if(dist > maxDist + 3D) return 0F;
 		return (maxDist + 3D - dist) / (maxDist - 3D);
 	}
-	
-	/*
-	public boolean handleRenderType(ItemStack item, ItemRenderType type)
-	{
-		return type == ItemRenderType.INVENTORY;
-	}
-	
-	public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper)
-	{
-		return true;
-	}
-	
-	public void renderItem(ItemRenderType type, ItemStack item, Object... data)
-	{
-		GlStateManager.pushMatrix();
-		GlStateManager.pushAttrib();
-		
-		RenderBlocks rb = (RenderBlocks) data[0];
-		
-		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
-		
-		XPTItems.teleporter.setBlockBoundsForItemRender();
-		rb.setRenderBoundsFromBlock(XPTItems.teleporter);
-		rb.renderBlockAsItem(XPTItems.teleporter, 0, 1F);
-		
-		float lastBrightnessX = OpenGlHelper.lastBrightnessX;
-		float lastBrightnessY = OpenGlHelper.lastBrightnessY;
-		
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
-		
-		GlStateManager.translate(0F, -0.6F, 0F);
-		float sc = 1F;
-		GlStateManager.scale(-sc, -sc, sc);
-		GlStateManager.rotate(45F, 0F, 1F, 0F);
-		
-		GlStateManager.disableLighting();
-		GlStateManager.disableCull();
-		GlStateManager.depthMask(false);
-		GlStateManager.disableTexture2D();
-		GlStateManager.color(1F, 1F, 1F, 1F);
-		GlStateManager.enableBlend();
-		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-		GlStateManager.disableAlpha();
-		GlStateManager.shadeModel(GL11.GL_SMOOTH);
-		
-		GlStateManager.color(0F, 1F, 1F, 0F);
-		GL11.glBegin(GL11.GL_QUADS);
-		float s = 0.75F;
-		float s1 = 0.12F;
-		GL11.glVertex3d(-s, -1.5F, 0F);
-		GL11.glVertex3d(s, -1.5F, 0F);
-		
-		GlStateManager.color(0.2F, 0.4F, 1F, 1F);
-		
-		GL11.glVertex3f(s1, -0.125F, 0F);
-		GL11.glVertex3f(-s1, -0.125F, 0F);
-		GL11.glEnd();
-		
-		GlStateManager.popAttrib();
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
-		GlStateManager.popMatrix();
-		
-		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		GlStateManager.shadeModel(GL11.GL_FLAT);
-		GlStateManager.color(1F, 1F, 1F, 1F);
-		GlStateManager.depthMask(true);
-	}
-	*/
 }

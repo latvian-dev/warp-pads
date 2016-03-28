@@ -93,7 +93,7 @@ public class TileTeleporter extends TileLM
 		}
 	}
 	
-	public boolean onRightClick(EntityPlayer ep, ItemStack is, int side, float x, float y, float z)
+	public boolean onRightClick(EntityPlayer ep, ItemStack is, EnumFacing side, float x, float y, float z)
 	{
 		if(worldObj.isRemote || is == null) return true;
 		
@@ -121,7 +121,7 @@ public class TileTeleporter extends TileLM
 				if(t != null)
 				{
 					boolean crossdim = pos.dim != getDimension();
-					int levels = XPTConfig.only_linking_uses_xp.get() ? getLevels(pos.x, pos.y, pos.z, crossdim) : 0;
+					int levels = XPTConfig.only_linking_uses_xp.getAsBoolean() ? getLevels(pos.x, pos.y, pos.z, crossdim) : 0;
 					
 					if(!XPTConfig.canConsumeLevels(ep, levels))
 					{
@@ -219,7 +219,7 @@ public class TileTeleporter extends TileLM
 				if(t != null && t.linked == null) t.createLink(this, false);
 				
 				boolean crossdim = linked.dim != getDimension();
-				int levels = XPTConfig.only_linking_uses_xp.get() ? 0 : getLevels(linked.x, linked.y, linked.z, crossdim);
+				int levels = XPTConfig.only_linking_uses_xp.getAsBoolean() ? 0 : getLevels(linked.x, linked.y, linked.z, crossdim);
 				
 				if(!XPTConfig.canConsumeLevels(ep, levels))
 				{
@@ -248,13 +248,14 @@ public class TileTeleporter extends TileLM
 	
 	private int getLevels(int x, int y, int z, boolean crossdim)
 	{
-		if(crossdim) return XPTConfig.levels_for_crossdim.get();
+		if(crossdim) return XPTConfig.levels_for_crossdim.getAsInt();
 		double dist = Math.sqrt(getDistanceSq(x + 0.5D, y + 0.5D, z + 0.5D));
-		return Math.max(0, ((XPTConfig.levels_for_1000_blocks.get() > 0) ? MathHelper.ceiling_double_int(XPTConfig.levels_for_1000_blocks.get() * dist / 1000D) : 0) - 1);
+		return Math.max(0, ((XPTConfig.levels_for_1000_blocks.getAsInt() > 0) ? MathHelper.ceiling_double_int(XPTConfig.levels_for_1000_blocks.getAsInt() * dist / 1000D) : 0) - 1);
 	}
 	
-	public void onPlacedBy(EntityPlayer el, ItemStack is)
+	public void onPlacedBy(EntityPlayer ep, ItemStack is, IBlockState state)
 	{
+		super.onPlacedBy(ep, is, state);
 		if(is.hasDisplayName()) name = is.getDisplayName();
 		markDirty();
 	}

@@ -1,8 +1,9 @@
 package latmod.xpt.item;
 
-import ftb.lib.LMDimUtils;
-import ftb.lib.api.item.ODItems;
+import ftb.lib.*;
+import ftb.lib.api.item.*;
 import latmod.xpt.XPT;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -11,15 +12,19 @@ import net.minecraftforge.fml.relauncher.*;
 
 import java.util.List;
 
-public class ItemLinkCard extends ItemXPT
+public class ItemLinkCard extends ItemLM
 {
 	public static final String NBT_TAG = "Coords";
 	
 	public ItemLinkCard(String s)
 	{
 		super(s);
+		setCreativeTab(CreativeTabs.tabTransport);
 		setMaxStackSize(1);
 	}
+	
+	public LMMod getMod()
+	{ return XPT.mod; }
 	
 	public void loadRecipes()
 	{

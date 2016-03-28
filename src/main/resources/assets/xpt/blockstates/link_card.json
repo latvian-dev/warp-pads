@@ -1,0 +1,13 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "builtin/generated",
+    "transform": "forge:default-item",
+    "textures": {
+      "layer0": "xpt:items/link_card"
+    }
+  },
+  "variants": {
+    "inventory": [{}]
+  }
+}
