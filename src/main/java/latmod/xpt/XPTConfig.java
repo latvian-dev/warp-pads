@@ -1,9 +1,8 @@
 package latmod.xpt;
 
 import ftb.lib.FTBLib;
-import ftb.lib.api.config.ConfigRegistry;
-import ftb.lib.api.config.old.*;
-import latmod.lib.Info;
+import ftb.lib.api.config.*;
+import latmod.lib.annotations.*;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.io.File;
@@ -12,19 +11,16 @@ public class XPTConfig // XPT
 {
 	public static final ConfigFile configFile = new ConfigFile("xpt");
 	
-	@MinValue(0)
-	@MaxValue(200)
+	@NumberBounds(min = 0, max = 200)
 	@Info("Levels required to teleport in same dimension")
 	public static final ConfigEntryInt levels_for_1000_blocks = new ConfigEntryInt("levels_for_1000_blocks", 20);
 	
-	@MinValue(0)
-	@MaxValue(200)
+	@NumberBounds(min = 0, max = 200)
 	@Info("Levels required to teleport to another dimension")
 	public static final ConfigEntryInt levels_for_crossdim = new ConfigEntryInt("levels_for_crossdim", 30);
 	
-	@Sync
-	@MinValue(1)
-	@MaxValue(3600)
+	@Flags(Flag.SYNC)
+	@NumberBounds(min = 1, max = 3600)
 	@Info("Teleporter cooldown")
 	public static final ConfigEntryInt cooldown_seconds = new ConfigEntryInt("cooldown_seconds", 3);
 	
@@ -34,12 +30,11 @@ public class XPTConfig // XPT
 	@Info("Only linking will cost levels, teleporting will be free")
 	public static final ConfigEntryBool only_linking_uses_xp = new ConfigEntryBool("only_linking_uses_xp", false);
 	
-	@Sync
+	@Flags(Flag.SYNC)
 	@Info("Soft blocks are like torches - you can walk trough them, BUT it solved the 'getting stuck in block' issue")
 	public static final ConfigEntryBool soft_blocks = new ConfigEntryBool("soft_blocks", true);
 	
-	@MinValue(-1)
-	@MaxValue(200)
+	@NumberBounds(min = -1, max = 200)
 	@Info({"-1 - Disabled", "0+ - Enables Recall Remote crafting and usage"})
 	public static final ConfigEntryInt levels_for_recall = new ConfigEntryInt("levels_for_recall", -1);
 	
