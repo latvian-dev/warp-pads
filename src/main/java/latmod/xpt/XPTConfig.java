@@ -19,7 +19,7 @@ public class XPTConfig // XPT
 	@Info("Levels required to teleport to another dimension")
 	public static final ConfigEntryInt levels_for_crossdim = new ConfigEntryInt("levels_for_crossdim", 30);
 	
-	@Flags(Flag.SYNC)
+	@Flags(Flags.SYNC)
 	@NumberBounds(min = 1, max = 3600)
 	@Info("Teleporter cooldown")
 	public static final ConfigEntryInt cooldown_seconds = new ConfigEntryInt("cooldown_seconds", 3);
@@ -30,7 +30,7 @@ public class XPTConfig // XPT
 	@Info("Only linking will cost levels, teleporting will be free")
 	public static final ConfigEntryBool only_linking_uses_xp = new ConfigEntryBool("only_linking_uses_xp", false);
 	
-	@Flags(Flag.SYNC)
+	@Flags(Flags.SYNC)
 	@Info("Soft blocks are like torches - you can walk trough them, BUT it solved the 'getting stuck in block' issue")
 	public static final ConfigEntryBool soft_blocks = new ConfigEntryBool("soft_blocks", true);
 	
