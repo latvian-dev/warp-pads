@@ -32,7 +32,7 @@ public class ItemMagicalMirror extends ItemLinkCard // ItemBow
 	{
 		if(ep instanceof EntityPlayerMP)
 		{
-			if(XPTConfig.levels_for_recall.get() == -1)
+			if(XPTConfig.levels_for_recall.getAsInt() == -1)
 			{
 				XPTChatMessages.RECALL_DISABLED.print(ep);
 				return is;
@@ -43,7 +43,7 @@ public class ItemMagicalMirror extends ItemLinkCard // ItemBow
 				return is;
 			}
 			
-			int levels = XPTConfig.only_linking_uses_xp.get() ? 0 : XPTConfig.levels_for_recall.get();
+			int levels = XPTConfig.only_linking_uses_xp.getAsBoolean() ? 0 : XPTConfig.levels_for_recall.getAsInt();
 			
 			if(!XPTConfig.canConsumeLevels(ep, levels))
 			{

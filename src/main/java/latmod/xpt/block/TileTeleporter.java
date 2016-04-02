@@ -100,7 +100,7 @@ public class TileTeleporter extends TileLM
 				if(t != null)
 				{
 					boolean crossdim = pos[3] != getDimension();
-					int levels = XPTConfig.only_linking_uses_xp.get() ? getLevels(t.xCoord, t.yCoord, t.zCoord, crossdim) : 0;
+					int levels = XPTConfig.only_linking_uses_xp.getAsBoolean() ? getLevels(t.xCoord, t.yCoord, t.zCoord, crossdim) : 0;
 					
 					if(!XPTConfig.canConsumeLevels(ep, levels))
 					{
@@ -201,7 +201,7 @@ public class TileTeleporter extends TileLM
 				if(t != null && t.linked == null) t.createLink(this, false);
 				
 				boolean crossdim = linked.dim != getDimension();
-				int levels = XPTConfig.only_linking_uses_xp.get() ? 0 : getLevels(linked.x, linked.y, linked.z, crossdim);
+				int levels = XPTConfig.only_linking_uses_xp.getAsBoolean() ? 0 : getLevels(linked.x, linked.y, linked.z, crossdim);
 				
 				if(!XPTConfig.canConsumeLevels(ep, levels))
 				{
@@ -230,9 +230,9 @@ public class TileTeleporter extends TileLM
 	
 	private int getLevels(int x, int y, int z, boolean crossdim)
 	{
-		if(crossdim) return XPTConfig.levels_for_crossdim.get();
+		if(crossdim) return XPTConfig.levels_for_crossdim.getAsInt();
 		double dist = crossdim ? 0D : Math.sqrt(getDistanceFrom(x + 0.5D, y + 0.5D, z + 0.5D));
-		return Math.max(0, ((XPTConfig.levels_for_1000_blocks.get() > 0) ? MathHelper.ceiling_double_int(XPTConfig.levels_for_1000_blocks.get() * dist / 1000D) : 0) - 1);
+		return Math.max(0, ((XPTConfig.levels_for_1000_blocks.getAsInt() > 0) ? MathHelper.ceiling_double_int(XPTConfig.levels_for_1000_blocks.getAsDouble() * dist / 1000D) : 0) - 1);
 	}
 	
 	public void onPlacedBy(EntityPlayer el, ItemStack is)

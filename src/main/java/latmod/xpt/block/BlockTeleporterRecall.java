@@ -27,7 +27,7 @@ public class BlockTeleporterRecall extends BlockTeleporterBase
 		
 		if(is.getItem() == XPTItems.mirror)
 		{
-			if(XPTConfig.levels_for_recall.get() == -1)
+			if(XPTConfig.levels_for_recall.getAsInt() == -1)
 			{
 				XPTChatMessages.RECALL_DISABLED.print(ep);
 				return true;
@@ -50,7 +50,7 @@ public class BlockTeleporterRecall extends BlockTeleporterBase
 			
 			if(prevLinkedX != x || prevLinkedY != y || prevLinkedZ != z || prevLinkedDim != w.provider.dimensionId)
 			{
-				int levels = XPTConfig.only_linking_uses_xp.get() ? XPTConfig.levels_for_recall.get() : 0;
+				int levels = XPTConfig.only_linking_uses_xp.getAsBoolean() ? XPTConfig.levels_for_recall.getAsInt() : 0;
 				
 				if(!XPTConfig.canConsumeLevels(ep, levels)) XPTChatMessages.NEED_XP_LEVEL_LINK.print(ep, "" + levels);
 				else

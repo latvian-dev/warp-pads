@@ -60,5 +60,5 @@ public class XPTConfig // XPT
 	}
 	
 	public static int cooldownTicks()
-	{ return cooldown_seconds.get() * 20; }
+	{ return cooldown_seconds.getAsInt() * 20; }
 }

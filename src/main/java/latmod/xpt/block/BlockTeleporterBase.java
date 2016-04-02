@@ -38,7 +38,7 @@ public class BlockTeleporterBase extends BlockLM
 	
 	public void loadRecipes()
 	{
-		if(XPTConfig.levels_for_recall.get() > 0)
+		if(XPTConfig.levels_for_recall.getAsInt() > 0)
 			GameRegistry.addRecipe(new ShapedOreRecipe(this, "IEI", "IPI", 'E', "blockEmerald", 'I', "ingotGold", 'P', Items.ender_eye));
 	}
 	
@@ -48,7 +48,7 @@ public class BlockTeleporterBase extends BlockLM
 	
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World w, int x, int y, int z)
 	{
-		if(XPTConfig.soft_blocks.get()) return null;
+		if(XPTConfig.soft_blocks.getAsBoolean()) return null;
 		setBlockBoundsBasedOnState(w, x, y, z);
 		return super.getCollisionBoundingBoxFromPool(w, x, y, z);
 	}
