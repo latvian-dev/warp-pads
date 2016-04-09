@@ -12,6 +12,5 @@ public class XPTClient extends XPTCommon
 	{
 		FTBLibClient.addTileRenderer(TileTeleporter.class, new RenderTeleporter());
 		FTBLibClient.addItemRenderer(XPTItems.teleporter, new RenderTeleporter.Item());
-		FTBLibClient.addItemRenderer(XPTItems.teleporter_recall, new RenderTeleporterItemRecall());
 	}
 }

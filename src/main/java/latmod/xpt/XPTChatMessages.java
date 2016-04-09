@@ -1,7 +1,7 @@
 package latmod.xpt;
 
+import ftb.lib.api.LangKey;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.util.ChatComponentTranslation;
 
 public enum XPTChatMessages
 {
@@ -13,21 +13,13 @@ public enum XPTChatMessages
 	NEED_XP_LEVEL_LINK("need_xp_level_link"),
 	RECALL_DISABLED("recall_disabled");
 	
-	public final String id;
+	public final LangKey id;
 	
 	XPTChatMessages(String s)
 	{
-		id = s;
+		id = new LangKey("xpt.lang." + s);
 	}
-	
-	/*public static XPTChatMessages getNeedLevel(boolean tp)
-	{
-		if(tp) return NEED_XP_LEVEL_TP;
-		return NEED_XP_LEVEL_LINK;
-	}*/
 	
 	public void print(ICommandSender ics, Object... o)
-	{
-		ics.addChatMessage(new ChatComponentTranslation("xpt.lang." + id, o));
-	}
+	{ ics.addChatMessage(id.chatComponent(o)); }
 }

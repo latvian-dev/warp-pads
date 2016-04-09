@@ -211,7 +211,7 @@ public class TileTeleporter extends TileLM
 				
 				worldObj.playSoundEffect(xCoord + 0.5D, yCoord + 1.5D, zCoord + 0.5D, "mob.endermen.portal", 1F, 1F);
 				
-				if(LMDimUtils.teleportPlayer(ep, linked))
+				if(LMDimUtils.teleportEntity(ep, linked))
 				{
 					XPTConfig.consumeLevels(ep, levels);
 					cooldown = XPTConfig.cooldownTicks();

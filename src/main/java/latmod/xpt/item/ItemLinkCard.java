@@ -20,14 +20,11 @@ public class ItemLinkCard extends ItemLM
 	{
 		super(s);
 		setMaxStackSize(1);
+		setCreativeTab(CreativeTabs.tabTransport);
 	}
 	
 	public LMMod getMod()
 	{ return XPT.mod; }
-	
-	@SideOnly(Side.CLIENT)
-	public CreativeTabs getCreativeTab()
-	{ return XPT.creativeTab; }
 	
 	public void loadRecipes()
 	{
