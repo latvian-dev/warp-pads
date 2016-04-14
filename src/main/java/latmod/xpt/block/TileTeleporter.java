@@ -2,6 +2,7 @@ package latmod.xpt.block;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.*;
+import ftb.lib.api.LangKey;
 import ftb.lib.api.tile.TileLM;
 import latmod.xpt.*;
 import latmod.xpt.item.ItemLinkCard;
@@ -91,7 +92,7 @@ public class TileTeleporter extends TileLM
 		{
 			if(ItemLinkCard.hasData(is))
 			{
-				XPTChatMessages msg = XPTChatMessages.INVALID_BLOCK;
+				LangKey msg = XPTLang.invalid_block;
 				
 				int[] pos = is.getTagCompound().getIntArray(ItemLinkCard.NBT_TAG);
 				
@@ -104,19 +105,19 @@ public class TileTeleporter extends TileLM
 					
 					if(!XPTConfig.canConsumeLevels(ep, levels))
 					{
-						XPTChatMessages.NEED_XP_LEVEL_LINK.print(ep, Integer.toString(levels));
+						XPTLang.need_xp_level_link.printChat(ep, Integer.toString(levels));
 						return true;
 					}
 					
 					msg = createLink(t, true);
-					if(msg == XPTChatMessages.LINK_CREATED)
+					if(msg == XPTLang.link_created)
 					{
 						is.stackSize--;
 						XPTConfig.consumeLevels(ep, levels);
 					}
 				}
 				
-				msg.print(ep);
+				msg.printChat(ep);
 			}
 			else if(yCoord > 0)
 			{
@@ -142,11 +143,11 @@ public class TileTeleporter extends TileLM
 		return true;
 	}
 	
-	public XPTChatMessages createLink(TileTeleporter t, boolean updateLink)
+	public LangKey createLink(TileTeleporter t, boolean updateLink)
 	{
-		if(t == null || !isServer()) return XPTChatMessages.INVALID_BLOCK;
-		if(linked != null && linked.equalsPos(t.linked)) return XPTChatMessages.ALREADY_LINKED;
-		if(t.equals(this)) return XPTChatMessages.ALREADY_LINKED;
+		if(t == null || !isServer()) return XPTLang.invalid_block;
+		if(linked != null && linked.equalsPos(t.linked)) return XPTLang.already_linked;
+		if(t.equals(this)) return XPTLang.already_linked;
 		
 		TileTeleporter t0 = getLinkedTile();
 		if(t0 != null)
@@ -164,7 +165,7 @@ public class TileTeleporter extends TileLM
 		}
 		
 		markDirty();
-		return XPTChatMessages.LINK_CREATED;
+		return XPTLang.link_created;
 	}
 	
 	public static TileTeleporter getTileXPT(int x, int y, int z, int dim)
@@ -205,7 +206,7 @@ public class TileTeleporter extends TileLM
 				
 				if(!XPTConfig.canConsumeLevels(ep, levels))
 				{
-					XPTChatMessages.NEED_XP_LEVEL_TP.print(ep, Integer.toString(levels));
+					XPTLang.need_xp_level_tp.printChat(ep, Integer.toString(levels));
 					return;
 				}
 				
