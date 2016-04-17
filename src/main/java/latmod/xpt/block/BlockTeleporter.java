@@ -13,15 +13,16 @@ import net.minecraft.entity.player.*;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.math.*;
 import net.minecraft.world.*;
 
 public class BlockTeleporter extends BlockLM
 {
-	public BlockTeleporter(String s)
+	public static final AxisAlignedBB AABB = new AxisAlignedBB(0D, 0D, 0D, 1D, 1D / 8D, 1D);
+	
+	public BlockTeleporter()
 	{
-		super(s, Material.iron);
-		setBlockBounds(0F, 0F, 0F, 1F, 1F / 8F, 1F);
+		super(Material.iron);
 		setHardness(1F);
 		setResistance(100000F);
 		setCreativeTab(CreativeTabs.tabTransport);
@@ -42,30 +43,19 @@ public class BlockTeleporter extends BlockLM
 	public void onPostLoaded()
 	{
 		super.onPostLoaded();
-		getMod().addTile(TileTeleporter.class, blockName);
+		getMod().addTile(TileTeleporter.class, getRegistryName().getResourcePath());
 	}
 	
 	public void loadRecipes()
 	{
-		getMod().recipes.addRecipe(new ItemStack(this), "IEI", "IPI", 'E', "blockEmerald", 'I', ODItems.IRON, 'P', Items.ender_pearl);
+		getMod().recipes.addRecipe(new ItemStack(this, 2), "IEI", "IPI", 'E', "blockEmerald", 'I', ODItems.IRON, 'P', Items.ender_pearl);
 	}
 	
-	public void setBlockBoundsForItemRender()
-	{
-		setBlockBounds(0F, 0F, 0F, 1F, 1F / 8F, 1F);
-	}
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess w, BlockPos pos)
+	{ return AABB; }
 	
-	public void setBlockBoundsBasedOnState(IBlockAccess worldIn, BlockPos pos)
-	{
-		setBlockBounds(0F, 0F, 0F, 1F, 1F / 8F, 1F);
-	}
-	
-	public AxisAlignedBB getCollisionBoundingBox(World w, BlockPos pos, IBlockState state)
-	{
-		if(XPTConfig.soft_blocks.getAsBoolean()) return null;
-		setBlockBoundsBasedOnState(w, pos);
-		return super.getCollisionBoundingBox(w, pos, state);
-	}
+	public AxisAlignedBB getSelectedBoundingBox(IBlockState blockState, World worldIn, BlockPos pos)
+	{ return XPTConfig.soft_blocks.getAsBoolean() ? NULL_AABB : AABB; }
 	
 	public void onEntityCollidedWithBlock(World w, BlockPos pos, IBlockState state, Entity e)
 	{
@@ -76,12 +66,12 @@ public class BlockTeleporter extends BlockLM
 		}
 	}
 	
-	public boolean isOpaqueCube()
+	public boolean isOpaqueCube(IBlockState state)
 	{ return false; }
 	
-	public boolean isFullCube()
+	public boolean isFullCube(IBlockState state)
 	{ return false; }
 	
-	public boolean canEntityDestroy(IBlockAccess world, BlockPos pos, Entity entity)
+	public boolean canEntityDestroy(IBlockState state, IBlockAccess world, BlockPos pos, Entity entity)
 	{ return !(entity instanceof EntityDragon || entity instanceof EntityWither); }
 }

@@ -6,6 +6,7 @@ import latmod.xpt.XPTConfig;
 import latmod.xpt.block.TileTeleporter;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraftforge.fml.relauncher.*;
 import org.lwjgl.opengl.GL11;
 
@@ -14,8 +15,8 @@ public class RenderTeleporter extends TileEntitySpecialRenderer<TileTeleporter>
 {
 	public void renderTileEntityAt(TileTeleporter t, double rx, double ry, double rz, float pt, int dmg)
 	{
-		int ID = t.getType();
-		if(ID == 0) return;
+		Tessellator tessellator = Tessellator.getInstance();
+		VertexBuffer buffer = tessellator.getBuffer();
 		
 		double tx = t.getPos().getX() + 0.5D;
 		double tz = t.getPos().getX() + 0.5D;
@@ -39,7 +40,6 @@ public class RenderTeleporter extends TileEntitySpecialRenderer<TileTeleporter>
 		double cooldown = (t.cooldown > 0) ? (1D - ((t.cooldown + (t.cooldown - t.pcooldown) * pt) / (double) XPTConfig.cooldownTicks())) : 1D;
 		
 		GlStateManager.pushMatrix();
-		GlStateManager.pushAttrib();
 		
 		FTBLibClient.pushMaxBrightness();
 		
@@ -60,27 +60,21 @@ public class RenderTeleporter extends TileEntitySpecialRenderer<TileTeleporter>
 		GlStateManager.disableAlpha();
 		GlStateManager.shadeModel(GL11.GL_SMOOTH);
 		
-		GlStateManager.color(0F, 1F, 1F, 0F);
-		
-		GL11.glBegin(GL11.GL_QUADS);
 		double s = cooldown * 0.75D;
 		double s1 = cooldown * 0.12D;
-		GL11.glVertex3d(-s, -1.5D, 0D);
-		GL11.glVertex3d(s, -1.5D, 0D);
 		
-		if(ID == 1) GlStateManager.color(0.2F, 0.4F, 1F, alpha);
-		else GlStateManager.color(0.2F, 1F, 0.2F, alpha * 0.8F);
-		
-		GL11.glVertex3d(s1, -0.125D, 0D);
-		GL11.glVertex3d(-s1, -0.125D, 0D);
-		GL11.glEnd();
+		buffer.begin(7, DefaultVertexFormats.POSITION_COLOR);
+		buffer.pos(-s, -1.5D, 0D).color(0F, 1F, 1F, 0F);
+		buffer.pos(s, -1.5D, 0D).color(0F, 1F, 1F, 0F);
+		buffer.pos(s1, -0.125D, 0D).color(0.2F, 0.4F, 1F, alpha);
+		buffer.pos(-s1, -0.125D, 0D).color(0.2F, 0.4F, 1F, alpha);
+		tessellator.draw();
 		
 		if(t.cooldown > 0)
 		{
 			double b = 1D / 32D;
 			
-			if(ID == 3) GlStateManager.color(1F, 0.9F, 0.1F, alpha * 0.3F);
-			else GlStateManager.color(86F / 255F, 218F / 255F, 1F, alpha * 0.3F);
+			GlStateManager.color(86F / 255F, 218F / 255F, 1F, alpha * 0.3F);
 			
 			double w = 1D;
 			double h = 1D / 4D;
@@ -104,12 +98,10 @@ public class RenderTeleporter extends TileEntitySpecialRenderer<TileTeleporter>
 		GlStateManager.depthMask(true);
 		
 		GlStateManager.popMatrix();
-		GlStateManager.popAttrib();
 		
 		if(alpha > 0.05F && !t.name.isEmpty())
 		{
 			GlStateManager.pushMatrix();
-			GlStateManager.pushAttrib();
 			GlStateManager.translate(rx + 0.5D, ry + 1.6D, rz + 0.5D);
 			GL11.glNormal3f(0F, 1F, 0F);
 			//OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
@@ -125,7 +117,6 @@ public class RenderTeleporter extends TileEntitySpecialRenderer<TileTeleporter>
 			
 			GlStateManager.color(1F, 1F, 1F, 1F);
 			FTBLibClient.mc.fontRendererObj.drawString(t.name, -(FTBLibClient.mc.fontRendererObj.getStringWidth(t.name) / 2), -8, LMColorUtils.getRGBAF(1F, 1F, 1F, alpha));
-			GlStateManager.popAttrib();
 			GlStateManager.popMatrix();
 		}
 		
@@ -134,18 +125,17 @@ public class RenderTeleporter extends TileEntitySpecialRenderer<TileTeleporter>
 		GlStateManager.enableTexture2D();
 	}
 	
-	private void drawQuad(double x1, double y1, double x2, double y2, double z)
-	{
-		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glVertex3d(x1, y1, z);
-		GL11.glVertex3d(x2, y1, z);
-		GL11.glVertex3d(x2, y2, z);
-		GL11.glVertex3d(x1, y2, z);
-		GL11.glEnd();
-	}
-	
 	private void drawRect(double x, double y, double w, double h, double z)
-	{ drawQuad(x, y, x + w, y + h, z); }
+	{
+		Tessellator tessellator = Tessellator.getInstance();
+		VertexBuffer buffer = tessellator.getBuffer();
+		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
+		buffer.pos(x, y, z).endVertex();
+		buffer.pos(x + w, y, z).endVertex();
+		buffer.pos(x + w, y + h, z).endVertex();
+		buffer.pos(x, y + h, z).endVertex();
+		tessellator.draw();
+	}
 	
 	private double getAlpha(double dist)
 	{

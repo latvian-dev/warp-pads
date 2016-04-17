@@ -16,9 +16,9 @@ public class ItemLinkCard extends ItemLM
 {
 	public static final String NBT_TAG = "Coords";
 	
-	public ItemLinkCard(String s)
+	public ItemLinkCard()
 	{
-		super(s);
+		super();
 		setCreativeTab(CreativeTabs.tabTransport);
 		setMaxStackSize(1);
 	}
@@ -54,8 +54,7 @@ public class ItemLinkCard extends ItemLM
 	{
 		if(hasData(is))
 		{
-			int[] coords = is.getTagCompound().getIntArray(NBT_TAG);
-			l.add("Linked to: " + coords[0] + ", " + coords[1] + ", " + coords[2] + " @ " + LMDimUtils.getDimName(coords[3]));
+			l.add("Linked to: " + new BlockDimPos(is.getTagCompound().getIntArray(NBT_TAG)));
 		}
 	}
 }

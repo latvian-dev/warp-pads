@@ -8,12 +8,12 @@ import latmod.xpt.item.ItemLinkCard;
  */
 public class XPTItems
 {
-	public static final BlockTeleporter teleporter = new BlockTeleporter("teleporter");
-	public static final ItemLinkCard link_card = new ItemLinkCard("link_card");
+	public static BlockTeleporter teleporter;
+	public static ItemLinkCard link_card;
 	
 	public static void init()
 	{
-		XPT.mod.addItem(teleporter);
-		XPT.mod.addItem(link_card);
+		teleporter = XPT.mod.register("teleporter", new BlockTeleporter());
+		link_card = XPT.mod.register("link_card", new ItemLinkCard());
 	}
 }

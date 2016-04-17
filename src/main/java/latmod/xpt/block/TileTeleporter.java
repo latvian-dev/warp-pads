@@ -1,6 +1,7 @@
 package latmod.xpt.block;
 
 import ftb.lib.*;
+import ftb.lib.api.LangKey;
 import ftb.lib.api.tile.TileLM;
 import latmod.lib.*;
 import latmod.xpt.*;
@@ -8,12 +9,13 @@ import latmod.xpt.item.ItemLinkCard;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.*;
-import net.minecraft.init.Items;
+import net.minecraft.init.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
-import net.minecraft.world.World;
+import net.minecraft.util.math.*;
+import net.minecraft.world.*;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.relauncher.*;
 
@@ -50,7 +52,10 @@ public class TileTeleporter extends TileLM
 		
 		pcooldown = cooldown = Converter.nonNull(data.get(0));
 		
-		if(data.containsKey(1)) linked = new BlockDimPos(data.get(1), data.get(2), data.get(3), data.get(4));
+		if(data.containsKey(1))
+		{
+			linked = new BlockDimPos(data.get(1), data.get(2), data.get(3), DimensionType.getById(data.get(4)));
+		}
 		else linked = null;
 		
 		name = tag.getString("N");
@@ -67,7 +72,7 @@ public class TileTeleporter extends TileLM
 			data.put(1, linked.x);
 			data.put(2, linked.y);
 			data.put(3, linked.z);
-			data.put(4, linked.dim);
+			data.put(4, linked.dim.getId());
 		}
 		
 		tag.setIntArray("D", data.toArray());
@@ -88,12 +93,11 @@ public class TileTeleporter extends TileLM
 		if(cooldown > 0)
 		{
 			cooldown--;
-			
 			if(cooldown == 0 && getSide().isServer()) markDirty();
 		}
 	}
 	
-	public boolean onRightClick(EntityPlayer ep, ItemStack is, EnumFacing side, float x, float y, float z)
+	public boolean onRightClick(EntityPlayer ep, ItemStack is, EnumFacing side, EnumHand hand, float x, float y, float z)
 	{
 		if(worldObj.isRemote || is == null) return true;
 		
@@ -113,7 +117,7 @@ public class TileTeleporter extends TileLM
 		{
 			if(ItemLinkCard.hasData(is))
 			{
-				XPTChatMessages msg = XPTChatMessages.INVALID_BLOCK;
+				LangKey msg = XPTLang.invalid_block;
 				
 				BlockDimPos pos = new BlockDimPos(is.getTagCompound().getIntArray(ItemLinkCard.NBT_TAG));
 				TileTeleporter t = getTileXPT(pos);
@@ -125,19 +129,19 @@ public class TileTeleporter extends TileLM
 					
 					if(!XPTConfig.canConsumeLevels(ep, levels))
 					{
-						XPTChatMessages.NEED_XP_LEVEL_LINK.print(ep, Integer.toString(levels));
+						XPTLang.need_xp_level_link.printChat(ep, Integer.toString(levels));
 						return true;
 					}
 					
 					msg = createLink(t, true);
-					if(msg == XPTChatMessages.LINK_CREATED)
+					if(msg == XPTLang.link_created)
 					{
 						is.stackSize--;
 						XPTConfig.consumeLevels(ep, levels);
 					}
 				}
 				
-				msg.print(ep);
+				msg.printChat(ep);
 			}
 			else if(getPos().getY() > 0)
 			{
@@ -163,11 +167,11 @@ public class TileTeleporter extends TileLM
 		return true;
 	}
 	
-	public XPTChatMessages createLink(TileTeleporter t, boolean updateLink)
+	public LangKey createLink(TileTeleporter t, boolean updateLink)
 	{
-		if(t == null || getSide().isClient()) return XPTChatMessages.INVALID_BLOCK;
-		if(linked != null && linked.equalsPos(t.linked)) return XPTChatMessages.ALREADY_LINKED;
-		if(t.equals(this)) return XPTChatMessages.ALREADY_LINKED;
+		if(t == null || getSide().isClient()) return XPTLang.invalid_block;
+		if(linked != null && linked.equalsPos(t.linked)) return XPTLang.already_linked;
+		if(t.equals(this)) return XPTLang.already_linked;
 		
 		TileTeleporter t0 = getLinkedTile();
 		if(t0 != null)
@@ -185,7 +189,7 @@ public class TileTeleporter extends TileLM
 		}
 		
 		markDirty();
-		return XPTChatMessages.LINK_CREATED;
+		return XPTLang.link_created;
 	}
 	
 	public static TileTeleporter getTileXPT(BlockDimPos pos)
@@ -223,11 +227,11 @@ public class TileTeleporter extends TileLM
 				
 				if(!XPTConfig.canConsumeLevels(ep, levels))
 				{
-					XPTChatMessages.NEED_XP_LEVEL_TP.print(ep, Integer.toString(levels));
+					XPTLang.need_xp_level_tp.printChat(ep, Integer.toString(levels));
 					return;
 				}
 				
-				worldObj.playSoundEffect(getPos().getX() + 0.5D, getPos().getY() + 1.5D, getPos().getZ() + 0.5D, "mob.endermen.portal", 1F, 1F);
+				worldObj.playSound(ep, getPos().getX() + 0.5D, getPos().getY() + 1.5D, getPos().getZ() + 0.5D, SoundEvents.entity_endermen_teleport, SoundCategory.BLOCKS, 1F, 1F);
 				
 				if(LMDimUtils.teleportPlayer(ep, linked))
 				{
@@ -240,7 +244,7 @@ public class TileTeleporter extends TileLM
 						t.cooldown = cooldown;
 						t.markDirty();
 					}
-					ep.worldObj.playSoundEffect(linked.x + 0.5D, linked.y + 1.5D, linked.z + 0.5D, "mob.endermen.portal", 1F, 1F);
+					ep.worldObj.playSound(ep, linked.x + 0.5D, linked.y + 1.5D, linked.z + 0.5D, SoundEvents.entity_endermen_teleport, SoundCategory.BLOCKS, 1F, 1F);
 				}
 			}
 		}
