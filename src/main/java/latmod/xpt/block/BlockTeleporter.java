@@ -5,20 +5,25 @@ import ftb.lib.api.block.BlockLM;
 import ftb.lib.api.item.ODItems;
 import latmod.xpt.*;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.state.*;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.boss.*;
-import net.minecraft.entity.player.*;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.*;
 import net.minecraft.util.math.*;
 import net.minecraft.world.*;
 
 public class BlockTeleporter extends BlockLM
 {
-	public static final AxisAlignedBB AABB = new AxisAlignedBB(0D, 0D, 0D, 1D, 1D / 8D, 1D);
+	public static final PropertyDirection FACING = PropertyDirection.create("facing");
+	private static final double H0 = 1D / 8D;
+	private static final double H1 = 1D - H0;
+	public static final AxisAlignedBB AABB[] = {new AxisAlignedBB(0D, 0D, 0D, 1D, H0, 1D), new AxisAlignedBB(0D, H1, 0D, 1D, 1D, 1D), new AxisAlignedBB(0D, 0D, 0D, 1D, 1D, H0), new AxisAlignedBB(0D, 0D, H1, 1D, 1D, 1D), new AxisAlignedBB(0D, 0D, 0D, H0, 1D, 1D), new AxisAlignedBB(H1, 0D, 0D, 1D, 1D, 1D)};
 	
 	public BlockTeleporter()
 	{
@@ -51,20 +56,14 @@ public class BlockTeleporter extends BlockLM
 		getMod().recipes.addRecipe(new ItemStack(this, 2), "IEI", "IPI", 'E', "blockEmerald", 'I', ODItems.IRON, 'P', Items.ender_pearl);
 	}
 	
+	public int damageDropped(IBlockState state)
+	{ return 0; }
+	
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess w, BlockPos pos)
-	{ return AABB; }
+	{ return AABB[state.getValue(FACING).ordinal()]; }
 	
-	public AxisAlignedBB getSelectedBoundingBox(IBlockState blockState, World worldIn, BlockPos pos)
-	{ return XPTConfig.soft_blocks.getAsBoolean() ? NULL_AABB : AABB; }
-	
-	public void onEntityCollidedWithBlock(World w, BlockPos pos, IBlockState state, Entity e)
-	{
-		if(e != null && !e.isDead && e instanceof EntityPlayerMP)
-		{
-			TileTeleporter t = (TileTeleporter) w.getTileEntity(pos);
-			if(t != null) t.onPlayerCollided((EntityPlayerMP) e);
-		}
-	}
+	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World w, BlockPos pos)
+	{ return XPTConfig.soft_blocks.getAsBoolean() ? NULL_AABB : getBoundingBox(state, w, pos); }
 	
 	public boolean isOpaqueCube(IBlockState state)
 	{ return false; }
@@ -74,4 +73,25 @@ public class BlockTeleporter extends BlockLM
 	
 	public boolean canEntityDestroy(IBlockState state, IBlockAccess world, BlockPos pos, Entity entity)
 	{ return !(entity instanceof EntityDragon || entity instanceof EntityWither); }
+	
+	public IBlockState withRotation(IBlockState state, Rotation rot)
+	{ return state.withProperty(FACING, rot.rotate(state.getValue(FACING))); }
+	
+	public IBlockState withMirror(IBlockState state, Mirror mirrorIn)
+	{ return state.withRotation(mirrorIn.toRotation(state.getValue(FACING))); }
+	
+	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
+	{ return getDefaultState().withProperty(FACING, facing.getOpposite()); }
+	
+	public IBlockState getStateFromMeta(int meta)
+	{ return getDefaultState().withProperty(FACING, EnumFacing.getHorizontal(meta)); }
+	
+	public int getMetaFromState(IBlockState state)
+	{ return state.getValue(FACING).ordinal(); }
+	
+	protected BlockStateContainer createBlockState()
+	{ return new BlockStateContainer(this, FACING); }
+	
+	public IBlockState getModelState()
+	{ return getDefaultState().withProperty(FACING, EnumFacing.DOWN); }
 }

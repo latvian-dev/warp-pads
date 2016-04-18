@@ -1,7 +1,7 @@
 package latmod.xpt.client;
 
 import ftb.lib.api.client.*;
-import latmod.lib.LMColorUtils;
+import latmod.lib.*;
 import latmod.xpt.XPTConfig;
 import latmod.xpt.block.TileTeleporter;
 import net.minecraft.client.renderer.*;
@@ -13,27 +13,25 @@ import org.lwjgl.opengl.GL11;
 @SideOnly(Side.CLIENT)
 public class RenderTeleporter extends TileEntitySpecialRenderer<TileTeleporter>
 {
+	private static long debugTimer = 0L;
+	
 	public void renderTileEntityAt(TileTeleporter t, double rx, double ry, double rz, float pt, int dmg)
 	{
 		Tessellator tessellator = Tessellator.getInstance();
 		VertexBuffer buffer = tessellator.getBuffer();
 		
 		double tx = t.getPos().getX() + 0.5D;
-		double tz = t.getPos().getX() + 0.5D;
+		double tz = t.getPos().getZ() + 0.5D;
 		
 		//double dist = mc.thePlayer.getDistance(t.xCoord + 0.5D, t.yCoord + 0.125D, t.zCoord + 0.5D);
-		double dx = tx - LMFrustrumUtils.playerX;
-		dx = dx * dx;
-		double dy = t.getPos().getY() - LMFrustrumUtils.playerY;
-		dy = dy * dy;
-		double dz = tz - LMFrustrumUtils.playerZ;
-		dz = dz * dz;
-		double dist = Math.sqrt(dx + dy + dz);
-		if(dx <= 0D && dz <= 0D) return;
+		double dist = MathHelperLM.dist(tx, t.getPos().getY(), tz, LMFrustrumUtils.playerX, LMFrustrumUtils.playerY, LMFrustrumUtils.playerZ);
+		if(dist <= 0D) return;
 		
 		float alpha = (float) getAlpha(dist);
 		if(alpha <= 0F) return;
 		if(alpha > 1F) alpha = 1F;
+		
+		//FTBLib.printChat(null, t.getPos() + ": " + pt);
 		
 		//if(te.getWorldObj().rand.nextInt(100) > 97) return;
 		
@@ -48,7 +46,7 @@ public class RenderTeleporter extends TileEntitySpecialRenderer<TileTeleporter>
 		GlStateManager.translate(rx + 0.5D, ry + 0.0D, rz + 0.5D);
 		GlStateManager.scale(-1F, -1F, 1F);
 		
-		GlStateManager.rotate((float) (-Math.atan2(tx - LMFrustrumUtils.playerX, tz - LMFrustrumUtils.playerZ) * 180D / Math.PI), 0F, 1F, 0F);
+		//GlStateManager.rotate((float) (-Math.atan2(tx - LMFrustrumUtils.playerX, tz - LMFrustrumUtils.playerZ) * 180D / Math.PI), 0F, 1F, 0F);
 		
 		GlStateManager.disableLighting();
 		GlStateManager.disableCull();
@@ -120,6 +118,7 @@ public class RenderTeleporter extends TileEntitySpecialRenderer<TileTeleporter>
 			GlStateManager.popMatrix();
 		}
 		
+		GlStateManager.enableCull();
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		FTBLibClient.popMaxBrightness();
 		GlStateManager.enableTexture2D();

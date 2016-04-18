@@ -2,12 +2,38 @@
   "forge_marker": 1,
   "defaults": {
     "model": "xpt:teleporter_base",
-    "transform": "forge:default-block"
+    "transform": "forge:default-block",
+    "textures": {
+      "particle": "xpt:blocks/teleporter",
+      "all": "xpt:blocks/teleporter"
+    }
   },
   "variants": {
-    "inventory": [{}],
-    "normal": {
-      "model": "xpt:teleporter_base"
+    "facing": {
+      "up": {
+        "x": 180,
+        "y": 0
+      },
+      "down": {
+        "x": 0,
+        "y": 0
+      },
+      "north": {
+        "x": 90,
+        "y": 180
+      },
+      "south": {
+        "x": 90,
+        "y": 0
+      },
+      "west": {
+        "x": 90,
+        "y": 90
+      },
+      "east": {
+        "x": 90,
+        "y": 270
+      }
     }
   }
 }

@@ -8,7 +8,7 @@ import latmod.xpt.*;
 import latmod.xpt.item.ItemLinkCard;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.*;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -77,12 +77,6 @@ public class TileTeleporter extends TileLM
 		
 		tag.setIntArray("D", data.toArray());
 		if(!name.isEmpty()) tag.setString("N", name);
-	}
-	
-	public int getType()
-	{
-		if(worldObj != null && linked != null) return (linked.dim == getDimension()) ? 1 : 2;
-		return 0;
 	}
 	
 	public void onUpdate()
@@ -163,6 +157,45 @@ public class TileTeleporter extends TileLM
 				}
 			}
 		}
+		else
+		{
+			if(linked != null && getSide().isServer() && cooldown <= 0 && ep.isSneaking() && !(ep instanceof FakePlayer))
+			{
+				ep.setSneaking(false);
+				
+				TileTeleporter t = getLinkedTile();
+				if(t == null || (t.linked == null || equals(t.getLinkedTile())))
+				{
+					if(t != null && t.linked == null) t.createLink(this, false);
+					
+					boolean crossdim = linked.dim != getDimension();
+					int levels = XPTConfig.only_linking_uses_xp.getAsBoolean() ? 0 : getLevels(linked.x, linked.y, linked.z, crossdim);
+					
+					if(!XPTConfig.canConsumeLevels(ep, levels))
+					{
+						XPTLang.need_xp_level_tp.printChat(ep, Integer.toString(levels));
+						return true;
+					}
+					
+					worldObj.playSound(ep, getPos().getX() + 0.5D, getPos().getY() + 1.5D, getPos().getZ() + 0.5D, SoundEvents.entity_endermen_teleport, SoundCategory.BLOCKS, 1F, 1F);
+					
+					cooldown = XPTConfig.cooldownTicks();
+					
+					if(LMDimUtils.teleportPlayer(ep, linked))
+					{
+						XPTConfig.consumeLevels(ep, levels);
+						markDirty();
+						
+						if(t != null)
+						{
+							t.cooldown = cooldown;
+							t.markDirty();
+						}
+						ep.worldObj.playSound(ep, linked.x + 0.5D, linked.y + 1.5D, linked.z + 0.5D, SoundEvents.entity_endermen_teleport, SoundCategory.BLOCKS, 1F, 1F);
+					}
+				}
+			}
+		}
 		
 		return true;
 	}
@@ -210,45 +243,6 @@ public class TileTeleporter extends TileLM
 	
 	public TileTeleporter getLinkedTile()
 	{ return getTileXPT(linked); }
-	
-	public void onPlayerCollided(EntityPlayerMP ep)
-	{
-		if(linked != null && getSide().isServer() && cooldown <= 0 && ep.isSneaking() && !(ep instanceof FakePlayer))
-		{
-			ep.setSneaking(false);
-			
-			TileTeleporter t = getLinkedTile();
-			if(t == null || (t.linked == null || equals(t.getLinkedTile())))
-			{
-				if(t != null && t.linked == null) t.createLink(this, false);
-				
-				boolean crossdim = linked.dim != getDimension();
-				int levels = XPTConfig.only_linking_uses_xp.getAsBoolean() ? 0 : getLevels(linked.x, linked.y, linked.z, crossdim);
-				
-				if(!XPTConfig.canConsumeLevels(ep, levels))
-				{
-					XPTLang.need_xp_level_tp.printChat(ep, Integer.toString(levels));
-					return;
-				}
-				
-				worldObj.playSound(ep, getPos().getX() + 0.5D, getPos().getY() + 1.5D, getPos().getZ() + 0.5D, SoundEvents.entity_endermen_teleport, SoundCategory.BLOCKS, 1F, 1F);
-				
-				if(LMDimUtils.teleportPlayer(ep, linked))
-				{
-					XPTConfig.consumeLevels(ep, levels);
-					cooldown = XPTConfig.cooldownTicks();
-					markDirty();
-					
-					if(t != null)
-					{
-						t.cooldown = cooldown;
-						t.markDirty();
-					}
-					ep.worldObj.playSound(ep, linked.x + 0.5D, linked.y + 1.5D, linked.z + 0.5D, SoundEvents.entity_endermen_teleport, SoundCategory.BLOCKS, 1F, 1F);
-				}
-			}
-		}
-	}
 	
 	private int getLevels(int x, int y, int z, boolean crossdim)
 	{
