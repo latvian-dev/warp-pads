@@ -26,6 +26,7 @@ public class TileTeleporter extends TileLM
 	public int pcooldown = 0;
 	public String name = "";
 	
+	@Override
 	public void readTileData(NBTTagCompound tag)
 	{
 		super.readTileData(tag);
@@ -38,6 +39,7 @@ public class TileTeleporter extends TileLM
 		if(tag.hasKey("Name")) name = tag.getString("Name");
 	}
 	
+	@Override
 	public void writeTileData(NBTTagCompound tag)
 	{
 		super.writeTileData(tag);
@@ -45,6 +47,7 @@ public class TileTeleporter extends TileLM
 		tag.setInteger("Cooldown", cooldown);
 	}
 	
+	@Override
 	public void readTileClientData(NBTTagCompound tag)
 	{
 		IntMap data = new IntMap();
@@ -61,6 +64,7 @@ public class TileTeleporter extends TileLM
 		name = tag.getString("N");
 	}
 	
+	@Override
 	public void writeTileClientData(NBTTagCompound tag)
 	{
 		IntMap data = new IntMap();
@@ -79,6 +83,7 @@ public class TileTeleporter extends TileLM
 		if(!name.isEmpty()) tag.setString("N", name);
 	}
 	
+	@Override
 	public void onUpdate()
 	{
 		pcooldown = cooldown;
@@ -91,11 +96,12 @@ public class TileTeleporter extends TileLM
 		}
 	}
 	
+	@Override
 	public boolean onRightClick(EntityPlayer ep, ItemStack is, EnumFacing side, EnumHand hand, float x, float y, float z)
 	{
-		if(worldObj.isRemote || is == null) return true;
+		if(worldObj.isRemote) return true;
 		
-		if(is.getItem() == Items.name_tag)
+		if(is != null && is.getItem() == Items.name_tag)
 		{
 			if(!is.hasDisplayName()) return true;
 			
@@ -107,7 +113,7 @@ public class TileTeleporter extends TileLM
 			
 			return true;
 		}
-		else if(is.getItem() == XPTItems.link_card)
+		else if(is != null && is.getItem() == XPTItems.link_card)
 		{
 			if(ItemLinkCard.hasData(is))
 			{
@@ -159,10 +165,8 @@ public class TileTeleporter extends TileLM
 		}
 		else
 		{
-			if(linked != null && getSide().isServer() && cooldown <= 0 && ep.isSneaking() && !(ep instanceof FakePlayer))
+			if(linked != null && getSide().isServer() && cooldown <= 0 && !(ep instanceof FakePlayer))
 			{
-				ep.setSneaking(false);
-				
 				TileTeleporter t = getLinkedTile();
 				if(t == null || (t.linked == null || equals(t.getLinkedTile())))
 				{
@@ -251,6 +255,7 @@ public class TileTeleporter extends TileLM
 		return Math.max(0, ((XPTConfig.levels_for_1000_blocks.getAsInt() > 0) ? MathHelper.ceiling_double_int(XPTConfig.levels_for_1000_blocks.getAsInt() * dist / 1000D) : 0) - 1);
 	}
 	
+	@Override
 	public void onPlacedBy(EntityPlayer ep, ItemStack is, IBlockState state)
 	{
 		super.onPlacedBy(ep, is, state);
@@ -258,6 +263,7 @@ public class TileTeleporter extends TileLM
 		markDirty();
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public AxisAlignedBB getRenderBoundingBox()
 	{
@@ -265,10 +271,12 @@ public class TileTeleporter extends TileLM
 		return new AxisAlignedBB(getPos().getX() - d, getPos().getY(), getPos().getZ() - d, getPos().getX() + 1D + d, getPos().getY() + 2D, getPos().getZ() + 1D + d);
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public double getMaxRenderDistanceSquared()
 	{ return 64D; }
 	
+	@Override
 	public void onBroken(IBlockState state)
 	{
 		super.onBroken(state);

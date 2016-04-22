@@ -8,6 +8,7 @@ import net.minecraftforge.fml.relauncher.*;
 @SideOnly(Side.CLIENT)
 public class XPTClient extends XPTCommon
 {
+	@Override
 	public void load()
 	{
 		FTBLibClient.addTileRenderer(TileTeleporter.class, new RenderTeleporter());

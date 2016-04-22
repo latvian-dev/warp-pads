@@ -33,65 +33,83 @@ public class BlockTeleporter extends BlockLM
 		setCreativeTab(CreativeTabs.tabTransport);
 	}
 	
+	@Override
 	public LMMod getMod()
 	{ return XPT.mod; }
 	
+	@Override
 	public boolean canHarvestBlock(IBlockAccess world, BlockPos pos, EntityPlayer player)
 	{ return true; }
 	
+	@Override
 	public boolean hasTileEntity(IBlockState state)
 	{ return true; }
 	
+	@Override
 	public TileEntity createTileEntity(World w, IBlockState state)
 	{ return new TileTeleporter(); }
 	
-	public void onPostLoaded()
+	@Override
+	public void loadTiles()
 	{
-		super.onPostLoaded();
 		getMod().addTile(TileTeleporter.class, getRegistryName().getResourcePath());
 	}
 	
+	@Override
 	public void loadRecipes()
 	{
 		getMod().recipes.addRecipe(new ItemStack(this, 2), "IEI", "IPI", 'E', "blockEmerald", 'I', ODItems.IRON, 'P', Items.ender_pearl);
 	}
 	
+	@Override
 	public int damageDropped(IBlockState state)
 	{ return 0; }
 	
+	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess w, BlockPos pos)
 	{ return AABB[state.getValue(FACING).ordinal()]; }
 	
+	@Override
 	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World w, BlockPos pos)
 	{ return XPTConfig.soft_blocks.getAsBoolean() ? NULL_AABB : getBoundingBox(state, w, pos); }
 	
+	@Override
 	public boolean isOpaqueCube(IBlockState state)
 	{ return false; }
 	
+	@Override
 	public boolean isFullCube(IBlockState state)
 	{ return false; }
 	
+	@Override
 	public boolean canEntityDestroy(IBlockState state, IBlockAccess world, BlockPos pos, Entity entity)
 	{ return !(entity instanceof EntityDragon || entity instanceof EntityWither); }
 	
+	@Override
 	public IBlockState withRotation(IBlockState state, Rotation rot)
 	{ return state.withProperty(FACING, rot.rotate(state.getValue(FACING))); }
 	
+	@Override
 	public IBlockState withMirror(IBlockState state, Mirror mirrorIn)
 	{ return state.withRotation(mirrorIn.toRotation(state.getValue(FACING))); }
 	
+	@Override
 	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
 	{ return getDefaultState().withProperty(FACING, facing.getOpposite()); }
 	
+	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{ return getDefaultState().withProperty(FACING, EnumFacing.getHorizontal(meta)); }
 	
+	@Override
 	public int getMetaFromState(IBlockState state)
 	{ return state.getValue(FACING).ordinal(); }
 	
+	@Override
 	protected BlockStateContainer createBlockState()
 	{ return new BlockStateContainer(this, FACING); }
 	
+	@Override
 	public IBlockState getModelState()
 	{ return getDefaultState().withProperty(FACING, EnumFacing.DOWN); }
 }

@@ -7,6 +7,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.*;
 
@@ -23,9 +24,11 @@ public class ItemLinkCard extends ItemLM
 		setMaxStackSize(1);
 	}
 	
+	@Override
 	public LMMod getMod()
 	{ return XPT.mod; }
 	
+	@Override
 	public void loadRecipes()
 	{
 		XPT.mod.recipes.addShapelessRecipe(new ItemStack(this), ODItems.DIAMOND, ODItems.EMERALD, Items.paper, Items.ender_pearl);
@@ -34,11 +37,13 @@ public class ItemLinkCard extends ItemLM
 	public static boolean hasData(ItemStack is)
 	{ return is.hasTagCompound() && is.getTagCompound().hasKey(NBT_TAG); }
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean hasEffect(ItemStack is)
 	{ return hasData(is); }
 	
-	public ItemStack onItemRightClick(ItemStack is, World w, EntityPlayer ep)
+	@Override
+	public ActionResult<ItemStack> onItemRightClick(ItemStack is, World w, EntityPlayer ep, EnumHand hand)
 	{
 		if(!w.isRemote && ep.isSneaking() && hasData(is))
 		{
@@ -46,9 +51,10 @@ public class ItemLinkCard extends ItemLM
 			if(is.getTagCompound().hasNoTags()) is.setTagCompound(null);
 		}
 		
-		return is;
+		return new ActionResult<>(EnumActionResult.SUCCESS, is);
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack is, EntityPlayer ep, List<String> l, boolean b)
 	{
