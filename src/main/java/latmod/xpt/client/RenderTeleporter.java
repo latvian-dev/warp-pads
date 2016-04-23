@@ -18,6 +18,7 @@ import org.lwjgl.opengl.GL11;
 @SideOnly(Side.CLIENT)
 public class RenderTeleporter extends TileEntitySpecialRenderer
 {
+	@Override
 	public void renderTileEntityAt(TileEntity te, double rx, double ry, double rz, float pt)
 	{
 		if(te == null || te.isInvalid() || !(te instanceof TileTeleporter)) return;
@@ -170,16 +171,19 @@ public class RenderTeleporter extends TileEntitySpecialRenderer
 	
 	public static class Item implements IItemRenderer
 	{
+		@Override
 		public boolean handleRenderType(ItemStack item, ItemRenderType type)
 		{
 			return type == ItemRenderType.INVENTORY;
 		}
 		
+		@Override
 		public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper)
 		{
 			return true;
 		}
 		
+		@Override
 		public void renderItem(ItemRenderType type, ItemStack item, Object... data)
 		{
 			GlStateManager.pushMatrix();

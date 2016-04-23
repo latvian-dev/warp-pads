@@ -23,6 +23,7 @@ public class TileTeleporter extends TileLM
 	public int pcooldown = 0;
 	private String name;
 	
+	@Override
 	public void readTileData(NBTTagCompound tag)
 	{
 		super.readTileData(tag);
@@ -31,6 +32,7 @@ public class TileTeleporter extends TileLM
 		name = tag.hasKey("Name") ? tag.getString("Name") : null;
 	}
 	
+	@Override
 	public void writeTileData(NBTTagCompound tag)
 	{
 		super.writeTileData(tag);
@@ -39,6 +41,7 @@ public class TileTeleporter extends TileLM
 		if(name != null) tag.setString("Name", name);
 	}
 	
+	@Override
 	public void readTileClientData(NBTTagCompound tag)
 	{
 		linked = tag.hasKey("L") ? new BlockDimPos(tag.getIntArray("L")) : null;
@@ -46,6 +49,7 @@ public class TileTeleporter extends TileLM
 		name = tag.hasKey("N") ? tag.getString("N") : null;
 	}
 	
+	@Override
 	public void writeTileClientData(NBTTagCompound tag)
 	{
 		if(linked != null) tag.setIntArray("L", linked.toIntArray());
@@ -59,6 +63,7 @@ public class TileTeleporter extends TileLM
 		return 0;
 	}
 	
+	@Override
 	public void onUpdate()
 	{
 		pcooldown = cooldown;
@@ -72,6 +77,7 @@ public class TileTeleporter extends TileLM
 		}
 	}
 	
+	@Override
 	public boolean onRightClick(EntityPlayer ep, ItemStack is, int side, float x, float y, float z)
 	{
 		if(worldObj.isRemote || is == null) return true;
@@ -236,6 +242,7 @@ public class TileTeleporter extends TileLM
 		return Math.max(0, ((XPTConfig.levels_for_1000_blocks.getAsInt() > 0) ? MathHelper.ceiling_double_int(XPTConfig.levels_for_1000_blocks.getAsDouble() * dist / 1000D) : 0) - 1);
 	}
 	
+	@Override
 	public void onPlacedBy(EntityPlayer el, ItemStack is)
 	{
 		if(is.hasDisplayName())
@@ -245,6 +252,7 @@ public class TileTeleporter extends TileLM
 		markDirty();
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public AxisAlignedBB getRenderBoundingBox()
 	{
@@ -252,15 +260,18 @@ public class TileTeleporter extends TileLM
 		return AxisAlignedBB.getBoundingBox(xCoord - d, yCoord, zCoord - d, xCoord + 1D + d, yCoord + 2D, zCoord + 1D + d);
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public double getMaxRenderDistanceSquared()
 	{ return 64D; }
 	
+	@Override
 	public void onBroken()
 	{
 		super.onBroken();
 	}
 	
+	@Override
 	public void setName(String s)
 	{
 		if(s == null || s.isEmpty()) name = null;

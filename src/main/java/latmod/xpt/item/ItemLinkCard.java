@@ -23,9 +23,11 @@ public class ItemLinkCard extends ItemLM
 		setCreativeTab(CreativeTabs.tabTransport);
 	}
 	
+	@Override
 	public LMMod getMod()
 	{ return XPT.mod; }
 	
+	@Override
 	public void loadRecipes()
 	{
 		XPT.mod.recipes.addShapelessRecipe(new ItemStack(this), ODItems.DIAMOND, ODItems.EMERALD, Items.paper, Items.ender_pearl);
@@ -34,10 +36,12 @@ public class ItemLinkCard extends ItemLM
 	public static boolean hasData(ItemStack is)
 	{ return is.hasTagCompound() && is.stackTagCompound.hasKey(NBT_TAG); }
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean hasEffect(ItemStack is, int pass)
 	{ return hasData(is); }
 	
+	@Override
 	public ItemStack onItemRightClick(ItemStack is, World w, EntityPlayer ep)
 	{
 		if(!w.isRemote && ep.isSneaking() && hasData(is))

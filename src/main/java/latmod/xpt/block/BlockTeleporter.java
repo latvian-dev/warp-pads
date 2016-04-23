@@ -27,32 +27,41 @@ public class BlockTeleporter extends BlockLM
 		textureName = "teleporter";
 	}
 	
+	@Override
 	public LMMod getMod()
 	{ return XPT.mod; }
 	
+	@Override
 	public boolean canHarvestBlock(EntityPlayer player, int meta)
 	{ return true; }
 	
+	@Override
 	public boolean hasTileEntity(int meta)
 	{ return true; }
 	
+	@Override
 	public TileEntity createTileEntity(World world, int metadata)
 	{ return new TileTeleporter(); }
 	
+	@Override
 	public void onPostLoaded()
 	{
 		XPT.mod.addTile(TileTeleporter.class, "teleporter");
 	}
 	
+	@Override
 	public void loadRecipes()
 	{
 		XPT.mod.recipes.addRecipe(new ItemStack(this), "IEI", "IPI", 'E', "blockEmerald", 'I', ODItems.IRON, 'P', Items.ender_pearl);
 	}
 	
+	@Override
 	public void setBlockBoundsForItemRender() { }
 	
+	@Override
 	public void setBlockBoundsBasedOnState(IBlockAccess iba, int x, int y, int z) { }
 	
+	@Override
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World w, int x, int y, int z)
 	{
 		if(XPTConfig.soft_blocks.getAsBoolean()) return null;
@@ -60,15 +69,19 @@ public class BlockTeleporter extends BlockLM
 		return super.getCollisionBoundingBoxFromPool(w, x, y, z);
 	}
 	
+	@Override
 	public boolean isOpaqueCube()
 	{ return false; }
 	
+	@Override
 	public boolean renderAsNormalBlock()
 	{ return false; }
 	
+	@Override
 	public boolean canEntityDestroy(IBlockAccess world, int x, int y, int z, Entity entity)
 	{ return !(entity instanceof EntityDragon || entity instanceof EntityWither); }
 	
+	@Override
 	public void onEntityCollidedWithBlock(World w, int x, int y, int z, Entity e)
 	{
 		if(e != null && !e.isDead && e instanceof EntityPlayerMP)
