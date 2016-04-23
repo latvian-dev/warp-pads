@@ -1,8 +1,11 @@
 package latmod.xpt.item;
 
-import cpw.mods.fml.relauncher.*;
-import ftb.lib.*;
-import ftb.lib.api.item.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import ftb.lib.LMDimUtils;
+import ftb.lib.LMMod;
+import ftb.lib.api.item.ItemLM;
+import ftb.lib.api.item.ODItems;
 import latmod.xpt.XPT;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;

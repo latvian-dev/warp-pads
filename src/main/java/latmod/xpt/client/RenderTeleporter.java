@@ -1,12 +1,18 @@
 package latmod.xpt.client;
 
-import cpw.mods.fml.relauncher.*;
-import ftb.lib.api.client.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import ftb.lib.api.client.FTBLibClient;
+import ftb.lib.api.client.GlStateManager;
+import ftb.lib.api.client.LMFrustrumUtils;
 import latmod.lib.LMColorUtils;
-import latmod.xpt.*;
+import latmod.xpt.XPTConfig;
+import latmod.xpt.XPTItems;
 import latmod.xpt.block.TileTeleporter;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;

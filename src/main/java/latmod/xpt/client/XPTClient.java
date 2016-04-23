@@ -1,8 +1,10 @@
 package latmod.xpt.client;
 
-import cpw.mods.fml.relauncher.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import ftb.lib.api.client.FTBLibClient;
-import latmod.xpt.*;
+import latmod.xpt.XPTCommon;
+import latmod.xpt.XPTItems;
 import latmod.xpt.block.TileTeleporter;
 
 @SideOnly(Side.CLIENT)

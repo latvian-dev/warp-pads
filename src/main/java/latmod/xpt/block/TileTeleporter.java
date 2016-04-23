@@ -1,18 +1,24 @@
 package latmod.xpt.block;
 
-import cpw.mods.fml.relauncher.*;
-import ftb.lib.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import ftb.lib.BlockDimPos;
+import ftb.lib.LMDimUtils;
 import ftb.lib.api.LangKey;
 import ftb.lib.api.tile.TileLM;
-import latmod.xpt.*;
+import latmod.xpt.XPTConfig;
+import latmod.xpt.XPTItems;
+import latmod.xpt.XPTLang;
 import latmod.xpt.item.ItemLinkCard;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.*;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 
