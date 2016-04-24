@@ -4,6 +4,7 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import ftb.lib.EventBusHelper;
 import ftb.lib.LMMod;
 
 @Mod(modid = XPT.MOD_ID, name = "XPTeleporters", version = "@VERSION@", dependencies = "required-after:FTBL")
@@ -25,8 +26,9 @@ public class XPT
 		mod = LMMod.create(XPT.MOD_ID);
 		XPTItems.init();
 		XPTConfig.load();
-		proxy.load();
 		mod.onPostLoaded();
+		EventBusHelper.register(new XPTEventHandler());
+		proxy.load();
 	}
 	
 	@Mod.EventHandler
