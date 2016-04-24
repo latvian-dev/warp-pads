@@ -12,7 +12,7 @@ public class XPTEventHandler
 	@SubscribeEvent
 	public void syncData(EventFTBSync e)
 	{
-		if(e.side.isServer())
+		if(e.world.side.isServer())
 		{
 			NBTTagCompound tag = new NBTTagCompound();
 			
