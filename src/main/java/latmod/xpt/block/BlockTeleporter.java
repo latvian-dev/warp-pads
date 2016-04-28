@@ -3,20 +3,28 @@ package latmod.xpt.block;
 import ftb.lib.LMMod;
 import ftb.lib.api.block.BlockLM;
 import ftb.lib.api.item.ODItems;
-import latmod.xpt.*;
+import latmod.xpt.XPT;
+import latmod.xpt.XPTConfig;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
-import net.minecraft.block.state.*;
+import net.minecraft.block.state.BlockStateContainer;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.*;
-import net.minecraft.entity.boss.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.boss.EntityDragon;
+import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
-import net.minecraft.util.math.*;
-import net.minecraft.world.*;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Mirror;
+import net.minecraft.util.Rotation;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 
 public class BlockTeleporter extends BlockLM
 {
@@ -110,6 +118,6 @@ public class BlockTeleporter extends BlockLM
 	{ return new BlockStateContainer(this, FACING); }
 	
 	@Override
-	public IBlockState getModelState()
-	{ return getDefaultState().withProperty(FACING, EnumFacing.DOWN); }
+	public String getModelState()
+	{ return "facing=down"; }
 }
