@@ -1,8 +1,13 @@
 package latmod.xpt;
 
 import ftb.lib.FTBLib;
-import ftb.lib.api.config.*;
-import latmod.lib.annotations.*;
+import ftb.lib.api.config.ConfigEntryBool;
+import ftb.lib.api.config.ConfigEntryInt;
+import ftb.lib.api.config.ConfigFile;
+import ftb.lib.api.config.ConfigRegistry;
+import latmod.lib.annotations.Flags;
+import latmod.lib.annotations.Info;
+import latmod.lib.annotations.NumberBounds;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.io.File;

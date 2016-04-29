@@ -1,12 +1,16 @@
 package latmod.xpt.client;
 
-import ftb.lib.api.client.*;
+import ftb.lib.api.client.FTBLibClient;
+import ftb.lib.api.client.LMFrustrumUtils;
 import latmod.lib.LMColorUtils;
 import latmod.xpt.block.TileTeleporter;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)

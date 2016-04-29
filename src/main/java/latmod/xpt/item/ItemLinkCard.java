@@ -1,15 +1,20 @@
 package latmod.xpt.item;
 
-import ftb.lib.*;
-import ftb.lib.api.item.*;
+import ftb.lib.BlockDimPos;
+import ftb.lib.LMMod;
+import ftb.lib.api.item.ItemLM;
+import ftb.lib.api.item.ODItems;
 import latmod.xpt.XPT;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 

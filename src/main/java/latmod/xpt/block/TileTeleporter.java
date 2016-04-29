@@ -1,23 +1,33 @@
 package latmod.xpt.block;
 
-import ftb.lib.*;
+import ftb.lib.BlockDimPos;
+import ftb.lib.LMDimUtils;
 import ftb.lib.api.LangKey;
 import ftb.lib.api.tile.TileLM;
-import latmod.lib.*;
-import latmod.xpt.*;
+import latmod.lib.Converter;
+import latmod.lib.IntMap;
+import latmod.xpt.XPTConfig;
+import latmod.xpt.XPTItems;
+import latmod.xpt.XPTLang;
 import latmod.xpt.item.ItemLinkCard;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.*;
+import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
-import net.minecraft.util.math.*;
-import net.minecraft.world.*;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.DimensionType;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileTeleporter extends TileLM
 {

@@ -9,6 +9,8 @@
     }
   },
   "variants": {
+    "normal": {
+    },
     "facing": {
       "up": {
         "x": 180,

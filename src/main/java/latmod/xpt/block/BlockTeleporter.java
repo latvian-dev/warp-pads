@@ -1,5 +1,7 @@
 package latmod.xpt.block;
 
+import ftb.lib.BlockStateSerializer;
+import ftb.lib.FTBLib;
 import ftb.lib.LMMod;
 import ftb.lib.api.block.BlockLM;
 import ftb.lib.api.item.ODItems;
@@ -60,7 +62,7 @@ public class BlockTeleporter extends BlockLM
 	@Override
 	public void loadTiles()
 	{
-		getMod().addTile(TileTeleporter.class, getRegistryName().getResourcePath());
+		FTBLib.addTile(TileTeleporter.class, getRegistryName());
 	}
 	
 	@Override
@@ -119,5 +121,5 @@ public class BlockTeleporter extends BlockLM
 	
 	@Override
 	public String getModelState()
-	{ return "facing=down"; }
+	{ return BlockStateSerializer.getString(FACING, EnumFacing.DOWN); }
 }

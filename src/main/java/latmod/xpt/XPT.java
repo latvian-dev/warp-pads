@@ -1,13 +1,15 @@
 package latmod.xpt;
 
 import ftb.lib.LMMod;
-import net.minecraftforge.fml.common.*;
-import net.minecraftforge.fml.common.event.*;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = XPT.MOD_ID, name = "XPTeleporters", version = "@VERSION@", dependencies = "required-after:FTBL")
+@Mod(modid = XPT.MOD_ID, name = "XPTeleporters", version = "@VERSION@", dependencies = "required-after:ftbl")
 public class XPT
 {
-	protected static final String MOD_ID = "XPT";
+	protected static final String MOD_ID = "xpt";
 	
 	@Mod.Instance(XPT.MOD_ID)
 	public static XPT inst;
