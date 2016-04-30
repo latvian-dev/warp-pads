@@ -23,6 +23,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
@@ -42,8 +43,7 @@ public class TileTeleporter extends TileLM
 		super.readTileData(tag);
 		
 		BlockDimPos link = new BlockDimPos(tag.getIntArray("Link"));
-		if(link.isValid()) linked = link;
-		else linked = null;
+		linked = link.pos.getY() > 0 ? link : null;
 		pcooldown = cooldown = tag.getInteger("Cooldown");
 		
 		if(tag.hasKey("Name")) name = tag.getString("Name");
@@ -67,7 +67,7 @@ public class TileTeleporter extends TileLM
 		
 		if(data.containsKey(1))
 		{
-			linked = new BlockDimPos(data.get(1), data.get(2), data.get(3), DimensionType.getById(data.get(4)));
+			linked = new BlockDimPos(new Vec3i(data.get(1), data.get(2), data.get(3)), DimensionType.getById(data.get(4)));
 		}
 		else linked = null;
 		
@@ -83,9 +83,9 @@ public class TileTeleporter extends TileLM
 		
 		if(linked != null)
 		{
-			data.put(1, linked.x);
-			data.put(2, linked.y);
-			data.put(3, linked.z);
+			data.put(1, linked.pos.getX());
+			data.put(2, linked.pos.getY());
+			data.put(3, linked.pos.getZ());
 			data.put(4, linked.dim.getId());
 		}
 		
@@ -135,7 +135,7 @@ public class TileTeleporter extends TileLM
 				if(t != null)
 				{
 					boolean crossdim = pos.dim != getDimension();
-					int levels = XPTConfig.only_linking_uses_xp.getAsBoolean() ? getLevels(pos.x, pos.y, pos.z, crossdim) : 0;
+					int levels = XPTConfig.only_linking_uses_xp.getAsBoolean() ? getLevels(pos.pos, crossdim) : 0;
 					
 					if(!XPTConfig.canConsumeLevels(ep, levels))
 					{
@@ -183,7 +183,7 @@ public class TileTeleporter extends TileLM
 					if(t != null && t.linked == null) t.createLink(this, false);
 					
 					boolean crossdim = linked.dim != getDimension();
-					int levels = XPTConfig.only_linking_uses_xp.getAsBoolean() ? 0 : getLevels(linked.x, linked.y, linked.z, crossdim);
+					int levels = XPTConfig.only_linking_uses_xp.getAsBoolean() ? 0 : getLevels(linked.pos, crossdim);
 					
 					if(!XPTConfig.canConsumeLevels(ep, levels))
 					{
@@ -191,7 +191,7 @@ public class TileTeleporter extends TileLM
 						return true;
 					}
 					
-					worldObj.playSound(ep, getPos().getX() + 0.5D, getPos().getY() + 1.5D, getPos().getZ() + 0.5D, SoundEvents.entity_endermen_teleport, SoundCategory.BLOCKS, 1F, 1F);
+					playSound(SoundEvents.entity_endermen_teleport, SoundCategory.BLOCKS, 1F, 1F);
 					
 					cooldown = XPTConfig.cooldownTicks();
 					
@@ -205,7 +205,8 @@ public class TileTeleporter extends TileLM
 							t.cooldown = cooldown;
 							t.markDirty();
 						}
-						ep.worldObj.playSound(ep, linked.x + 0.5D, linked.y + 1.5D, linked.z + 0.5D, SoundEvents.entity_endermen_teleport, SoundCategory.BLOCKS, 1F, 1F);
+						
+						playSound(SoundEvents.entity_endermen_teleport, SoundCategory.BLOCKS, 1F, 1F);
 					}
 				}
 			}
@@ -241,13 +242,13 @@ public class TileTeleporter extends TileLM
 	
 	public static TileTeleporter getTileXPT(BlockDimPos pos)
 	{
-		if(pos == null || pos.y < 0 || pos.y > 256) return null;
+		if(pos == null || pos.pos.getY() < 0 || pos.pos.getY() >= 256) return null;
 		
 		World w = LMDimUtils.getWorld(pos.dim);
 		
 		if(w != null)
 		{
-			TileEntity te = w.getTileEntity(pos.toBlockPos());
+			TileEntity te = w.getTileEntity(pos.pos);
 			
 			if(te != null && te instanceof TileTeleporter) return (TileTeleporter) te;
 		}
@@ -258,10 +259,10 @@ public class TileTeleporter extends TileLM
 	public TileTeleporter getLinkedTile()
 	{ return getTileXPT(linked); }
 	
-	private int getLevels(int x, int y, int z, boolean crossdim)
+	private int getLevels(Vec3i pos, boolean crossdim)
 	{
 		if(crossdim) return XPTConfig.levels_for_crossdim.getAsInt();
-		double dist = Math.sqrt(getDistanceSq(x + 0.5D, y + 0.5D, z + 0.5D));
+		double dist = Math.sqrt(getDistanceSq(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D));
 		return Math.max(0, ((XPTConfig.levels_for_1000_blocks.getAsInt() > 0) ? MathHelper.ceiling_double_int(XPTConfig.levels_for_1000_blocks.getAsInt() * dist / 1000D) : 0) - 1);
 	}
 	

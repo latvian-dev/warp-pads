@@ -2,11 +2,7 @@
   "forge_marker": 1,
   "defaults": {
     "model": "xpt:teleporter",
-    "transform": "forge:default-block",
-    "textures": {
-      "particle": "xpt:blocks/teleporter",
-      "all": "xpt:blocks/teleporter"
-    }
+    "transform": "forge:default-block"
   },
   "variants": {
     "facing": {
