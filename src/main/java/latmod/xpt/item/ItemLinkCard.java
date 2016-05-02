@@ -25,7 +25,7 @@ public class ItemLinkCard extends ItemLM
 	public ItemLinkCard()
 	{
 		super();
-		setCreativeTab(CreativeTabs.tabTransport);
+		setCreativeTab(CreativeTabs.TRANSPORTATION);
 		setMaxStackSize(1);
 	}
 	
@@ -36,7 +36,7 @@ public class ItemLinkCard extends ItemLM
 	@Override
 	public void loadRecipes()
 	{
-		XPT.mod.recipes.addShapelessRecipe(new ItemStack(this), ODItems.DIAMOND, ODItems.EMERALD, Items.paper, Items.ender_pearl);
+		XPT.mod.recipes.addShapelessRecipe(new ItemStack(this), ODItems.DIAMOND, ODItems.EMERALD, Items.PAPER, Items.ENDER_PEARL);
 	}
 	
 	public static boolean hasData(ItemStack is)
@@ -53,7 +53,7 @@ public class ItemLinkCard extends ItemLM
 		if(!w.isRemote && ep.isSneaking() && hasData(is))
 		{
 			is.getTagCompound().removeTag(NBT_TAG);
-			if(is.getTagCompound().hasNoTags()) is.setTagCompound(null);
+			if(is.getTagCompound().hasNoTags()) { is.setTagCompound(null); }
 		}
 		
 		return new ActionResult<>(EnumActionResult.SUCCESS, is);

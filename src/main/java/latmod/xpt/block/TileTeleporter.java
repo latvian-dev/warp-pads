@@ -112,7 +112,7 @@ public class TileTeleporter extends TileLM
 	{
 		if(worldObj.isRemote) { return true; }
 		
-		if(is != null && is.getItem() == Items.name_tag)
+		if(is != null && is.getItem() == Items.NAME_TAG)
 		{
 			if(!is.hasDisplayName()) { return true; }
 			
@@ -192,7 +192,7 @@ public class TileTeleporter extends TileLM
 						return true;
 					}
 					
-					playSound(SoundEvents.entity_endermen_teleport, SoundCategory.BLOCKS, 1F, 1F);
+					playSound(SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.BLOCKS, 1F, 1F);
 					
 					cooldown = XPTConfig.cooldownTicks();
 					
@@ -207,7 +207,7 @@ public class TileTeleporter extends TileLM
 							t.markDirty();
 						}
 						
-						playSound(SoundEvents.entity_endermen_teleport, SoundCategory.BLOCKS, 1F, 1F);
+						playSound(SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.BLOCKS, 1F, 1F);
 					}
 				}
 			}

@@ -37,10 +37,10 @@ public class BlockTeleporter extends BlockLM
 	
 	public BlockTeleporter()
 	{
-		super(Material.iron);
+		super(Material.IRON);
 		setHardness(1F);
 		setResistance(100000F);
-		setCreativeTab(CreativeTabs.tabTransport);
+		setCreativeTab(CreativeTabs.TRANSPORTATION);
 	}
 	
 	@Override
@@ -68,7 +68,7 @@ public class BlockTeleporter extends BlockLM
 	@Override
 	public void loadRecipes()
 	{
-		getMod().recipes.addRecipe(new ItemStack(this, 2), "IEI", "IPI", 'E', "blockEmerald", 'I', ODItems.IRON, 'P', Items.ender_pearl);
+		getMod().recipes.addRecipe(new ItemStack(this, 2), "IEI", "IPI", 'E', "blockEmerald", 'I', ODItems.IRON, 'P', Items.ENDER_PEARL);
 	}
 	
 	@Override
