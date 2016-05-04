@@ -3,6 +3,7 @@ package latmod.xpt.block;
 import ftb.lib.BlockStateSerializer;
 import ftb.lib.FTBLib;
 import ftb.lib.LMMod;
+import ftb.lib.MathHelperMC;
 import ftb.lib.api.block.BlockLM;
 import ftb.lib.api.item.ODItems;
 import latmod.xpt.XPT;
@@ -31,9 +32,7 @@ import net.minecraft.world.World;
 public class BlockTeleporter extends BlockLM
 {
 	public static final PropertyDirection FACING = PropertyDirection.create("facing");
-	private static final double H0 = 1D / 8D;
-	private static final double H1 = 1D - H0;
-	public static final AxisAlignedBB AABB[] = {new AxisAlignedBB(0D, 0D, 0D, 1D, H0, 1D), new AxisAlignedBB(0D, H1, 0D, 1D, 1D, 1D), new AxisAlignedBB(0D, 0D, 0D, 1D, 1D, H0), new AxisAlignedBB(0D, 0D, H1, 1D, 1D, 1D), new AxisAlignedBB(0D, 0D, 0D, H0, 1D, 1D), new AxisAlignedBB(H1, 0D, 0D, 1D, 1D, 1D)};
+	public static final AxisAlignedBB AABB[] = MathHelperMC.getRotatedBoxes(new AxisAlignedBB(0D, 0D, 0D, 1D, 1D / 8D, 1D), false);
 	
 	public BlockTeleporter()
 	{
@@ -80,15 +79,15 @@ public class BlockTeleporter extends BlockLM
 	{ return AABB[state.getValue(FACING).ordinal()]; }
 	
 	@Override
+	public boolean isFullCube(IBlockState state)
+	{ return false; }
+	
+	@Override
 	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World w, BlockPos pos)
 	{ return XPTConfig.soft_blocks.getAsBoolean() ? NULL_AABB : getBoundingBox(state, w, pos); }
 	
 	@Override
 	public boolean isOpaqueCube(IBlockState state)
-	{ return false; }
-	
-	@Override
-	public boolean isFullCube(IBlockState state)
 	{ return false; }
 	
 	@Override
