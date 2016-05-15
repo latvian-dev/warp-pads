@@ -1,9 +1,9 @@
 package latmod.xpt.item;
 
-import ftb.lib.BlockDimPos;
-import ftb.lib.LMMod;
-import ftb.lib.api.item.ItemLM;
-import ftb.lib.api.item.ODItems;
+import com.feed_the_beast.ftbl.api.item.ItemLM;
+import com.feed_the_beast.ftbl.api.item.ODItems;
+import com.feed_the_beast.ftbl.util.BlockDimPos;
+import com.feed_the_beast.ftbl.util.LMMod;
 import latmod.xpt.XPT;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;

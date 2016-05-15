@@ -1,7 +1,7 @@
 package latmod.xpt.client;
 
-import ftb.lib.api.client.FTBLibClient;
-import ftb.lib.api.client.LMFrustrumUtils;
+import com.feed_the_beast.ftbl.api.client.FTBLibClient;
+import com.feed_the_beast.ftbl.api.client.LMFrustrumUtils;
 import latmod.lib.LMColorUtils;
 import latmod.xpt.block.TileTeleporter;
 import net.minecraft.client.renderer.GlStateManager;
@@ -177,10 +177,10 @@ public class RenderTeleporter extends TileEntitySpecialRenderer<TileTeleporter>
 	
 	private double getAlpha(double dist)
 	{
-		if(dist < 2D) return dist / 2D;
+		if(dist < 2D) { return dist / 2D; }
 		double maxDist = 5D;
-		if(dist <= maxDist) return 1F;
-		if(dist > maxDist + 3D) return 0F;
+		if(dist <= maxDist) { return 1F; }
+		if(dist > maxDist + 3D) { return 0F; }
 		return (maxDist + 3D - dist) / (maxDist - 3D);
 	}
 }

@@ -1,6 +1,6 @@
 package latmod.xpt;
 
-import ftb.lib.LMMod;
+import com.feed_the_beast.ftbl.util.LMMod;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -32,6 +32,6 @@ public class XPT
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent e)
 	{
-		if(XPTConfig.enable_crafting.getAsBoolean()) mod.loadRecipes();
+		if(XPTConfig.enable_crafting.getAsBoolean()) { mod.loadRecipes(); }
 	}
 }

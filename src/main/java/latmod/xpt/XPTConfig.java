@@ -1,10 +1,10 @@
 package latmod.xpt;
 
-import ftb.lib.FTBLib;
-import ftb.lib.api.config.ConfigEntryBool;
-import ftb.lib.api.config.ConfigEntryInt;
-import ftb.lib.api.config.ConfigFile;
-import ftb.lib.api.config.ConfigRegistry;
+import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
+import com.feed_the_beast.ftbl.api.config.ConfigEntryInt;
+import com.feed_the_beast.ftbl.api.config.ConfigFile;
+import com.feed_the_beast.ftbl.api.config.ConfigRegistry;
+import com.feed_the_beast.ftbl.util.FTBLib;
 import latmod.lib.annotations.Flags;
 import latmod.lib.annotations.Info;
 import latmod.lib.annotations.NumberBounds;
@@ -59,7 +59,7 @@ public class XPTConfig // XPT
 	
 	public static void consumeLevels(EntityPlayer ep, int levels)
 	{
-		if(levels <= 0 || ep.capabilities.isCreativeMode) return;
+		if(levels <= 0 || ep.capabilities.isCreativeMode) { return; }
 		ep.addExperienceLevel(-levels);
 	}
 	

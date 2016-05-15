@@ -1,9 +1,9 @@
 package latmod.xpt.block;
 
-import ftb.lib.BlockDimPos;
-import ftb.lib.LMDimUtils;
-import ftb.lib.api.LangKey;
-import ftb.lib.api.tile.TileLM;
+import com.feed_the_beast.ftbl.api.LangKey;
+import com.feed_the_beast.ftbl.api.tile.TileLM;
+import com.feed_the_beast.ftbl.util.BlockDimPos;
+import com.feed_the_beast.ftbl.util.LMDimUtils;
 import latmod.lib.Converter;
 import latmod.lib.IntMap;
 import latmod.xpt.XPTConfig;

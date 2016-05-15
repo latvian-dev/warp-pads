@@ -1,6 +1,6 @@
 package latmod.xpt;
 
-import ftb.lib.api.LangKey;
+import com.feed_the_beast.ftbl.api.LangKey;
 
 /**
  * Created by LatvianModder on 17.04.2016.
