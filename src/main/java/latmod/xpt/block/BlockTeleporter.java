@@ -8,8 +8,8 @@ import com.feed_the_beast.ftbl.util.LMMod;
 import com.feed_the_beast.ftbl.util.MathHelperMC;
 import latmod.xpt.XPT;
 import latmod.xpt.XPTConfig;
+import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
@@ -31,8 +31,7 @@ import net.minecraft.world.World;
 
 public class BlockTeleporter extends BlockLM
 {
-	public static final PropertyDirection FACING = PropertyDirection.create("facing");
-	public static final AxisAlignedBB AABB[] = MathHelperMC.getRotatedBoxes(new AxisAlignedBB(0D, 0D, 0D, 1D, 1D / 8D, 1D), false);
+	public static final AxisAlignedBB AABB[] = MathHelperMC.getRotatedBoxes(new AxisAlignedBB(0D, 0D, 0D, 1D, 1D / 8D, 1D));
 	
 	public BlockTeleporter()
 	{
@@ -76,7 +75,7 @@ public class BlockTeleporter extends BlockLM
 	
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess w, BlockPos pos)
-	{ return AABB[state.getValue(FACING).ordinal()]; }
+	{ return AABB[state.getValue(BlockDirectional.FACING).ordinal()]; }
 	
 	@Override
 	public boolean isFullCube(IBlockState state)
@@ -96,29 +95,29 @@ public class BlockTeleporter extends BlockLM
 	
 	@Override
 	public IBlockState withRotation(IBlockState state, Rotation rot)
-	{ return state.withProperty(FACING, rot.rotate(state.getValue(FACING))); }
+	{ return state.withProperty(BlockDirectional.FACING, rot.rotate(state.getValue(BlockDirectional.FACING))); }
 	
 	@Override
 	public IBlockState withMirror(IBlockState state, Mirror mirrorIn)
-	{ return state.withRotation(mirrorIn.toRotation(state.getValue(FACING))); }
+	{ return state.withRotation(mirrorIn.toRotation(state.getValue(BlockDirectional.FACING))); }
 	
 	@Override
 	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
-	{ return getDefaultState().withProperty(FACING, facing.getOpposite()); }
+	{ return getDefaultState().withProperty(BlockDirectional.FACING, facing.getOpposite()); }
 	
 	@Override
 	public IBlockState getStateFromMeta(int meta)
-	{ return getDefaultState().withProperty(FACING, EnumFacing.getHorizontal(meta)); }
+	{ return getDefaultState().withProperty(BlockDirectional.FACING, EnumFacing.getHorizontal(meta)); }
 	
 	@Override
 	public int getMetaFromState(IBlockState state)
-	{ return state.getValue(FACING).ordinal(); }
+	{ return state.getValue(BlockDirectional.FACING).ordinal(); }
 	
 	@Override
 	protected BlockStateContainer createBlockState()
-	{ return new BlockStateContainer(this, FACING); }
+	{ return new BlockStateContainer(this, BlockDirectional.FACING); }
 	
 	@Override
 	public String getModelState()
-	{ return BlockStateSerializer.getString(FACING, EnumFacing.DOWN); }
+	{ return BlockStateSerializer.getString(BlockDirectional.FACING, EnumFacing.DOWN); }
 }
