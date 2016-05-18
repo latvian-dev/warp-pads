@@ -39,10 +39,6 @@ public class XPTConfig // XPT
 	@Info("Soft blocks are like torches - you can walk trough them, BUT it solved the 'getting stuck in block' issue")
 	public static final ConfigEntryBool soft_blocks = new ConfigEntryBool("soft_blocks", true);
 	
-	@NumberBounds(min = -1, max = 200)
-	@Info({"-1 - Disabled", "0+ - Enables Recall Remote crafting and usage"})
-	public static final ConfigEntryInt levels_for_recall = new ConfigEntryInt("levels_for_recall", -1);
-	
 	public static void load()
 	{
 		configFile.setFile(new File(FTBLib.folderConfig, "/LatMod/XPT.json"));
