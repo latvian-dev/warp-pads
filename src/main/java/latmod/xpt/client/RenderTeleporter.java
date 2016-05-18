@@ -16,46 +16,46 @@ import org.lwjgl.opengl.GL11;
 @SideOnly(Side.CLIENT)
 public class RenderTeleporter extends TileEntitySpecialRenderer<TileTeleporter>
 {
-	private static long debugTimer = 0L;
-	
-	@Override
-	public void renderTileEntityAt(TileTeleporter te, double rx, double ry, double rz, float partialTicks, int destroyStage)
-	{
-		double tx = te.getPos().getX() + 0.5D;
-		double tz = te.getPos().getZ() + 0.5D;
-		
-		GlStateManager.pushMatrix();
-		GlStateManager.translate(rx + 0.5D, ry + 0.5D, rz + 0.5D);
-		GlStateManager.disableCull();
-		GlStateManager.enableBlend();
-		GlStateManager.disableLighting();
-		//render
-		
-		float alpha = 1F;
-		
-		te.name = "XPT, FTBLib & FTBUtilities in 1.9 \\o/";
-		
-		if(alpha > 0.05F && !te.name.isEmpty())
-		{
-			GlStateManager.pushMatrix();
-			GlStateManager.translate(rx + 0.5D, ry + 1.6D, rz + 0.5D);
-			GL11.glNormal3f(0F, 1F, 0F);
-			//OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
-			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-			GlStateManager.enableTexture2D();
-			float f1 = 0.02F;
-			GlStateManager.scale(-f1, -f1, f1);
-			
-			GlStateManager.rotate((float) (-Math.atan2(tx - LMFrustrumUtils.playerX, tz - LMFrustrumUtils.playerZ) * 180D / Math.PI), 0F, 1F, 0F);
-			
-			GlStateManager.color(1F, 1F, 1F, 1F);
-			FTBLibClient.mc.fontRendererObj.drawString(te.name, -(FTBLibClient.mc.fontRendererObj.getStringWidth(te.name) / 2), -8, LMColorUtils.getRGBAF(1F, 1F, 1F, alpha));
-			GlStateManager.popMatrix();
-		}
-		
-		GlStateManager.enableCull();
-		GlStateManager.popMatrix();
-		
+    private static long debugTimer = 0L;
+    
+    @Override
+    public void renderTileEntityAt(TileTeleporter te, double rx, double ry, double rz, float partialTicks, int destroyStage)
+    {
+        double tx = te.getPos().getX() + 0.5D;
+        double tz = te.getPos().getZ() + 0.5D;
+        
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(rx + 0.5D, ry + 0.5D, rz + 0.5D);
+        GlStateManager.disableCull();
+        GlStateManager.enableBlend();
+        GlStateManager.disableLighting();
+        //render
+        
+        float alpha = 1F;
+        
+        te.name = "XPT, FTBLib & FTBUtilities in 1.9 \\o/";
+        
+        if(alpha > 0.05F && !te.name.isEmpty())
+        {
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(rx + 0.5D, ry + 1.6D, rz + 0.5D);
+            GL11.glNormal3f(0F, 1F, 0F);
+            //OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
+            GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+            GlStateManager.enableTexture2D();
+            float f1 = 0.02F;
+            GlStateManager.scale(-f1, -f1, f1);
+            
+            GlStateManager.rotate((float) (-Math.atan2(tx - LMFrustrumUtils.playerX, tz - LMFrustrumUtils.playerZ) * 180D / Math.PI), 0F, 1F, 0F);
+            
+            GlStateManager.color(1F, 1F, 1F, 1F);
+            FTBLibClient.mc.fontRendererObj.drawString(te.name, -(FTBLibClient.mc.fontRendererObj.getStringWidth(te.name) / 2), -8, LMColorUtils.getRGBAF(1F, 1F, 1F, alpha));
+            GlStateManager.popMatrix();
+        }
+        
+        GlStateManager.enableCull();
+        GlStateManager.popMatrix();
+        
 		/*
 		double tx = t.getPos().getX() + 0.5D;
 		double tz = t.getPos().getZ() + 0.5D;
@@ -161,26 +161,26 @@ public class RenderTeleporter extends TileEntitySpecialRenderer<TileTeleporter>
 		GlStateManager.enableTexture2D();
 		
 		*/
-	}
-	
-	private void drawRect(double x, double y, double w, double h, double z)
-	{
-		Tessellator tessellator = Tessellator.getInstance();
-		VertexBuffer buffer = tessellator.getBuffer();
-		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
-		buffer.pos(x, y, z).endVertex();
-		buffer.pos(x + w, y, z).endVertex();
-		buffer.pos(x + w, y + h, z).endVertex();
-		buffer.pos(x, y + h, z).endVertex();
-		tessellator.draw();
-	}
-	
-	private double getAlpha(double dist)
-	{
-		if(dist < 2D) { return dist / 2D; }
-		double maxDist = 5D;
-		if(dist <= maxDist) { return 1F; }
-		if(dist > maxDist + 3D) { return 0F; }
-		return (maxDist + 3D - dist) / (maxDist - 3D);
-	}
+    }
+    
+    private void drawRect(double x, double y, double w, double h, double z)
+    {
+        Tessellator tessellator = Tessellator.getInstance();
+        VertexBuffer buffer = tessellator.getBuffer();
+        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
+        buffer.pos(x, y, z).endVertex();
+        buffer.pos(x + w, y, z).endVertex();
+        buffer.pos(x + w, y + h, z).endVertex();
+        buffer.pos(x, y + h, z).endVertex();
+        tessellator.draw();
+    }
+    
+    private double getAlpha(double dist)
+    {
+        if(dist < 2D) { return dist / 2D; }
+        double maxDist = 5D;
+        if(dist <= maxDist) { return 1F; }
+        if(dist > maxDist + 3D) { return 0F; }
+        return (maxDist + 3D - dist) / (maxDist - 3D);
+    }
 }

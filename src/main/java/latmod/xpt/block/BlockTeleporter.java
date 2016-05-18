@@ -31,93 +31,93 @@ import net.minecraft.world.World;
 
 public class BlockTeleporter extends BlockLM
 {
-	public static final AxisAlignedBB AABB[] = MathHelperMC.getRotatedBoxes(new AxisAlignedBB(0D, 0D, 0D, 1D, 1D / 8D, 1D));
-	
-	public BlockTeleporter()
-	{
-		super(Material.IRON);
-		setHardness(1F);
-		setResistance(100000F);
-		setCreativeTab(CreativeTabs.TRANSPORTATION);
-	}
-	
-	@Override
-	public LMMod getMod()
-	{ return XPT.mod; }
-	
-	@Override
-	public boolean canHarvestBlock(IBlockAccess world, BlockPos pos, EntityPlayer player)
-	{ return true; }
-	
-	@Override
-	public boolean hasTileEntity(IBlockState state)
-	{ return true; }
-	
-	@Override
-	public TileEntity createTileEntity(World w, IBlockState state)
-	{ return new TileTeleporter(); }
-	
-	@Override
-	public void loadTiles()
-	{
-		FTBLib.addTile(TileTeleporter.class, getRegistryName());
-	}
-	
-	@Override
-	public void loadRecipes()
-	{
-		getMod().recipes.addRecipe(new ItemStack(this, 2), "IEI", "IPI", 'E', "blockEmerald", 'I', ODItems.IRON, 'P', Items.ENDER_PEARL);
-	}
-	
-	@Override
-	public int damageDropped(IBlockState state)
-	{ return 0; }
-	
-	@Override
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess w, BlockPos pos)
-	{ return AABB[state.getValue(BlockDirectional.FACING).ordinal()]; }
-	
-	@Override
-	public boolean isFullCube(IBlockState state)
-	{ return false; }
-	
-	@Override
-	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World w, BlockPos pos)
-	{ return XPTConfig.soft_blocks.getAsBoolean() ? NULL_AABB : getBoundingBox(state, w, pos); }
-	
-	@Override
-	public boolean isOpaqueCube(IBlockState state)
-	{ return false; }
-	
-	@Override
-	public boolean canEntityDestroy(IBlockState state, IBlockAccess world, BlockPos pos, Entity entity)
-	{ return !(entity instanceof EntityDragon || entity instanceof EntityWither); }
-	
-	@Override
-	public IBlockState withRotation(IBlockState state, Rotation rot)
-	{ return state.withProperty(BlockDirectional.FACING, rot.rotate(state.getValue(BlockDirectional.FACING))); }
-	
-	@Override
-	public IBlockState withMirror(IBlockState state, Mirror mirrorIn)
-	{ return state.withRotation(mirrorIn.toRotation(state.getValue(BlockDirectional.FACING))); }
-	
-	@Override
-	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
-	{ return getDefaultState().withProperty(BlockDirectional.FACING, facing.getOpposite()); }
-	
-	@Override
-	public IBlockState getStateFromMeta(int meta)
-	{ return getDefaultState().withProperty(BlockDirectional.FACING, EnumFacing.getHorizontal(meta)); }
-	
-	@Override
-	public int getMetaFromState(IBlockState state)
-	{ return state.getValue(BlockDirectional.FACING).ordinal(); }
-	
-	@Override
-	protected BlockStateContainer createBlockState()
-	{ return new BlockStateContainer(this, BlockDirectional.FACING); }
-	
-	@Override
-	public String getModelState()
-	{ return BlockStateSerializer.getString(BlockDirectional.FACING, EnumFacing.DOWN); }
+    public static final AxisAlignedBB AABB[] = MathHelperMC.getRotatedBoxes(new AxisAlignedBB(0D, 0D, 0D, 1D, 1D / 8D, 1D));
+    
+    public BlockTeleporter()
+    {
+        super(Material.IRON);
+        setHardness(1F);
+        setResistance(100000F);
+        setCreativeTab(CreativeTabs.TRANSPORTATION);
+    }
+    
+    @Override
+    public LMMod getMod()
+    { return XPT.mod; }
+    
+    @Override
+    public boolean canHarvestBlock(IBlockAccess world, BlockPos pos, EntityPlayer player)
+    { return true; }
+    
+    @Override
+    public boolean hasTileEntity(IBlockState state)
+    { return true; }
+    
+    @Override
+    public TileEntity createTileEntity(World w, IBlockState state)
+    { return new TileTeleporter(); }
+    
+    @Override
+    public void loadTiles()
+    {
+        FTBLib.addTile(TileTeleporter.class, getRegistryName());
+    }
+    
+    @Override
+    public void loadRecipes()
+    {
+        getMod().recipes.addRecipe(new ItemStack(this, 2), "IEI", "IPI", 'E', "blockEmerald", 'I', ODItems.IRON, 'P', Items.ENDER_PEARL);
+    }
+    
+    @Override
+    public int damageDropped(IBlockState state)
+    { return 0; }
+    
+    @Override
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess w, BlockPos pos)
+    { return AABB[state.getValue(BlockDirectional.FACING).ordinal()]; }
+    
+    @Override
+    public boolean isFullCube(IBlockState state)
+    { return false; }
+    
+    @Override
+    public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World w, BlockPos pos)
+    { return XPTConfig.soft_blocks.getAsBoolean() ? NULL_AABB : getBoundingBox(state, w, pos); }
+    
+    @Override
+    public boolean isOpaqueCube(IBlockState state)
+    { return false; }
+    
+    @Override
+    public boolean canEntityDestroy(IBlockState state, IBlockAccess world, BlockPos pos, Entity entity)
+    { return !(entity instanceof EntityDragon || entity instanceof EntityWither); }
+    
+    @Override
+    public IBlockState withRotation(IBlockState state, Rotation rot)
+    { return state.withProperty(BlockDirectional.FACING, rot.rotate(state.getValue(BlockDirectional.FACING))); }
+    
+    @Override
+    public IBlockState withMirror(IBlockState state, Mirror mirrorIn)
+    { return state.withRotation(mirrorIn.toRotation(state.getValue(BlockDirectional.FACING))); }
+    
+    @Override
+    public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
+    { return getDefaultState().withProperty(BlockDirectional.FACING, facing.getOpposite()); }
+    
+    @Override
+    public IBlockState getStateFromMeta(int meta)
+    { return getDefaultState().withProperty(BlockDirectional.FACING, EnumFacing.getHorizontal(meta)); }
+    
+    @Override
+    public int getMetaFromState(IBlockState state)
+    { return state.getValue(BlockDirectional.FACING).ordinal(); }
+    
+    @Override
+    protected BlockStateContainer createBlockState()
+    { return new BlockStateContainer(this, BlockDirectional.FACING); }
+    
+    @Override
+    public String getModelState()
+    { return BlockStateSerializer.getString(BlockDirectional.FACING, EnumFacing.DOWN); }
 }
