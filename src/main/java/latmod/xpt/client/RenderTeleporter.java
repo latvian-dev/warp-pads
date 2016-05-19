@@ -17,24 +17,24 @@ import org.lwjgl.opengl.GL11;
 public class RenderTeleporter extends TileEntitySpecialRenderer<TileTeleporter>
 {
     private static long debugTimer = 0L;
-    
+
     @Override
     public void renderTileEntityAt(TileTeleporter te, double rx, double ry, double rz, float partialTicks, int destroyStage)
     {
         double tx = te.getPos().getX() + 0.5D;
         double tz = te.getPos().getZ() + 0.5D;
-        
+
         GlStateManager.pushMatrix();
         GlStateManager.translate(rx + 0.5D, ry + 0.5D, rz + 0.5D);
         GlStateManager.disableCull();
         GlStateManager.enableBlend();
         GlStateManager.disableLighting();
         //render
-        
+
         float alpha = 1F;
-        
+
         te.name = "XPT, FTBLib & FTBUtilities in 1.9 \\o/";
-        
+
         if(alpha > 0.05F && !te.name.isEmpty())
         {
             GlStateManager.pushMatrix();
@@ -45,19 +45,19 @@ public class RenderTeleporter extends TileEntitySpecialRenderer<TileTeleporter>
             GlStateManager.enableTexture2D();
             float f1 = 0.02F;
             GlStateManager.scale(-f1, -f1, f1);
-            
+
             GlStateManager.rotate((float) (-Math.atan2(tx - LMFrustrumUtils.playerX, tz - LMFrustrumUtils.playerZ) * 180D / Math.PI), 0F, 1F, 0F);
-            
+
             GlStateManager.color(1F, 1F, 1F, 1F);
             FTBLibClient.mc.fontRendererObj.drawString(te.name, -(FTBLibClient.mc.fontRendererObj.getStringWidth(te.name) / 2), -8, LMColorUtils.getRGBAF(1F, 1F, 1F, alpha));
             GlStateManager.popMatrix();
         }
-        
+
         GlStateManager.enableCull();
         GlStateManager.popMatrix();
         
 		/*
-		double tx = t.getPos().getX() + 0.5D;
+        double tx = t.getPos().getX() + 0.5D;
 		double tz = t.getPos().getZ() + 0.5D;
 		
 		//double dist = mc.thePlayer.getDistance(t.xCoord + 0.5D, t.yCoord + 0.125D, t.zCoord + 0.5D);
@@ -162,7 +162,7 @@ public class RenderTeleporter extends TileEntitySpecialRenderer<TileTeleporter>
 		
 		*/
     }
-    
+
     private void drawRect(double x, double y, double w, double h, double z)
     {
         Tessellator tessellator = Tessellator.getInstance();
@@ -174,7 +174,7 @@ public class RenderTeleporter extends TileEntitySpecialRenderer<TileTeleporter>
         buffer.pos(x, y + h, z).endVertex();
         tessellator.draw();
     }
-    
+
     private double getAlpha(double dist)
     {
         if(dist < 2D) { return dist / 2D; }

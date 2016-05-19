@@ -10,7 +10,7 @@ public class XPTItems
 {
     public static BlockTeleporter teleporter;
     public static ItemLinkCard link_card;
-    
+
     public static void init()
     {
         teleporter = XPT.mod.register("teleporter", new BlockTeleporter());

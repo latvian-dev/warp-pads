@@ -10,15 +10,15 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 public class XPT
 {
     protected static final String MOD_ID = "xpt";
-    
+
     @Mod.Instance(XPT.MOD_ID)
     public static XPT inst;
-    
+
     @SidedProxy(clientSide = "latmod.xpt.client.XPTClient", serverSide = "latmod.xpt.XPTCommon")
     public static XPTCommon proxy;
-    
+
     public static LMMod mod;
-    
+
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent e)
     {
@@ -28,7 +28,7 @@ public class XPT
         proxy.load();
         mod.onPostLoaded();
     }
-    
+
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent e)
     {
