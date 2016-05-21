@@ -25,7 +25,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3i;
-import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.relauncher.Side;
@@ -84,7 +83,7 @@ public class TileTeleporter extends TileLM
 
         if(data.containsKey(1))
         {
-            linked = new BlockDimPos(new BlockPos(data.get(1), data.get(2), data.get(3)), DimensionType.getById(data.get(4)));
+            linked = new BlockDimPos(new BlockPos(data.get(1), data.get(2), data.get(3)), data.get(4));
         }
         else { linked = null; }
 
@@ -103,7 +102,7 @@ public class TileTeleporter extends TileLM
             data.put(1, linked.pos.getX());
             data.put(2, linked.pos.getY());
             data.put(3, linked.pos.getZ());
-            data.put(4, linked.dim.getId());
+            data.put(4, linked.dim);
         }
 
         tag.setIntArray("D", data.toArray());

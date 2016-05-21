@@ -1,6 +1,7 @@
 package latmod.xpt;
 
 import com.feed_the_beast.ftbl.util.LMMod;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -26,6 +27,7 @@ public class XPT
         XPTItems.init();
         XPTConfig.load();
         proxy.load();
+        MinecraftForge.EVENT_BUS.register(new XPTEventHandler());
         mod.onPostLoaded();
     }
 
