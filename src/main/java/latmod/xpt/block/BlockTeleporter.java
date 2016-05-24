@@ -2,7 +2,6 @@ package latmod.xpt.block;
 
 import com.feed_the_beast.ftbl.api.block.BlockLM;
 import com.feed_the_beast.ftbl.api.item.ODItems;
-import com.feed_the_beast.ftbl.util.BlockStateSerializer;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.LMMod;
 import com.feed_the_beast.ftbl.util.MathHelperMC;
@@ -39,23 +38,32 @@ public class BlockTeleporter extends BlockLM
         setHardness(1F);
         setResistance(100000F);
         setCreativeTab(CreativeTabs.TRANSPORTATION);
+        setDefaultState(blockState.getBaseState().withProperty(BlockDirectional.FACING, EnumFacing.DOWN));
     }
 
     @Override
     public LMMod getMod()
-    { return XPT.mod; }
+    {
+        return XPT.mod;
+    }
 
     @Override
     public boolean canHarvestBlock(IBlockAccess world, BlockPos pos, EntityPlayer player)
-    { return true; }
+    {
+        return true;
+    }
 
     @Override
     public boolean hasTileEntity(IBlockState state)
-    { return true; }
+    {
+        return true;
+    }
 
     @Override
     public TileEntity createTileEntity(World w, IBlockState state)
-    { return new TileTeleporter(); }
+    {
+        return new TileTeleporter();
+    }
 
     @Override
     public void loadTiles()
@@ -71,53 +79,81 @@ public class BlockTeleporter extends BlockLM
 
     @Override
     public int damageDropped(IBlockState state)
-    { return 0; }
+    {
+        return 0;
+    }
 
     @Override
+    @Deprecated
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess w, BlockPos pos)
-    { return AABB[state.getValue(BlockDirectional.FACING).ordinal()]; }
+    {
+        return AABB[state.getValue(BlockDirectional.FACING).ordinal()];
+    }
 
     @Override
+    @Deprecated
     public boolean isFullCube(IBlockState state)
-    { return false; }
+    {
+        return false;
+    }
 
     @Override
+    @Deprecated
     public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World w, BlockPos pos)
-    { return XPTConfig.soft_blocks.getAsBoolean() ? NULL_AABB : getBoundingBox(state, w, pos); }
+    {
+        return XPTConfig.soft_blocks.getAsBoolean() ? NULL_AABB : getBoundingBox(state, w, pos);
+    }
 
     @Override
+    @Deprecated
     public boolean isOpaqueCube(IBlockState state)
-    { return false; }
+    {
+        return false;
+    }
 
     @Override
     public boolean canEntityDestroy(IBlockState state, IBlockAccess world, BlockPos pos, Entity entity)
-    { return !(entity instanceof EntityDragon || entity instanceof EntityWither); }
+    {
+        return !(entity instanceof EntityDragon || entity instanceof EntityWither);
+    }
 
     @Override
+    @Deprecated
     public IBlockState withRotation(IBlockState state, Rotation rot)
-    { return state.withProperty(BlockDirectional.FACING, rot.rotate(state.getValue(BlockDirectional.FACING))); }
+    {
+        return state.withProperty(BlockDirectional.FACING, rot.rotate(state.getValue(BlockDirectional.FACING)));
+    }
 
     @Override
+    @Deprecated
     public IBlockState withMirror(IBlockState state, Mirror mirrorIn)
-    { return state.withRotation(mirrorIn.toRotation(state.getValue(BlockDirectional.FACING))); }
+    {
+        return state.withRotation(mirrorIn.toRotation(state.getValue(BlockDirectional.FACING)));
+    }
 
     @Override
+    @Deprecated
     public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
-    { return getDefaultState().withProperty(BlockDirectional.FACING, facing.getOpposite()); }
+    {
+        return getDefaultState().withProperty(BlockDirectional.FACING, facing.getOpposite());
+    }
 
     @Override
+    @Deprecated
     public IBlockState getStateFromMeta(int meta)
-    { return getDefaultState().withProperty(BlockDirectional.FACING, EnumFacing.getHorizontal(meta)); }
+    {
+        return getDefaultState().withProperty(BlockDirectional.FACING, EnumFacing.getHorizontal(meta));
+    }
 
     @Override
     public int getMetaFromState(IBlockState state)
-    { return state.getValue(BlockDirectional.FACING).ordinal(); }
+    {
+        return state.getValue(BlockDirectional.FACING).ordinal();
+    }
 
     @Override
     protected BlockStateContainer createBlockState()
-    { return new BlockStateContainer(this, BlockDirectional.FACING); }
-
-    @Override
-    public String getModelState()
-    { return BlockStateSerializer.getString(BlockDirectional.FACING, EnumFacing.DOWN); }
+    {
+        return new BlockStateContainer(this, BlockDirectional.FACING);
+    }
 }

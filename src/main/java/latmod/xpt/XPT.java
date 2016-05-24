@@ -34,6 +34,9 @@ public class XPT
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent e)
     {
-        if(XPTConfig.enable_crafting.getAsBoolean()) { mod.loadRecipes(); }
+        if(XPTConfig.enable_crafting.getAsBoolean())
+        {
+            mod.loadRecipes();
+        }
     }
 }

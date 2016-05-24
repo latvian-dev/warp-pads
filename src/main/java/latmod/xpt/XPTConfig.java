@@ -52,7 +52,10 @@ public class XPTConfig // XPT
 
     public static void consumeLevels(EntityPlayer ep, int levels)
     {
-        if(levels <= 0 || ep.capabilities.isCreativeMode) { return; }
+        if(levels <= 0 || ep.capabilities.isCreativeMode)
+        {
+            return;
+        }
         ep.addExperienceLevel(-levels);
     }
 

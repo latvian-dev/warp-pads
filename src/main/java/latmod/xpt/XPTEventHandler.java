@@ -1,6 +1,6 @@
 package latmod.xpt;
 
-import com.feed_the_beast.ftbl.api.events.SyncWorldEvent;
+import com.feed_the_beast.ftbl.api.events.ForgeWorldEvent;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -10,7 +10,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class XPTEventHandler
 {
     @SubscribeEvent
-    public void syncData(SyncWorldEvent e)
+    public void syncData(ForgeWorldEvent.Sync e)
     {
         if(e.world.getSide().isServer())
         {

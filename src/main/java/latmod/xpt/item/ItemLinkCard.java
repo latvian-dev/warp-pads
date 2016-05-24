@@ -24,17 +24,20 @@ public class ItemLinkCard extends ItemLM
 
     public ItemLinkCard()
     {
-        super();
         setCreativeTab(CreativeTabs.TRANSPORTATION);
         setMaxStackSize(1);
     }
 
     public static boolean hasData(ItemStack is)
-    { return is.hasTagCompound() && is.getTagCompound().hasKey(NBT_TAG); }
+    {
+        return is.hasTagCompound() && is.getTagCompound().hasKey(NBT_TAG);
+    }
 
     @Override
     public LMMod getMod()
-    { return XPT.mod; }
+    {
+        return XPT.mod;
+    }
 
     @Override
     public void loadRecipes()
@@ -45,7 +48,9 @@ public class ItemLinkCard extends ItemLM
     @Override
     @SideOnly(Side.CLIENT)
     public boolean hasEffect(ItemStack is)
-    { return hasData(is); }
+    {
+        return hasData(is);
+    }
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack is, World w, EntityPlayer ep, EnumHand hand)
@@ -53,7 +58,10 @@ public class ItemLinkCard extends ItemLM
         if(!w.isRemote && ep.isSneaking() && hasData(is))
         {
             is.getTagCompound().removeTag(NBT_TAG);
-            if(is.getTagCompound().hasNoTags()) { is.setTagCompound(null); }
+            if(is.getTagCompound().hasNoTags())
+            {
+                is.setTagCompound(null);
+            }
         }
 
         return new ActionResult<>(EnumActionResult.SUCCESS, is);
