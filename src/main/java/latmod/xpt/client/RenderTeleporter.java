@@ -49,7 +49,7 @@ public class RenderTeleporter extends TileEntitySpecialRenderer<TileTeleporter>
             GlStateManager.rotate((float) (-Math.atan2(tx - LMFrustrumUtils.playerX, tz - LMFrustrumUtils.playerZ) * 180D / Math.PI), 0F, 1F, 0F);
 
             GlStateManager.color(1F, 1F, 1F, 1F);
-            FTBLibClient.mc.fontRendererObj.drawString(te.name, -(FTBLibClient.mc.fontRendererObj.getStringWidth(te.name) / 2), -8, LMColorUtils.getRGBAF(1F, 1F, 1F, alpha));
+            FTBLibClient.mc().fontRendererObj.drawString(te.name, -(FTBLibClient.mc().fontRendererObj.getStringWidth(te.name) / 2), -8, LMColorUtils.getRGBAF(1F, 1F, 1F, alpha));
             GlStateManager.popMatrix();
         }
 
