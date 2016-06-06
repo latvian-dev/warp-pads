@@ -98,10 +98,9 @@ public class BlockTeleporter extends BlockLM
     }
 
     @Override
-    @Deprecated
-    public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World w, BlockPos pos)
+    public boolean isCollidable()
     {
-        return XPTConfig.soft_blocks.getAsBoolean() ? NULL_AABB : getBoundingBox(state, w, pos);
+        return !XPTConfig.soft_blocks.getAsBoolean();
     }
 
     @Override
