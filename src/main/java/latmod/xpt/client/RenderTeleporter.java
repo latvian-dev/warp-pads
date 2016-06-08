@@ -1,7 +1,7 @@
 package latmod.xpt.client;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
-import com.feed_the_beast.ftbl.api.client.LMFrustrumUtils;
+import com.feed_the_beast.ftbl.api.client.LMFrustumUtils;
 import latmod.lib.LMColorUtils;
 import latmod.xpt.block.TileTeleporter;
 import net.minecraft.client.renderer.GlStateManager;
@@ -46,7 +46,7 @@ public class RenderTeleporter extends TileEntitySpecialRenderer<TileTeleporter>
             float f1 = 0.02F;
             GlStateManager.scale(-f1, -f1, f1);
 
-            GlStateManager.rotate((float) (-Math.atan2(tx - LMFrustrumUtils.playerX, tz - LMFrustrumUtils.playerZ) * 180D / Math.PI), 0F, 1F, 0F);
+            GlStateManager.rotate((float) (-Math.atan2(tx - LMFrustumUtils.playerX, tz - LMFrustumUtils.playerZ) * 180D / Math.PI), 0F, 1F, 0F);
 
             GlStateManager.color(1F, 1F, 1F, 1F);
             FTBLibClient.mc().fontRendererObj.drawString(te.name, -(FTBLibClient.mc().fontRendererObj.getStringWidth(te.name) / 2), -8, LMColorUtils.getRGBAF(1F, 1F, 1F, alpha));
