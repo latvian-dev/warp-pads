@@ -28,6 +28,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 public class BlockTeleporter extends BlockLM
 {
     public static final AxisAlignedBB AABB[] = MathHelperMC.getRotatedBoxes(new AxisAlignedBB(0D, 0D, 0D, 1D, 1D / 8D, 1D));
@@ -48,7 +50,7 @@ public class BlockTeleporter extends BlockLM
     }
 
     @Override
-    public boolean canHarvestBlock(IBlockAccess world, BlockPos pos, EntityPlayer player)
+    public boolean canHarvestBlock(IBlockAccess world, @Nonnull BlockPos pos, @Nonnull EntityPlayer player)
     {
         return true;
     }
@@ -59,8 +61,9 @@ public class BlockTeleporter extends BlockLM
         return true;
     }
 
+    @Nonnull
     @Override
-    public TileEntity createTileEntity(World w, IBlockState state)
+    public TileEntity createTileEntity(@Nonnull World w, @Nonnull IBlockState state)
     {
         return new TileTeleporter();
     }
@@ -83,6 +86,7 @@ public class BlockTeleporter extends BlockLM
         return 0;
     }
 
+    @Nonnull
     @Override
     @Deprecated
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess w, BlockPos pos)
@@ -116,20 +120,23 @@ public class BlockTeleporter extends BlockLM
         return !(entity instanceof EntityDragon || entity instanceof EntityWither);
     }
 
+    @Nonnull
     @Override
     @Deprecated
-    public IBlockState withRotation(IBlockState state, Rotation rot)
+    public IBlockState withRotation(@Nonnull IBlockState state, Rotation rot)
     {
         return state.withProperty(BlockDirectional.FACING, rot.rotate(state.getValue(BlockDirectional.FACING)));
     }
 
+    @Nonnull
     @Override
     @Deprecated
-    public IBlockState withMirror(IBlockState state, Mirror mirrorIn)
+    public IBlockState withMirror(@Nonnull IBlockState state, Mirror mirrorIn)
     {
         return state.withRotation(mirrorIn.toRotation(state.getValue(BlockDirectional.FACING)));
     }
 
+    @Nonnull
     @Override
     @Deprecated
     public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
@@ -137,6 +144,7 @@ public class BlockTeleporter extends BlockLM
         return getDefaultState().withProperty(BlockDirectional.FACING, facing.getOpposite());
     }
 
+    @Nonnull
     @Override
     @Deprecated
     public IBlockState getStateFromMeta(int meta)
@@ -150,6 +158,7 @@ public class BlockTeleporter extends BlockLM
         return state.getValue(BlockDirectional.FACING).ordinal();
     }
 
+    @Nonnull
     @Override
     protected BlockStateContainer createBlockState()
     {

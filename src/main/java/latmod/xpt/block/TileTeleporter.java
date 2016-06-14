@@ -4,8 +4,9 @@ import com.feed_the_beast.ftbl.api.LangKey;
 import com.feed_the_beast.ftbl.api.tile.TileLM;
 import com.feed_the_beast.ftbl.util.BlockDimPos;
 import com.feed_the_beast.ftbl.util.LMDimUtils;
-import latmod.lib.Converter;
-import latmod.lib.IntMap;
+import gnu.trove.map.TIntIntMap;
+import gnu.trove.map.hash.TIntIntHashMap;
+import latmod.lib.util.LMTroveUtils;
 import latmod.xpt.XPTConfig;
 import latmod.xpt.XPTItems;
 import latmod.xpt.XPTLang;
@@ -29,6 +30,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nonnull;
 
 public class TileTeleporter extends TileLM
 {
@@ -60,7 +63,7 @@ public class TileTeleporter extends TileLM
     }
 
     @Override
-    public void readTileData(NBTTagCompound tag)
+    public void readTileData(@Nonnull NBTTagCompound tag)
     {
         super.readTileData(tag);
 
@@ -75,7 +78,7 @@ public class TileTeleporter extends TileLM
     }
 
     @Override
-    public void writeTileData(NBTTagCompound tag)
+    public void writeTileData(@Nonnull NBTTagCompound tag)
     {
         super.writeTileData(tag);
         tag.setIntArray("Link", (linked != null) ? linked.toIntArray() : new int[0]);
@@ -83,12 +86,11 @@ public class TileTeleporter extends TileLM
     }
 
     @Override
-    public void readTileClientData(NBTTagCompound tag)
+    public void readTileClientData(@Nonnull NBTTagCompound tag)
     {
-        IntMap data = new IntMap();
-        data.fromArray(tag.getIntArray("D"));
+        TIntIntMap data = LMTroveUtils.fromArray(tag.getIntArray("D"));
 
-        pcooldown = cooldown = Converter.nonNull(data.get(0));
+        pcooldown = cooldown = data.get(0);
 
         if(data.containsKey(1))
         {
@@ -103,9 +105,9 @@ public class TileTeleporter extends TileLM
     }
 
     @Override
-    public void writeTileClientData(NBTTagCompound tag)
+    public void writeTileClientData(@Nonnull NBTTagCompound tag)
     {
-        IntMap data = new IntMap();
+        TIntIntMap data = new TIntIntHashMap();
 
         data.put(0, cooldown);
 
@@ -117,7 +119,8 @@ public class TileTeleporter extends TileLM
             data.put(4, linked.dim);
         }
 
-        tag.setIntArray("D", data.toArray());
+        tag.setIntArray("D", LMTroveUtils.toIntList(data).toArray());
+
         if(!name.isEmpty())
         {
             tag.setString("N", name);
@@ -144,7 +147,7 @@ public class TileTeleporter extends TileLM
     }
 
     @Override
-    public boolean onRightClick(EntityPlayer ep, ItemStack is, EnumFacing side, EnumHand hand, float x, float y, float z)
+    public boolean onRightClick(@Nonnull EntityPlayer ep, @Nonnull ItemStack is, @Nonnull EnumFacing side, @Nonnull EnumHand hand, float x, float y, float z)
     {
         if(worldObj.isRemote)
         {
@@ -326,7 +329,7 @@ public class TileTeleporter extends TileLM
     }
 
     @Override
-    public void onPlacedBy(EntityPlayer ep, ItemStack is, IBlockState state)
+    public void onPlacedBy(@Nonnull EntityPlayer ep, @Nonnull ItemStack is, @Nonnull IBlockState state)
     {
         super.onPlacedBy(ep, is, state);
         if(is.hasDisplayName())
@@ -336,6 +339,7 @@ public class TileTeleporter extends TileLM
         markDirty();
     }
 
+    @Nonnull
     @Override
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getRenderBoundingBox()
@@ -352,7 +356,7 @@ public class TileTeleporter extends TileLM
     }
 
     @Override
-    public void onBroken(IBlockState state)
+    public void onBroken(@Nonnull IBlockState state)
     {
         super.onBroken(state);
     }

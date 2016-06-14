@@ -2,7 +2,7 @@ package latmod.xpt.client;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.client.LMFrustumUtils;
-import latmod.lib.LMColorUtils;
+import latmod.lib.util.LMColorUtils;
 import latmod.xpt.block.TileTeleporter;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -13,13 +13,15 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
+import javax.annotation.Nonnull;
+
 @SideOnly(Side.CLIENT)
 public class RenderTeleporter extends TileEntitySpecialRenderer<TileTeleporter>
 {
     private static long debugTimer = 0L;
 
     @Override
-    public void renderTileEntityAt(TileTeleporter te, double rx, double ry, double rz, float partialTicks, int destroyStage)
+    public void renderTileEntityAt(@Nonnull TileTeleporter te, double rx, double ry, double rz, float partialTicks, int destroyStage)
     {
         double tx = te.getPos().getX() + 0.5D;
         double tz = te.getPos().getZ() + 0.5D;
