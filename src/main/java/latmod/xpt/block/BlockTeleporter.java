@@ -29,6 +29,8 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class BlockTeleporter extends BlockLM
 {
@@ -102,9 +104,13 @@ public class BlockTeleporter extends BlockLM
     }
 
     @Override
-    public boolean isCollidable()
+    @Deprecated
+    public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn)
     {
-        return !XPTConfig.soft_blocks.getAsBoolean();
+        if(!XPTConfig.soft_blocks.getAsBoolean())
+        {
+            super.addCollisionBoxToList(state, worldIn, pos, entityBox, collidingBoxes, entityIn);
+        }
     }
 
     @Override
