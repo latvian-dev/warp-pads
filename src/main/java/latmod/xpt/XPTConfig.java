@@ -5,8 +5,8 @@ import com.feed_the_beast.ftbl.api.config.ConfigEntryInt;
 import com.feed_the_beast.ftbl.api.config.ConfigFile;
 import com.feed_the_beast.ftbl.api.config.ConfigRegistry;
 import com.feed_the_beast.ftbl.util.FTBLib;
-import latmod.lib.annotations.Info;
-import latmod.lib.annotations.NumberBounds;
+import com.latmod.lib.annotations.Info;
+import com.latmod.lib.annotations.NumberBounds;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextComponentString;
 

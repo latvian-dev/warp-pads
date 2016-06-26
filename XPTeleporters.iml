@@ -9,5 +9,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="FTBLib" />
+    <orderEntry type="module" module-name="ProjMC_9" />
   </component>
 </module>

@@ -2,7 +2,7 @@ package latmod.xpt.client;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.client.LMFrustumUtils;
-import latmod.lib.util.LMColorUtils;
+import com.latmod.lib.math.MathHelperLM;
 import latmod.xpt.block.TileTeleporter;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -24,6 +24,7 @@ public class RenderTeleporter extends TileEntitySpecialRenderer<TileTeleporter>
     public void renderTileEntityAt(@Nonnull TileTeleporter te, double rx, double ry, double rz, float partialTicks, int destroyStage)
     {
         double tx = te.getPos().getX() + 0.5D;
+        double ty = te.getPos().getY() + 0.5D;
         double tz = te.getPos().getZ() + 0.5D;
 
         GlStateManager.pushMatrix();
@@ -33,9 +34,7 @@ public class RenderTeleporter extends TileEntitySpecialRenderer<TileTeleporter>
         GlStateManager.disableLighting();
         //render
 
-        float alpha = 1F;
-
-        te.name = "XPT, FTBLib & FTBUtilities in 1.9 \\o/";
+        double alpha = getAlpha(MathHelperLM.dist(tx, ty, tz, LMFrustumUtils.playerX, LMFrustumUtils.playerY, LMFrustumUtils.playerZ));
 
         if(alpha > 0.05F && !te.name.isEmpty())
         {
@@ -51,7 +50,7 @@ public class RenderTeleporter extends TileEntitySpecialRenderer<TileTeleporter>
             GlStateManager.rotate((float) (-Math.atan2(tx - LMFrustumUtils.playerX, tz - LMFrustumUtils.playerZ) * 180D / Math.PI), 0F, 1F, 0F);
 
             GlStateManager.color(1F, 1F, 1F, 1F);
-            FTBLibClient.mc().fontRendererObj.drawString(te.name, -(FTBLibClient.mc().fontRendererObj.getStringWidth(te.name) / 2), -8, LMColorUtils.getRGBAF(1F, 1F, 1F, alpha));
+            FTBLibClient.mc().fontRendererObj.drawString(te.name, -(FTBLibClient.mc().fontRendererObj.getStringWidth(te.name) / 2), -8, ((int) (255D * alpha)) | 0x00FFFFFF);
             GlStateManager.popMatrix();
         }
 
