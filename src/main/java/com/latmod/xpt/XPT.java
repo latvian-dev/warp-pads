@@ -15,7 +15,7 @@ public class XPT
     @Mod.Instance(XPT.MOD_ID)
     public static XPT inst;
 
-    @SidedProxy(clientSide = "latmod.xpt.client.XPTClient", serverSide = "latmod.xpt.XPTCommon")
+    @SidedProxy(clientSide = "com.latmod.xpt.client.XPTClient", serverSide = "com.latmod.xpt.XPTCommon")
     public static XPTCommon proxy;
 
     public static LMMod mod;
