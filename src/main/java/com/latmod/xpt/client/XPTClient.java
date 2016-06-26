@@ -1,8 +1,8 @@
-package latmod.xpt.client;
+package com.latmod.xpt.client;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
-import latmod.xpt.XPTCommon;
-import latmod.xpt.block.TileTeleporter;
+import com.latmod.xpt.XPTCommon;
+import com.latmod.xpt.block.TileTeleporter;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 

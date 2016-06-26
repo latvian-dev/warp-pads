@@ -20,7 +20,7 @@ buildscript {
 apply plugin: 'forge'
 
 version = version_mc + "-" + version_mod
-group = "latmod.xpt"
+group = "com.latmod.xpt"
 archivesBaseName = "XPTeleporters"
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8

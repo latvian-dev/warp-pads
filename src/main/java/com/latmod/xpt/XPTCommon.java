@@ -1,4 +1,4 @@
-package latmod.xpt;
+package com.latmod.xpt;
 
 public class XPTCommon // XPTClient
 {

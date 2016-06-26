@@ -1,10 +1,10 @@
-package latmod.xpt.item;
+package com.latmod.xpt.item;
 
 import com.feed_the_beast.ftbl.api.item.ItemLM;
 import com.feed_the_beast.ftbl.api.item.ODItems;
 import com.feed_the_beast.ftbl.util.BlockDimPos;
 import com.feed_the_beast.ftbl.util.LMMod;
-import latmod.xpt.XPT;
+import com.latmod.xpt.XPT;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;

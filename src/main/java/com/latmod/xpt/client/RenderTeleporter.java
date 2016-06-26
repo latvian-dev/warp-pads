@@ -1,9 +1,9 @@
-package latmod.xpt.client;
+package com.latmod.xpt.client;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.client.LMFrustumUtils;
 import com.latmod.lib.math.MathHelperLM;
-import latmod.xpt.block.TileTeleporter;
+import com.latmod.xpt.block.TileTeleporter;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;

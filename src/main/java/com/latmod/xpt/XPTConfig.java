@@ -1,4 +1,4 @@
-package latmod.xpt;
+package com.latmod.xpt;
 
 import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryInt;

@@ -1,12 +1,12 @@
-package latmod.xpt.block;
+package com.latmod.xpt.block;
 
 import com.feed_the_beast.ftbl.api.block.BlockLM;
 import com.feed_the_beast.ftbl.api.item.ODItems;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.LMMod;
 import com.feed_the_beast.ftbl.util.MathHelperMC;
-import latmod.xpt.XPT;
-import latmod.xpt.XPTConfig;
+import com.latmod.xpt.XPT;
+import com.latmod.xpt.XPTConfig;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;

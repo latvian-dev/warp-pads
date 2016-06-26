@@ -1,4 +1,4 @@
-package latmod.xpt;
+package com.latmod.xpt;
 
 import com.feed_the_beast.ftbl.util.LMMod;
 import net.minecraftforge.common.MinecraftForge;

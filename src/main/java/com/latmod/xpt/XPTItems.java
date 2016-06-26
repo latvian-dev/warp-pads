@@ -1,7 +1,7 @@
-package latmod.xpt;
+package com.latmod.xpt;
 
-import latmod.xpt.block.BlockTeleporter;
-import latmod.xpt.item.ItemLinkCard;
+import com.latmod.xpt.block.BlockTeleporter;
+import com.latmod.xpt.item.ItemLinkCard;
 
 /**
  * Created by LatvianModder on 29.01.2016.

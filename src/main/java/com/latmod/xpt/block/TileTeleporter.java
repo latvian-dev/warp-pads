@@ -1,16 +1,16 @@
-package latmod.xpt.block;
+package com.latmod.xpt.block;
 
 import com.feed_the_beast.ftbl.api.LangKey;
 import com.feed_the_beast.ftbl.api.tile.TileLM;
 import com.feed_the_beast.ftbl.util.BlockDimPos;
 import com.feed_the_beast.ftbl.util.LMDimUtils;
 import com.latmod.lib.util.LMTroveUtils;
+import com.latmod.xpt.XPTConfig;
+import com.latmod.xpt.XPTItems;
+import com.latmod.xpt.XPTLang;
+import com.latmod.xpt.item.ItemLinkCard;
 import gnu.trove.map.TIntIntMap;
 import gnu.trove.map.hash.TIntIntHashMap;
-import latmod.xpt.XPTConfig;
-import latmod.xpt.XPTItems;
-import latmod.xpt.XPTLang;
-import latmod.xpt.item.ItemLinkCard;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
