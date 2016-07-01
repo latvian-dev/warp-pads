@@ -42,16 +42,16 @@ public class TileTeleporter extends TileLM
 
     public static TileTeleporter getTileXPT(BlockDimPos pos)
     {
-        if(pos == null || pos.pos.getY() < 0 || pos.pos.getY() >= 256)
+        if(pos == null)
         {
             return null;
         }
 
-        World w = LMDimUtils.getWorld(pos.dim);
+        World w = LMDimUtils.getWorld(pos.getDim());
 
         if(w != null)
         {
-            TileEntity te = w.getTileEntity(pos.pos);
+            TileEntity te = w.getTileEntity(pos);
 
             if(te != null && te instanceof TileTeleporter)
             {
@@ -67,8 +67,7 @@ public class TileTeleporter extends TileLM
     {
         super.readTileData(tag);
 
-        BlockDimPos link = new BlockDimPos(tag.getIntArray("Link"));
-        linked = link.pos.getY() > 0 ? link : null;
+        linked = new BlockDimPos(tag.getIntArray("Link"));
         pcooldown = cooldown = tag.getInteger("Cooldown");
 
         if(tag.hasKey("Name"))
@@ -81,7 +80,12 @@ public class TileTeleporter extends TileLM
     public void writeTileData(@Nonnull NBTTagCompound tag)
     {
         super.writeTileData(tag);
-        tag.setIntArray("Link", (linked != null) ? linked.toIntArray() : new int[0]);
+
+        if(linked != null)
+        {
+            tag.setIntArray("Link", linked.toIntArray());
+        }
+
         tag.setInteger("Cooldown", cooldown);
     }
 
@@ -113,10 +117,10 @@ public class TileTeleporter extends TileLM
 
         if(linked != null)
         {
-            data.put(1, linked.pos.getX());
-            data.put(2, linked.pos.getY());
-            data.put(3, linked.pos.getZ());
-            data.put(4, linked.dim);
+            data.put(1, linked.getX());
+            data.put(2, linked.getY());
+            data.put(3, linked.getZ());
+            data.put(4, linked.getDim());
         }
 
         tag.setIntArray("D", LMTroveUtils.toIntList(data).toArray());
@@ -183,8 +187,8 @@ public class TileTeleporter extends TileLM
 
                 if(t != null)
                 {
-                    boolean crossdim = pos.dim != getDimPos().dim;
-                    int levels = XPTConfig.only_linking_uses_xp.getAsBoolean() ? getLevels(pos.pos, crossdim) : 0;
+                    boolean crossdim = pos.getDim() != getDimPos().getDim();
+                    int levels = XPTConfig.only_linking_uses_xp.getAsBoolean() ? getLevels(pos, crossdim) : 0;
 
                     if(!XPTConfig.canConsumeLevels(ep, levels))
                     {
@@ -243,8 +247,8 @@ public class TileTeleporter extends TileLM
                         t.createLink(this, false);
                     }
 
-                    boolean crossdim = linked.dim != getDimPos().dim;
-                    int levels = XPTConfig.only_linking_uses_xp.getAsBoolean() ? 0 : getLevels(linked.pos, crossdim);
+                    boolean crossdim = linked.getDim() != getDimPos().getDim();
+                    int levels = XPTConfig.only_linking_uses_xp.getAsBoolean() ? 0 : getLevels(linked, crossdim);
 
                     if(!XPTConfig.canConsumeLevels(ep, levels))
                     {
