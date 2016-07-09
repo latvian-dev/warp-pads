@@ -1,82 +1,79 @@
-def version_mod = "1.2.4";
+def version_mod = "2.0.0"
 
+// For those who want the bleeding edge
 buildscript {
     repositories {
-        mavenCentral()
+        jcenter()
         maven {
             name = "forge"
             url = "http://files.minecraftforge.net/maven"
         }
-        maven {
-            name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
     }
 }
+apply plugin: 'net.minecraftforge.gradle.forge'
 
-apply plugin: 'forge'
+/*
+// for people who want stable - not yet functional for MC 1.8.8 - we require the forgegradle 2.1 snapshot
+plugins {
+    id "net.minecraftforge.gradle.forge" version "2.0.2"
+}
+*/
 
-version = version_mc + "-" + version_mod
+version = "1.9.4-" + version_mod
 group = "com.latmod.xpt"
 archivesBaseName = "XPTeleporters"
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 minecraft {
-    version = version_mc + "-" + version_forge
-    runDir = mcp_run_dir
-
+    version = "1.9.4-12.17.0.1987"
+    runDir = "run"
+    mappings = "snapshot_20160518"
+    // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
     replace "@VERSION@", version_mod
     replaceIn "XPT.java"
 }
 
 dependencies {
-    //compile fileTree(dir: project_dir + "DevMods/", include: '*.jar')
-    compile files(project_dir + "/Exported/FTBLib-" + version_mc + "-" + version_mods + "-dev.jar")
+    compile fileTree(dir: 'libs', include: '*.jar')
 }
 
 sourceSets {
     main {
         java {
-            srcDir project_dir + archivesBaseName + "/src/main/java"
+            srcDir 'src/main/java'
         }
         resources {
-            srcDir project_dir + archivesBaseName + "/src/main/resources"
+            srcDir 'src/main/resources'
         }
     }
 }
 
-tasks.withType(Jar) {
-    destinationDir = file(project_dir + "/Exported/")
-}
+processResources {
+    // this will ensure that this task is redone when the versions change.
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
 
-processResources
-        {
-            inputs.property "version", project.version
-            inputs.property "mcversion", project.minecraft.version
+    // replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
 
-            from(sourceSets.main.resources.srcDirs) {
-                include 'mcmod.info'
-                expand 'version': project.version, 'mcversion': project.minecraft.version
-            }
+        // replace version and mcversion
+        expand 'version': project.version, 'mcversion': project.minecraft.version
+    }
 
-            from(sourceSets.main.resources.srcDirs) {
-                exclude 'mcmod.info'
-            }
-        }
-
-task sourceJar(type: Jar) {
-    from sourceSets.main.java
-    classifier = 'src'
+    // copy everything else, thats not the mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
 }
 
 task deobfJar(type: Jar) {
     from sourceSets.main.output
-    classifier = 'dev'
+    classifier = 'deobf'
 }
 
 build.dependsOn deobfJar
-build.dependsOn sourceJar
