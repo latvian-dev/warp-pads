@@ -46,18 +46,19 @@ public class XPTConfig // XPT
         configFile.load();
     }
 
-    public static boolean canConsumeLevels(EntityPlayer ep, int levels)
+    public static boolean consumeLevels(EntityPlayer ep, int levels, boolean simulate)
     {
-        return levels <= 0 || ep.capabilities.isCreativeMode || ep.experienceLevel >= levels;
-    }
-
-    public static void consumeLevels(EntityPlayer ep, int levels)
-    {
-        if(levels <= 0 || ep.capabilities.isCreativeMode)
+        if(levels <= 0 || ep.capabilities.isCreativeMode || ep.experienceLevel >= levels)
         {
-            return;
+            if(!simulate && levels > 0)
+            {
+                ep.addExperienceLevel(-levels);
+            }
+
+            return true;
         }
-        ep.addExperienceLevel(-levels);
+
+        return false;
     }
 
     public static int cooldownTicks()

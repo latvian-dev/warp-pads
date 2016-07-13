@@ -1,29 +1,29 @@
 package com.latmod.xpt.block;
 
-import com.feed_the_beast.ftbl.api.LangKey;
+import com.feed_the_beast.ftbl.api.ForgeWorldMP;
+import com.feed_the_beast.ftbl.api.security.Security;
+import com.feed_the_beast.ftbl.api.tile.IGuiTile;
+import com.feed_the_beast.ftbl.api.tile.TileClientAction;
 import com.feed_the_beast.ftbl.api.tile.TileLM;
 import com.feed_the_beast.ftbl.util.BlockDimPos;
+import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.LMDimUtils;
-import com.latmod.lib.util.LMTroveUtils;
+import com.latmod.lib.util.LMUtils;
+import com.latmod.xpt.XPT;
 import com.latmod.xpt.XPTConfig;
-import com.latmod.xpt.XPTItems;
-import com.latmod.xpt.XPTLang;
-import com.latmod.xpt.item.ItemLinkCard;
-import gnu.trove.map.TIntIntMap;
-import gnu.trove.map.hash.TIntIntHashMap;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.item.EntityItem;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
-import net.minecraft.init.SoundEvents;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
@@ -32,13 +32,45 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.UUID;
 
-public class TileTeleporter extends TileLM
+public class TileTeleporter extends TileLM implements IGuiTile
 {
-    public BlockDimPos linked = null;
-    public int cooldown = 0;
-    public int pcooldown = 0;
-    public String name = "";
+    public static final TileClientAction TELEPORT = new TileClientAction(new ResourceLocation(XPT.MOD_ID, "tp"))
+    {
+        @Override
+        public void onAction(TileEntity te, NBTTagCompound data, EntityPlayerMP player)
+        {
+            UUID id = LMUtils.fromString(data.getString("ID"));
+            
+            /*
+                cooldown = XPTConfig.cooldownTicks();
+                
+                playSound(SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.BLOCKS, 1F, 1F);
+
+                if(LMDimUtils.teleportPlayer(ep, linked))
+                {
+                    XPTConfig.consumeLevels(ep, levels);
+                    markDirty();
+
+                    if(t != null)
+                    {
+                        t.cooldown = cooldown;
+                        t.markDirty();
+                    }
+
+                    playSound(SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.BLOCKS, 1F, 1F);
+                }
+                */
+        }
+    };
+
+    public UUID uuid;
+    public int cooldown;
+    public int pcooldown;
+    private String name;
 
     public static TileTeleporter getTileXPT(BlockDimPos pos)
     {
@@ -63,16 +95,53 @@ public class TileTeleporter extends TileLM
     }
 
     @Override
+    protected Security createSecurity()
+    {
+        return new Security(true, true);
+    }
+
+    @Nonnull
+    @Override
+    public String getName()
+    {
+        return name == null ? (uuid == null ? "<error>" : LMUtils.fromUUID(uuid)) : name;
+    }
+
+    @Override
+    public void onLoad()
+    {
+        super.onLoad();
+        XPTNet.add(this);
+    }
+
+    @Override
+    public void onChunkUnload()
+    {
+        XPTNet.remove(this);
+        super.onChunkUnload();
+    }
+
+    @Override
     public void readTileData(@Nonnull NBTTagCompound tag)
     {
         super.readTileData(tag);
 
-        linked = new BlockDimPos(tag.getIntArray("Link"));
+        uuid = LMUtils.fromString(tag.getString("UUID"));
+
+        if(uuid == null)
+        {
+            uuid = UUID.randomUUID();
+        }
+
         pcooldown = cooldown = tag.getInteger("Cooldown");
 
         if(tag.hasKey("Name"))
         {
             name = tag.getString("Name");
+        }
+        else
+        {
+            name = null;
         }
     }
 
@@ -81,51 +150,51 @@ public class TileTeleporter extends TileLM
     {
         super.writeTileData(tag);
 
-        if(linked != null)
-        {
-            tag.setIntArray("Link", linked.toIntArray());
-        }
-
+        tag.setString("UUID", LMUtils.fromUUID(uuid));
         tag.setInteger("Cooldown", cooldown);
+
+        if(name != null && !name.isEmpty())
+        {
+            tag.setString("Name", name);
+        }
     }
 
     @Override
     public void readTileClientData(@Nonnull NBTTagCompound tag)
     {
-        TIntIntMap data = LMTroveUtils.fromArray(tag.getIntArray("D"));
+        uuid = LMUtils.fromString(tag.getString("U"));
 
-        pcooldown = cooldown = data.get(0);
-
-        if(data.containsKey(1))
+        if(uuid == null)
         {
-            linked = new BlockDimPos(new BlockPos(data.get(1), data.get(2), data.get(3)), data.get(4));
+            uuid = UUID.randomUUID();
+        }
+
+        pcooldown = cooldown = tag.getInteger("C");
+
+        if(tag.hasKey("N"))
+        {
+            name = tag.getString("N");
         }
         else
         {
-            linked = null;
+            name = null;
         }
-
-        name = tag.getString("N");
     }
 
     @Override
     public void writeTileClientData(@Nonnull NBTTagCompound tag)
     {
-        TIntIntMap data = new TIntIntHashMap();
-
-        data.put(0, cooldown);
-
-        if(linked != null)
+        if(uuid != null)
         {
-            data.put(1, linked.getX());
-            data.put(2, linked.getY());
-            data.put(3, linked.getZ());
-            data.put(4, linked.getDim());
+            tag.setString("U", LMUtils.fromUUID(uuid));
         }
 
-        tag.setIntArray("D", LMTroveUtils.toIntList(data).toArray());
+        if(cooldown != 0)
+        {
+            tag.setInteger("C", cooldown);
+        }
 
-        if(!name.isEmpty())
+        if(name != null && !name.isEmpty())
         {
             tag.setString("N", name);
         }
@@ -151,7 +220,7 @@ public class TileTeleporter extends TileLM
     }
 
     @Override
-    public boolean onRightClick(@Nonnull EntityPlayer ep, @Nonnull ItemStack is, @Nonnull EnumFacing side, @Nonnull EnumHand hand, float x, float y, float z)
+    public boolean onRightClick(@Nonnull EntityPlayer ep, @Nullable ItemStack is, @Nonnull EnumFacing side, @Nonnull EnumHand hand, float x, float y, float z)
     {
         if(worldObj.isRemote)
         {
@@ -160,166 +229,39 @@ public class TileTeleporter extends TileLM
 
         if(is != null && is.getItem() == Items.NAME_TAG)
         {
-            if(!is.hasDisplayName())
+            if(is.hasDisplayName())
             {
-                return true;
+                name = is.getDisplayName();
+
+                if(!ep.capabilities.isCreativeMode)
+                {
+                    is.stackSize--;
+                }
+
+                markDirty();
             }
-
-            name = is.getDisplayName();
-
-            if(!ep.capabilities.isCreativeMode)
-            {
-                is.stackSize--;
-            }
-
-            markDirty();
 
             return true;
         }
-        else if(is != null && is.getItem() == XPTItems.link_card)
-        {
-            if(ItemLinkCard.hasData(is))
-            {
-                LangKey msg = XPTLang.invalid_block;
-
-                BlockDimPos pos = new BlockDimPos(is.getTagCompound().getIntArray(ItemLinkCard.NBT_TAG));
-                TileTeleporter t = getTileXPT(pos);
-
-                if(t != null)
-                {
-                    boolean crossdim = pos.getDim() != getDimPos().getDim();
-                    int levels = XPTConfig.only_linking_uses_xp.getAsBoolean() ? getLevels(pos, crossdim) : 0;
-
-                    if(!XPTConfig.canConsumeLevels(ep, levels))
-                    {
-                        XPTLang.need_xp_level_link.printChat(ep, Integer.toString(levels));
-                        return true;
-                    }
-
-                    msg = createLink(t, true);
-                    if(msg == XPTLang.link_created)
-                    {
-                        is.stackSize--;
-                        XPTConfig.consumeLevels(ep, levels);
-                    }
-                }
-
-                msg.printChat(ep);
-            }
-            else if(getPos().getY() > 0)
-            {
-                if(is.stackSize > 1)
-                {
-                    if(!ep.capabilities.isCreativeMode)
-                    {
-                        is.stackSize--;
-                    }
-
-                    ItemStack is1 = new ItemStack(XPTItems.link_card);
-                    is1.setTagCompound(new NBTTagCompound());
-                    is1.getTagCompound().setIntArray(ItemLinkCard.NBT_TAG, getDimPos().toIntArray());
-
-                    if(ep.inventory.addItemStackToInventory(is1))
-                    {
-                        ep.openContainer.detectAndSendChanges();
-                    }
-                    else
-                    {
-                        worldObj.spawnEntityInWorld(new EntityItem(worldObj, ep.posX, ep.posY, ep.posZ, is1));
-                    }
-                }
-                else
-                {
-                    is.setTagCompound(new NBTTagCompound());
-                    is.getTagCompound().setIntArray(ItemLinkCard.NBT_TAG, getDimPos().toIntArray());
-                }
-            }
-        }
         else
         {
-            if(linked != null && getSide().isServer() && cooldown <= 0 && !(ep instanceof FakePlayer))
+            if(cooldown <= 0 && !(ep instanceof FakePlayer))
             {
-                TileTeleporter t = getLinkedTile();
-                if(t == null || (t.linked == null || equals(t.getLinkedTile())))
+                Collection<TileTeleporter> teleporters = XPTNet.getTeleporters((EntityPlayerMP) ep);
+                FTBLib.printChat(ep, "Available Teleporters: " + teleporters.size() + ":");
+
+                for(TileTeleporter tile : teleporters)
                 {
-                    if(t != null && t.linked == null)
-                    {
-                        t.createLink(this, false);
-                    }
-
-                    boolean crossdim = linked.getDim() != getDimPos().getDim();
-                    int levels = XPTConfig.only_linking_uses_xp.getAsBoolean() ? 0 : getLevels(linked, crossdim);
-
-                    if(!XPTConfig.canConsumeLevels(ep, levels))
-                    {
-                        XPTLang.need_xp_level_tp.printChat(ep, Integer.toString(levels));
-                        return true;
-                    }
-
-                    playSound(SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.BLOCKS, 1F, 1F);
-
-                    cooldown = XPTConfig.cooldownTicks();
-
-                    if(LMDimUtils.teleportPlayer(ep, linked))
-                    {
-                        XPTConfig.consumeLevels(ep, levels);
-                        markDirty();
-
-                        if(t != null)
-                        {
-                            t.cooldown = cooldown;
-                            t.markDirty();
-                        }
-
-                        playSound(SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.BLOCKS, 1F, 1F);
-                    }
+                    boolean crossdim = tile.getWorld().provider.getDimension() != worldObj.provider.getDimension();
+                    int levels = XPTConfig.only_linking_uses_xp.getAsBoolean() ? 0 : getLevels(tile.getPos(), crossdim);
+                    FTBLib.printChat(ep, "[" + ForgeWorldMP.inst.getPlayer(security.getOwner()) + "] " + tile.getName() + " [" + levels + ": " + XPTConfig.consumeLevels(ep, levels, true) + "]");
                 }
             }
+
+            //FIXME: Open the gui
         }
 
         return true;
-    }
-
-    public LangKey createLink(TileTeleporter t, boolean updateLink)
-    {
-        if(t == null || getSide().isClient())
-        {
-            return XPTLang.invalid_block;
-        }
-        if(linked != null && linked.equalsPos(t.linked))
-        {
-            return XPTLang.already_linked;
-        }
-        if(t.equals(this))
-        {
-            return XPTLang.already_linked;
-        }
-
-        TileTeleporter t0 = getLinkedTile();
-        if(t0 != null)
-        {
-            t0.linked = null;
-            t0.markDirty();
-        }
-
-        linked = t.getDimPos().copy();
-
-        if(updateLink)
-        {
-            t = getLinkedTile();
-            if(t != null)
-            {
-                t.createLink(this, false);
-            }
-        }
-
-        markDirty();
-        return XPTLang.link_created;
-    }
-
-    public TileTeleporter getLinkedTile()
-    {
-        return getTileXPT(linked);
     }
 
     private int getLevels(Vec3i pos, boolean crossdim)
@@ -360,8 +302,27 @@ public class TileTeleporter extends TileLM
     }
 
     @Override
+    public boolean isExplosionResistant()
+    {
+        return true;
+    }
+
+    @Override
     public void onBroken(@Nonnull IBlockState state)
     {
         super.onBroken(state);
+        onChunkUnload();
+    }
+
+    @Override
+    public Container getContainer(EntityPlayer ep, NBTTagCompound data)
+    {
+        return null;
+    }
+
+    @Override
+    public GuiScreen getGui(EntityPlayer ep, NBTTagCompound data)
+    {
+        return null;
     }
 }
