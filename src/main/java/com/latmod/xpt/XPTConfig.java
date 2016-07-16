@@ -39,7 +39,7 @@ public class XPTConfig // XPT
 
     public static void load()
     {
-        configFile.setFile(new File(FTBLib.folderConfig, "/LatMod/XPT.json"));
+        configFile.setFile(new File(FTBLib.folderConfig, "XPTeleporters.json"));
         configFile.setDisplayName(new TextComponentString("XPTeleporters"));
         configFile.addGroup("general", XPTConfig.class);
         ConfigRegistry.add("xpt", configFile);
