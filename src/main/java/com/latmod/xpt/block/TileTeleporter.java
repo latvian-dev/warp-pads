@@ -2,7 +2,6 @@ package com.latmod.xpt.block;
 
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.security.Security;
-import com.feed_the_beast.ftbl.api.tile.IGuiTile;
 import com.feed_the_beast.ftbl.api.tile.TileClientAction;
 import com.feed_the_beast.ftbl.api.tile.TileLM;
 import com.feed_the_beast.ftbl.util.BlockDimPos;
@@ -12,11 +11,9 @@ import com.latmod.lib.util.LMUtils;
 import com.latmod.xpt.XPT;
 import com.latmod.xpt.XPTConfig;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -36,7 +33,7 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.UUID;
 
-public class TileTeleporter extends TileLM implements IGuiTile
+public class TileTeleporter extends TileLM
 {
     public static final TileClientAction TELEPORT = new TileClientAction(new ResourceLocation(XPT.MOD_ID, "tp"))
     {
@@ -312,17 +309,5 @@ public class TileTeleporter extends TileLM implements IGuiTile
     {
         super.onBroken(state);
         onChunkUnload();
-    }
-
-    @Override
-    public Container getContainer(EntityPlayer ep, NBTTagCompound data)
-    {
-        return null;
-    }
-
-    @Override
-    public GuiScreen getGui(EntityPlayer ep, NBTTagCompound data)
-    {
-        return null;
     }
 }
