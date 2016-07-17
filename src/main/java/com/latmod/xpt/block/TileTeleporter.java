@@ -19,6 +19,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
@@ -33,7 +34,7 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.UUID;
 
-public class TileTeleporter extends TileLM
+public class TileTeleporter extends TileLM implements ITickable
 {
     public static final TileClientAction TELEPORT = new TileClientAction(new ResourceLocation(XPT.MOD_ID, "tp"))
     {
@@ -198,7 +199,7 @@ public class TileTeleporter extends TileLM
     }
 
     @Override
-    public void onUpdate()
+    public void update()
     {
         pcooldown = cooldown;
         if(cooldown < 0)
@@ -214,6 +215,8 @@ public class TileTeleporter extends TileLM
                 markDirty();
             }
         }
+
+        checkIfDirty();
     }
 
     @Override
