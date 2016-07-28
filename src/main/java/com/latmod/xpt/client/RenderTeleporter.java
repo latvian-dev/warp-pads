@@ -1,7 +1,5 @@
 package com.latmod.xpt.client;
 
-import com.feed_the_beast.ftbl.api.client.LMFrustumUtils;
-import com.latmod.lib.math.MathHelperLM;
 import com.latmod.xpt.block.TileTeleporter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -23,10 +21,6 @@ public class RenderTeleporter extends TileEntitySpecialRenderer<TileTeleporter>
     @Override
     public void renderTileEntityAt(@Nonnull TileTeleporter te, double rx, double ry, double rz, float partialTicks, int destroyStage)
     {
-        double tx = te.getPos().getX() + 0.5D;
-        double ty = te.getPos().getY() + 0.5D;
-        double tz = te.getPos().getZ() + 0.5D;
-
         GlStateManager.pushMatrix();
         GlStateManager.translate(rx + 0.5D, ry + 0.5D, rz + 0.5D);
         GlStateManager.disableCull();
@@ -34,136 +28,27 @@ public class RenderTeleporter extends TileEntitySpecialRenderer<TileTeleporter>
         GlStateManager.disableLighting();
         //render
 
-        double alpha = getAlpha(MathHelperLM.dist(tx, ty, tz, LMFrustumUtils.playerX, LMFrustumUtils.playerY, LMFrustumUtils.playerZ));
+        String name = te.getName();
 
-        if(alpha > 0.05F)
-        {
-            String name = te.getName();
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(rx + 0.5D, ry + 0.5D, rz + 0.5D);
+        //OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+        GlStateManager.enableTexture2D();
+        float f1 = 0.02F;
+        GlStateManager.scale(-f1, -f1, f1);
 
-            GlStateManager.pushMatrix();
-            GlStateManager.translate(rx + 0.5D, ry + 1.6D, rz + 0.5D);
-            GL11.glNormal3f(0F, 1F, 0F);
-            //OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
-            GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-            GlStateManager.enableTexture2D();
-            float f1 = 0.02F;
-            GlStateManager.scale(-f1, -f1, f1);
+        GlStateManager.rotate(0F, 0F, 1F, 0F);
 
-            GlStateManager.rotate((float) (-Math.atan2(tx - LMFrustumUtils.playerX, tz - LMFrustumUtils.playerZ) * 180D / Math.PI), 0F, 1F, 0F);
-
-            GlStateManager.color(1F, 1F, 1F, 1F);
-            Minecraft.getMinecraft().fontRendererObj.drawString(name, -(Minecraft.getMinecraft().fontRendererObj.getStringWidth(name) / 2), -8, ((int) (255D * alpha)) | 0x00FFFFFF);
-            GlStateManager.popMatrix();
-        }
+        GlStateManager.color(1F, 1F, 1F, 1F);
+        Minecraft.getMinecraft().fontRendererObj.drawString(name, -(Minecraft.getMinecraft().fontRendererObj.getStringWidth(name) / 2), -8, 0xFFFFFFFF);
+        GlStateManager.popMatrix();
 
         GlStateManager.enableCull();
         GlStateManager.popMatrix();
-        
-		/*
-        double tx = t.getPos().getX() + 0.5D;
-		double tz = t.getPos().getZ() + 0.5D;
-		
-		//double dist = mc.thePlayer.getDistance(t.xCoord + 0.5D, t.yCoord + 0.125D, t.zCoord + 0.5D);
-		double dist = MathHelperLM.dist(tx, t.getPos().getY(), tz, LMFrustrumUtils.playerX, LMFrustrumUtils.playerY, LMFrustrumUtils.playerZ);
-		if(dist <= 0D) return;
-		
-		float alpha = (float) getAlpha(dist);
-		if(alpha <= 0F) return;
-		if(alpha > 1F) alpha = 1F;
-		
-		//FTBLib.printChat(null, t.getPos() + ": " + pt);
-		
-		//if(te.getWorldObj().rand.nextInt(100) > 97) return;
-		
-		double cooldown = (t.cooldown > 0) ? (1D - ((t.cooldown + (t.cooldown - t.pcooldown) * pt) / (double) XPTConfig.cooldownTicks())) : 1D;
-		
-		GlStateManager.pushMatrix();
-		
-		FTBLibClient.pushMaxBrightness();
-		
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
-		
-		GlStateManager.translate(rx + 0.5D, ry + 0.0D, rz + 0.5D);
-		GlStateManager.scale(-1F, -1F, 1F);
-		
-		//GlStateManager.rotate((float) (-Math.atan2(tx - LMFrustrumUtils.playerX, tz - LMFrustrumUtils.playerZ) * 180D / Math.PI), 0F, 1F, 0F);
-		
-		GlStateManager.disableLighting();
-		GlStateManager.disableCull();
-		GlStateManager.depthMask(false);
-		GlStateManager.disableTexture2D();
-		GlStateManager.color(1F, 1F, 1F, 1F);
-		GlStateManager.enableBlend();
-		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-		GlStateManager.disableAlpha();
-		GlStateManager.shadeModel(GL11.GL_SMOOTH);
-		
-		double s = cooldown * 0.75D;
-		double s1 = cooldown * 0.12D;
-		
-		buffer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-		buffer.pos(-s, -1.5D, 0D).color(0F, 1F, 1F, 0F);
-		buffer.pos(s, -1.5D, 0D).color(0F, 1F, 1F, 0F);
-		buffer.pos(s1, -0.125D, 0D).color(0.2F, 0.4F, 1F, alpha);
-		buffer.pos(-s1, -0.125D, 0D).color(0.2F, 0.4F, 1F, alpha);
-		tessellator.draw();
-		
-		if(t.cooldown > 0)
-		{
-			double b = 1D / 32D;
-			
-			GlStateManager.color(86F / 255F, 218F / 255F, 1F, alpha * 0.3F);
-			
-			double w = 1D;
-			double h = 1D / 4D;
-			double x = -w / 2D;
-			double y = -2D + h * 0.1D;
-			
-			drawRect(x, y, w, b / 2D, 0D);
-			drawRect(x, y + h - b / 2D, w, b / 2D, 0D);
-			drawRect(x, y + b / 2D, b / 2D, h - b, 0D);
-			drawRect(x + w - b / 2D, y + b / 2D, b / 2D, h - b, 0D);
-			
-			GlStateManager.color(0F, 1F, 0F, alpha * 0.25F);
-			double w1 = w * cooldown;
-			drawRect(x + b, y + b, w1 - b * 2D, h - b * 2D, 0D);
-			
-			GlStateManager.color(1F, 0F, 0F, alpha * 0.25F);
-			double w2 = w1 - b * 2D;
-			drawRect(w2 + x + b, y + b, w - b * 2D - w2, h - b * 2D, 0D);
-		}
-		
-		GlStateManager.depthMask(true);
-		
-		GlStateManager.popMatrix();
-		
-		if(alpha > 0.05F && !t.name.isEmpty())
-		{
-			GlStateManager.pushMatrix();
-			GlStateManager.translate(rx + 0.5D, ry + 1.6D, rz + 0.5D);
-			GL11.glNormal3f(0F, 1F, 0F);
-			//OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
-			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-			GlStateManager.enableTexture2D();
-			GlStateManager.enableBlend();
-			GlStateManager.disableCull();
-			GlStateManager.disableLighting();
-			float f1 = 0.02F;
-			GlStateManager.scale(-f1, -f1, f1);
-			
-			GlStateManager.rotate((float) (-Math.atan2(tx - LMFrustrumUtils.playerX, tz - LMFrustrumUtils.playerZ) * 180D / Math.PI), 0F, 1F, 0F);
-			
-			GlStateManager.color(1F, 1F, 1F, 1F);
-			FTBLibClient.mc.fontRendererObj.drawString(t.name, -(FTBLibClient.mc.fontRendererObj.getStringWidth(t.name) / 2), -8, LMColorUtils.getRGBAF(1F, 1F, 1F, alpha));
-			GlStateManager.popMatrix();
-		}
-		
-		GlStateManager.enableCull();
-		GlStateManager.color(1F, 1F, 1F, 1F);
-		FTBLibClient.popMaxBrightness();
-		GlStateManager.enableTexture2D();
-		
-		*/
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GlStateManager.color(1F, 1F, 1F, 1F);
+        GlStateManager.disableBlend();
     }
 
     private void drawRect(double x, double y, double w, double h, double z)

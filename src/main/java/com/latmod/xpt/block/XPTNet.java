@@ -35,11 +35,16 @@ public class XPTNet
         LMMapUtils.removeAll(NET, REMOVE_FILTER);
     }
 
+    public static TileTeleporter get(UUID id)
+    {
+        return NET.get(id);
+    }
+
     public static void add(TileTeleporter teleporter)
     {
         if(teleporter.security.hasOwner() && teleporter.hasWorldObj() && teleporter.getSide().isServer())
         {
-            NET.put(teleporter.uuid, teleporter);
+            NET.put(teleporter.getUUID(), teleporter);
             FTBLib.dev_logger.info("Added " + teleporter.getPos());
         }
     }
@@ -48,7 +53,7 @@ public class XPTNet
     {
         if(teleporter.hasWorldObj() && teleporter.getSide().isServer())
         {
-            NET.remove(teleporter.uuid);
+            NET.remove(teleporter.getUUID());
             FTBLib.dev_logger.info("Removed " + teleporter.getPos());
         }
     }

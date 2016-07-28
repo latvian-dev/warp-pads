@@ -1,108 +1,134 @@
 package com.latmod.xpt.block;
 
-import com.feed_the_beast.ftbl.api.ForgeWorldMP;
+import com.feed_the_beast.ftbl.api.security.ISecure;
 import com.feed_the_beast.ftbl.api.security.Security;
-import com.feed_the_beast.ftbl.api.tile.TileClientAction;
+import com.feed_the_beast.ftbl.api.tile.TileClientActionRegistry;
 import com.feed_the_beast.ftbl.api.tile.TileLM;
-import com.feed_the_beast.ftbl.util.BlockDimPos;
-import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.LMDimUtils;
 import com.latmod.lib.util.LMUtils;
 import com.latmod.xpt.XPT;
 import com.latmod.xpt.XPTConfig;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3i;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Collection;
 import java.util.UUID;
 
 public class TileTeleporter extends TileLM implements ITickable
 {
-    public static final TileClientAction TELEPORT = new TileClientAction(new ResourceLocation(XPT.MOD_ID, "tp"))
+    public static final ResourceLocation TELEPORT = new ResourceLocation(XPT.MOD_ID, "tp");
+    public static final ResourceLocation SET_NAME = new ResourceLocation(XPT.MOD_ID, "name");
+    public static final ResourceLocation TOGGLE_PRIVACY = new ResourceLocation(XPT.MOD_ID, "privacy");
+    public static final ResourceLocation TOGGLE_ACTIVE = new ResourceLocation(XPT.MOD_ID, "active");
+
+    static
     {
-        @Override
-        public void onAction(TileEntity te, NBTTagCompound data, EntityPlayerMP player)
+        TileClientActionRegistry.INSTANCE.register(TELEPORT, (te, data, player) ->
         {
-            UUID id = LMUtils.fromString(data.getString("ID"));
-            
-            /*
-                cooldown = XPTConfig.cooldownTicks();
-                
-                playSound(SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.BLOCKS, 1F, 1F);
+            if(te instanceof TileTeleporter)
+            {
+                TileTeleporter teleporter0 = (TileTeleporter) te;
 
-                if(LMDimUtils.teleportPlayer(ep, linked))
+                TileTeleporter teleporter = XPTNet.get(new UUID(data.getLong("M"), data.getLong("L")));
+
+                if(teleporter != null)
                 {
-                    XPTConfig.consumeLevels(ep, levels);
-                    markDirty();
+                    int levels = teleporter0.getLevels(teleporter);
 
-                    if(t != null)
+                    if(XPTConfig.consumeLevels(player, levels, true))
                     {
-                        t.cooldown = cooldown;
-                        t.markDirty();
+                        teleporter0.playSound(SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.BLOCKS, 1F, 1F);
+                        LMDimUtils.teleportPlayer(player, teleporter.getDimPos());
+                        XPTConfig.consumeLevels(player, levels, false);
+                        teleporter.playSound(SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.BLOCKS, 1F, 1F);
+                    }
+                }
+            }
+        });
+
+        TileClientActionRegistry.INSTANCE.register(SET_NAME, (te, data, player) ->
+        {
+            if(te instanceof TileTeleporter)
+            {
+                TileTeleporter teleporter = (TileTeleporter) te;
+
+                if(!teleporter.security.hasOwner() || teleporter.security.getOwner().equals(player.getGameProfile().getId()))
+                {
+                    teleporter.name = data.getString("N");
+
+                    if(teleporter.name.isEmpty())
+                    {
+                        teleporter.name = null;
                     }
 
-                    playSound(SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.BLOCKS, 1F, 1F);
+                    teleporter.markDirty();
                 }
-                */
-        }
-    };
-
-    public UUID uuid;
-    public int cooldown;
-    public int pcooldown;
-    private String name;
-
-    public static TileTeleporter getTileXPT(BlockDimPos pos)
-    {
-        if(pos == null)
-        {
-            return null;
-        }
-
-        World w = LMDimUtils.getWorld(pos.getDim());
-
-        if(w != null)
-        {
-            TileEntity te = w.getTileEntity(pos);
-
-            if(te != null && te instanceof TileTeleporter)
-            {
-                return (TileTeleporter) te;
             }
-        }
+        });
 
-        return null;
+        TileClientActionRegistry.INSTANCE.register(TOGGLE_PRIVACY, (te, data, player) ->
+        {
+            if(te instanceof TileTeleporter)
+            {
+                TileTeleporter teleporter = (TileTeleporter) te;
+
+                if(!teleporter.security.hasOwner() || teleporter.security.getOwner().equals(player.getGameProfile().getId()))
+                {
+                    //
+                    teleporter.markDirty();
+                }
+            }
+        });
+
+        TileClientActionRegistry.INSTANCE.register(TOGGLE_ACTIVE, (te, data, player) ->
+        {
+            if(te instanceof TileTeleporter)
+            {
+                TileTeleporter teleporter = (TileTeleporter) te;
+
+                if(!teleporter.security.hasOwner() || teleporter.security.getOwner().equals(player.getGameProfile().getId()))
+                {
+                    teleporter.inactive = !teleporter.inactive;
+                    teleporter.markDirty();
+                }
+            }
+        });
     }
+
+    public boolean inactive;
+    private UUID uuid;
+    private String name;
 
     @Override
     protected Security createSecurity()
     {
-        return new Security(true, true);
+        return new Security(ISecure.SAVE_OWNER | ISecure.SAVE_PRIVACY_LEVEL);
     }
 
     @Nonnull
-    @Override
     public String getName()
     {
-        return name == null ? (uuid == null ? "<error>" : LMUtils.fromUUID(uuid)) : name;
+        return name == null ? LMUtils.fromUUID(getUUID()) : name;
+    }
+
+    @Nonnull
+    public UUID getUUID()
+    {
+        if(uuid == null)
+        {
+            uuid = UUID.randomUUID();
+        }
+
+        return uuid;
     }
 
     @Override
@@ -113,10 +139,10 @@ public class TileTeleporter extends TileLM implements ITickable
     }
 
     @Override
-    public void onChunkUnload()
+    public void invalidate()
     {
         XPTNet.remove(this);
-        super.onChunkUnload();
+        super.invalidate();
     }
 
     @Override
@@ -126,13 +152,6 @@ public class TileTeleporter extends TileLM implements ITickable
 
         uuid = LMUtils.fromString(tag.getString("UUID"));
 
-        if(uuid == null)
-        {
-            uuid = UUID.randomUUID();
-        }
-
-        pcooldown = cooldown = tag.getInteger("Cooldown");
-
         if(tag.hasKey("Name"))
         {
             name = tag.getString("Name");
@@ -141,6 +160,8 @@ public class TileTeleporter extends TileLM implements ITickable
         {
             name = null;
         }
+
+        inactive = tag.getBoolean("Inactive");
     }
 
     @Override
@@ -148,12 +169,16 @@ public class TileTeleporter extends TileLM implements ITickable
     {
         super.writeTileData(tag);
 
-        tag.setString("UUID", LMUtils.fromUUID(uuid));
-        tag.setInteger("Cooldown", cooldown);
+        tag.setString("UUID", LMUtils.fromUUID(getUUID()));
 
         if(name != null && !name.isEmpty())
         {
             tag.setString("Name", name);
+        }
+
+        if(inactive)
+        {
+            tag.setBoolean("Inactive", true);
         }
     }
 
@@ -161,13 +186,6 @@ public class TileTeleporter extends TileLM implements ITickable
     public void readTileClientData(@Nonnull NBTTagCompound tag)
     {
         uuid = LMUtils.fromString(tag.getString("U"));
-
-        if(uuid == null)
-        {
-            uuid = UUID.randomUUID();
-        }
-
-        pcooldown = cooldown = tag.getInteger("C");
 
         if(tag.hasKey("N"))
         {
@@ -177,112 +195,60 @@ public class TileTeleporter extends TileLM implements ITickable
         {
             name = null;
         }
+
+        inactive = tag.getBoolean("I");
     }
 
     @Override
     public void writeTileClientData(@Nonnull NBTTagCompound tag)
     {
-        if(uuid != null)
-        {
-            tag.setString("U", LMUtils.fromUUID(uuid));
-        }
-
-        if(cooldown != 0)
-        {
-            tag.setInteger("C", cooldown);
-        }
+        tag.setString("U", LMUtils.fromUUID(getUUID()));
 
         if(name != null && !name.isEmpty())
         {
             tag.setString("N", name);
+        }
+
+        if(inactive)
+        {
+            tag.setBoolean("I", inactive);
         }
     }
 
     @Override
     public void update()
     {
-        pcooldown = cooldown;
-        if(cooldown < 0)
-        {
-            cooldown = 0;
-        }
-
-        if(cooldown > 0)
-        {
-            cooldown--;
-            if(cooldown == 0 && getSide().isServer())
-            {
-                markDirty();
-            }
-        }
-
         checkIfDirty();
     }
 
-    @Override
-    public boolean onRightClick(@Nonnull EntityPlayer ep, @Nullable ItemStack is, @Nonnull EnumFacing side, @Nonnull EnumHand hand, float x, float y, float z)
+    public int getLevels(TileTeleporter teleporter)
     {
-        if(worldObj.isRemote)
+        if(teleporter.worldObj.provider.getDimension() == worldObj.provider.getDimension())
         {
-            return true;
+            return XPTConfig.getLevels(Math.sqrt(teleporter.getDistanceSq(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D)));
         }
 
-        if(is != null && is.getItem() == Items.NAME_TAG)
-        {
-            if(is.hasDisplayName())
-            {
-                name = is.getDisplayName();
-
-                if(!ep.capabilities.isCreativeMode)
-                {
-                    is.stackSize--;
-                }
-
-                markDirty();
-            }
-
-            return true;
-        }
-        else
-        {
-            if(cooldown <= 0 && !(ep instanceof FakePlayer))
-            {
-                Collection<TileTeleporter> teleporters = XPTNet.getTeleporters((EntityPlayerMP) ep);
-                FTBLib.printChat(ep, "Available Teleporters: " + teleporters.size() + ":");
-
-                for(TileTeleporter tile : teleporters)
-                {
-                    boolean crossdim = tile.getWorld().provider.getDimension() != worldObj.provider.getDimension();
-                    int levels = XPTConfig.only_linking_uses_xp.getAsBoolean() ? 0 : getLevels(tile.getPos(), crossdim);
-                    FTBLib.printChat(ep, "[" + ForgeWorldMP.inst.getPlayer(security.getOwner()) + "] " + tile.getName() + " [" + levels + ": " + XPTConfig.consumeLevels(ep, levels, true) + "]");
-                }
-            }
-
-            //FIXME: Open the gui
-        }
-
-        return true;
-    }
-
-    private int getLevels(Vec3i pos, boolean crossdim)
-    {
-        if(crossdim)
-        {
-            return XPTConfig.levels_for_crossdim.getAsInt();
-        }
-        double dist = Math.sqrt(getDistanceSq(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D));
-        return Math.max(0, ((XPTConfig.levels_for_1000_blocks.getAsInt() > 0) ? MathHelper.ceiling_double_int(XPTConfig.levels_for_1000_blocks.getAsInt() * dist / 1000D) : 0) - 1);
+        return XPTConfig.getLevels(0D);
     }
 
     @Override
     public void onPlacedBy(@Nonnull EntityPlayer ep, @Nonnull ItemStack is, @Nonnull IBlockState state)
     {
         super.onPlacedBy(ep, is, state);
+
+        if(is.hasTagCompound() && is.getTagCompound().hasKey("TeleporterData"))
+        {
+            readTileData(is.getTagCompound().getCompoundTag("TeleporterData"));
+            markDirty();
+        }
+
         if(is.hasDisplayName())
         {
             name = is.getDisplayName();
+            markDirty();
         }
-        markDirty();
+
+        onLoad();
     }
 
     @Nonnull
@@ -290,8 +256,7 @@ public class TileTeleporter extends TileLM implements ITickable
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getRenderBoundingBox()
     {
-        double d = 0.5D;
-        return new AxisAlignedBB(getPos().getX() - d, getPos().getY(), getPos().getZ() - d, getPos().getX() + 1D + d, getPos().getY() + 2D, getPos().getZ() + 1D + d);
+        return new AxisAlignedBB(pos.getX() - 0.5D, pos.getY(), pos.getZ() - 0.5D, pos.getX() + 1.5D, pos.getY() + 2D, pos.getZ() + 1.5D);
     }
 
     @Override
@@ -305,12 +270,5 @@ public class TileTeleporter extends TileLM implements ITickable
     public boolean isExplosionResistant()
     {
         return true;
-    }
-
-    @Override
-    public void onBroken(@Nonnull IBlockState state)
-    {
-        super.onBroken(state);
-        onChunkUnload();
     }
 }
