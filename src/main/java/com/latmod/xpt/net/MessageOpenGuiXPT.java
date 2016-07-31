@@ -2,6 +2,7 @@ package com.latmod.xpt.net;
 
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
+import com.feed_the_beast.ftbl.util.LMNetUtils;
 import com.latmod.xpt.block.TileTeleporter;
 import com.latmod.xpt.block.XPTNode;
 import com.latmod.xpt.client.GuiTeleporters;
@@ -21,16 +22,16 @@ import java.util.UUID;
  */
 public class MessageOpenGuiXPT extends MessageToClient<MessageOpenGuiXPT>
 {
-    public BlockPos teleporterPos;
+    public BlockPos pos;
     public List<XPTNode> teleporters;
 
     public MessageOpenGuiXPT()
     {
     }
 
-    public MessageOpenGuiXPT(BlockPos pos, List<XPTNode> t)
+    public MessageOpenGuiXPT(BlockPos p, List<XPTNode> t)
     {
-        teleporterPos = pos;
+        pos = p;
         teleporters = t;
     }
 
@@ -43,15 +44,13 @@ public class MessageOpenGuiXPT extends MessageToClient<MessageOpenGuiXPT>
     @Override
     public void toBytes(ByteBuf io)
     {
-        io.writeInt(teleporterPos.getX());
-        io.writeInt(teleporterPos.getY());
-        io.writeInt(teleporterPos.getZ());
+        LMNetUtils.writePos(io, pos);
         io.writeInt(teleporters.size());
 
         for(XPTNode t : teleporters)
         {
-            writeUUID(io, t.uuid);
-            writeString(io, t.name);
+            LMNetUtils.writeUUID(io, t.uuid);
+            LMNetUtils.writeString(io, t.name);
             io.writeShort(t.levels);
             io.writeBoolean(t.available);
         }
@@ -60,17 +59,14 @@ public class MessageOpenGuiXPT extends MessageToClient<MessageOpenGuiXPT>
     @Override
     public void fromBytes(ByteBuf io)
     {
-        int x = io.readInt();
-        int y = io.readInt();
-        int z = io.readInt();
-        teleporterPos = new BlockPos(x, y, z);
+        pos = LMNetUtils.readPos(io);
         int s = io.readInt();
         teleporters = new ArrayList<>();
 
         for(int i = 0; i < s; i++)
         {
-            UUID id = readUUID(io);
-            String n = readString(io);
+            UUID id = LMNetUtils.readUUID(io);
+            String n = LMNetUtils.readString(io);
             int l = io.readUnsignedShort();
             boolean a = io.readBoolean();
             teleporters.add(new XPTNode(id, n, l, a));
@@ -81,7 +77,7 @@ public class MessageOpenGuiXPT extends MessageToClient<MessageOpenGuiXPT>
     @SideOnly(Side.CLIENT)
     public void onMessage(MessageOpenGuiXPT m, Minecraft mc)
     {
-        TileEntity te = mc.theWorld.getTileEntity(m.teleporterPos);
+        TileEntity te = mc.theWorld.getTileEntity(m.pos);
 
         if(te instanceof TileTeleporter)
         {

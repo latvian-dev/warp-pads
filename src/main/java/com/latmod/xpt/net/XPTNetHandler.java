@@ -13,5 +13,9 @@ public class XPTNetHandler
     public static void init()
     {
         NET.register(1, new MessageOpenGuiXPT());
+        NET.register(2, new MessageSelectTeleporter());
+        NET.register(3, new MessageSetName());
+        NET.register(4, new MessageToggleActive());
+        NET.register(5, new MessageTogglePrivacy());
     }
 }

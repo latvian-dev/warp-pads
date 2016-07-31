@@ -13,9 +13,12 @@ import com.feed_the_beast.ftbl.util.TextureCoords;
 import com.latmod.xpt.XPT;
 import com.latmod.xpt.block.TileTeleporter;
 import com.latmod.xpt.block.XPTNode;
+import com.latmod.xpt.net.MessageSelectTeleporter;
+import com.latmod.xpt.net.MessageSetName;
+import com.latmod.xpt.net.MessageToggleActive;
+import com.latmod.xpt.net.MessageTogglePrivacy;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -55,10 +58,7 @@ public class GuiTeleporters extends GuiLM
 
             if(node.available && button.isLeft())
             {
-                NBTTagCompound data = new NBTTagCompound();
-                data.setLong("L", node.uuid.getLeastSignificantBits());
-                data.setLong("M", node.uuid.getMostSignificantBits());
-                teleporter.sendClientAction(TileTeleporter.TELEPORT, data);
+                new MessageSelectTeleporter(teleporter.getPos(), node.uuid).sendToServer();
                 closeGui();
             }
         }
@@ -84,6 +84,7 @@ public class GuiTeleporters extends GuiLM
     public final List<ButtonXPT> buttons;
     public final SliderLM slider;
     public final TextBoxLM textBox;
+    private Boolean lastInactive;
 
     public GuiTeleporters(TileTeleporter te, List<XPTNode> t)
     {
@@ -103,9 +104,7 @@ public class GuiTeleporters extends GuiLM
             public void onClicked(GuiLM gui, MouseButton button)
             {
                 playClickSound();
-                NBTTagCompound data = new NBTTagCompound();
-                data.setBoolean("F", button.isLeft());
-                teleporter.sendClientAction(TileTeleporter.TOGGLE_PRIVACY, data);
+                new MessageTogglePrivacy(teleporter.getPos(), button.isLeft()).sendToServer();
             }
         };
 
@@ -117,13 +116,9 @@ public class GuiTeleporters extends GuiLM
             public void onClicked(GuiLM gui, MouseButton button)
             {
                 playClickSound();
-                teleporter.inactive = !teleporter.inactive;
-                buttonToggle.title = teleporter.inactive ? GuiLang.label_disabled.translate() : GuiLang.label_enabled.translate();
-                teleporter.sendClientAction(TileTeleporter.TOGGLE_ACTIVE, null);
+                new MessageToggleActive(teleporter.getPos()).sendToServer();
             }
         };
-
-        buttonToggle.title = teleporter.inactive ? GuiLang.label_disabled.translate() : GuiLang.label_enabled.translate();
 
         slider = new SliderLM(114, 23, 6, 81, 10)
         {
@@ -140,9 +135,7 @@ public class GuiTeleporters extends GuiLM
             @Override
             public void onEnterPressed(GuiLM gui)
             {
-                NBTTagCompound data = new NBTTagCompound();
-                data.setString("N", getText());
-                teleporter.sendClientAction(TileTeleporter.SET_NAME, data);
+                new MessageSetName(teleporter.getPos(), getText()).sendToServer();
             }
         };
 
@@ -183,6 +176,12 @@ public class GuiTeleporters extends GuiLM
         {
             closeGui();
             return;
+        }
+
+        if(lastInactive == null || lastInactive != teleporter.inactive)
+        {
+            lastInactive = teleporter.inactive;
+            buttonToggle.title = teleporter.inactive ? GuiLang.label_disabled.translate() : GuiLang.label_enabled.translate();
         }
 
         slider.update(this);
