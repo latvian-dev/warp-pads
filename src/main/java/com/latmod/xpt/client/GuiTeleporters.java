@@ -88,10 +88,9 @@ public class GuiTeleporters extends GuiLM
 
     public GuiTeleporters(TileTeleporter te, List<XPTNode> t)
     {
+        super(126, 110);
         teleporter = te;
         buttons = new ArrayList<>();
-        width = 126;
-        height = 110;
 
         for(XPTNode n : t)
         {
@@ -150,7 +149,7 @@ public class GuiTeleporters extends GuiLM
     @Override
     public void onInit()
     {
-        double y = 23D;
+        int y = 23;
 
         for(ButtonXPT b : buttons)
         {
@@ -187,9 +186,9 @@ public class GuiTeleporters extends GuiLM
         slider.update(this);
 
         FTBLibClient.setTexture(TEXTURE);
-        int ax = (int) getAX();
-        int ay = (int) getAY();
-        GuiScreen.drawModalRectWithCustomSizedTexture(ax, ay, 0F, 0F, (int) width, (int) height, 128F, 128F);
+        int ax = getAX();
+        int ay = getAY();
+        GuiScreen.drawModalRectWithCustomSizedTexture(ax, ay, 0F, 0F, width, height, 128F, 128F);
         super.drawBackground();
 
         buttonPrivacy.render(teleporter.security.getPrivacyLevel().getIcon());
