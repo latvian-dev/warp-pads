@@ -19,7 +19,7 @@ import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Items;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -85,7 +85,14 @@ public class BlockTeleporter extends BlockLM
     @Override
     public void loadRecipes()
     {
-        getMod().recipes.addRecipe(new ItemStack(this, 2), "IEI", "IPI", 'E', "blockEmerald", 'I', ODItems.IRON, 'P', Items.ENDER_PEARL);
+        getMod().recipes.addRecipe(new ItemStack(this, 1),
+                " G ",
+                "DPD",
+                "III",
+                'I', Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE,
+                'P', ODItems.ENDERPEARL,
+                'G', ODItems.GLOWSTONE,
+                'D', ODItems.DIAMOND);
     }
 
     @Override
