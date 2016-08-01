@@ -5,6 +5,7 @@
     "transform": "forge:default-block"
   },
   "variants": {
+    "inventory": [{}],
     "facing": {
       "up": {"x": 180, "y": 0},
       "down": {"x": 0, "y": 0},
