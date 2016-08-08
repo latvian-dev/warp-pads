@@ -6,7 +6,7 @@ import com.feed_the_beast.ftbl.api.tile.TileLM;
 import com.latmod.lib.util.LMUtils;
 import com.latmod.xpt.XPTConfig;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ITickable;
@@ -159,9 +159,9 @@ public class TileTeleporter extends TileLM implements ITickable
     }
 
     @Override
-    public void onPlacedBy(@Nonnull EntityPlayer ep, @Nonnull ItemStack is, @Nonnull IBlockState state)
+    public void onPlacedBy(@Nonnull EntityLivingBase el, @Nonnull ItemStack is, @Nonnull IBlockState state)
     {
-        super.onPlacedBy(ep, is, state);
+        super.onPlacedBy(el, is, state);
 
         if(is.hasTagCompound() && is.getTagCompound().hasKey("TeleporterData"))
         {

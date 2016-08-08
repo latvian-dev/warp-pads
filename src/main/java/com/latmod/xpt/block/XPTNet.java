@@ -3,8 +3,6 @@ package com.latmod.xpt.block;
 import com.feed_the_beast.ftbl.api.ForgePlayer;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.util.FTBLib;
-import com.latmod.lib.RemoveFilter;
-import com.latmod.lib.util.LMMapUtils;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 import java.util.ArrayList;
@@ -23,16 +21,10 @@ public class XPTNet
 {
     private static final Map<UUID, TileTeleporter> NET = new HashMap<>();
     private static final Comparator<TileTeleporter> COMPARATOR = (o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName());
-    private static final RemoveFilter<Map.Entry<UUID, TileTeleporter>> REMOVE_FILTER = entry -> !entry.getValue().security.hasOwner() || entry.getValue().isInvalid() || !entry.getValue().hasWorldObj();
 
     public static void clear()
     {
         NET.clear();
-    }
-
-    public static void cleanup()
-    {
-        LMMapUtils.removeAll(NET, REMOVE_FILTER);
     }
 
     public static TileTeleporter get(UUID id)

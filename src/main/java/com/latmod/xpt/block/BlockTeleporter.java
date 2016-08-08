@@ -4,17 +4,13 @@ import com.feed_the_beast.ftbl.api.block.BlockLM;
 import com.feed_the_beast.ftbl.api.item.ODItems;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.LMMod;
-import com.feed_the_beast.ftbl.util.MathHelperMC;
 import com.latmod.xpt.XPT;
 import com.latmod.xpt.XPTConfig;
 import com.latmod.xpt.net.MessageOpenGuiXPT;
-import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,8 +21,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -40,7 +34,7 @@ import java.util.List;
 
 public class BlockTeleporter extends BlockLM
 {
-    public static final AxisAlignedBB AABB[] = MathHelperMC.getRotatedBoxes(new AxisAlignedBB(0D, 0D, 0D, 1D, 1D / 8D, 1D));
+    public static final AxisAlignedBB AABB = new AxisAlignedBB(0D, 0D, 0D, 1D, 1D / 8D, 1D);
 
     public BlockTeleporter()
     {
@@ -48,7 +42,6 @@ public class BlockTeleporter extends BlockLM
         setHardness(1F);
         setResistance(100000F);
         setCreativeTab(CreativeTabs.TRANSPORTATION);
-        setDefaultState(blockState.getBaseState().withProperty(BlockDirectional.FACING, EnumFacing.DOWN));
     }
 
     @Override
@@ -95,18 +88,12 @@ public class BlockTeleporter extends BlockLM
                 'D', ODItems.DIAMOND);
     }
 
-    @Override
-    public int damageDropped(IBlockState state)
-    {
-        return 0;
-    }
-
     @Nonnull
     @Override
     @Deprecated
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess w, BlockPos pos)
     {
-        return AABB[state.getValue(BlockDirectional.FACING).ordinal()];
+        return AABB;
     }
 
     @Override
@@ -137,51 +124,6 @@ public class BlockTeleporter extends BlockLM
     public boolean canEntityDestroy(IBlockState state, IBlockAccess world, BlockPos pos, Entity entity)
     {
         return !(entity instanceof EntityDragon || entity instanceof EntityWither);
-    }
-
-    @Nonnull
-    @Override
-    @Deprecated
-    public IBlockState withRotation(@Nonnull IBlockState state, Rotation rot)
-    {
-        return state.withProperty(BlockDirectional.FACING, rot.rotate(state.getValue(BlockDirectional.FACING)));
-    }
-
-    @Nonnull
-    @Override
-    @Deprecated
-    public IBlockState withMirror(@Nonnull IBlockState state, Mirror mirrorIn)
-    {
-        return state.withRotation(mirrorIn.toRotation(state.getValue(BlockDirectional.FACING)));
-    }
-
-    @Nonnull
-    @Override
-    @Deprecated
-    public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
-    {
-        return getDefaultState().withProperty(BlockDirectional.FACING, facing.getOpposite());
-    }
-
-    @Nonnull
-    @Override
-    @Deprecated
-    public IBlockState getStateFromMeta(int meta)
-    {
-        return getDefaultState().withProperty(BlockDirectional.FACING, EnumFacing.getHorizontal(meta));
-    }
-
-    @Override
-    public int getMetaFromState(IBlockState state)
-    {
-        return state.getValue(BlockDirectional.FACING).ordinal();
-    }
-
-    @Nonnull
-    @Override
-    protected BlockStateContainer createBlockState()
-    {
-        return new BlockStateContainer(this, BlockDirectional.FACING);
     }
 
     @Override
