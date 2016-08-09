@@ -13,7 +13,7 @@ public class XPTClient extends XPTCommon
     @Override
     public void preInit()
     {
-        XPTItems.TELEPORTER.addDefaultModel();
+        XPTItems.TELEPORTER.registerDefaultModel();
         ClientRegistry.bindTileEntitySpecialRenderer(TileTeleporter.class, new RenderTeleporter());
     }
 }
