@@ -1,10 +1,6 @@
 package com.latmod.xpt.block;
 
 import com.feed_the_beast.ftbl.api.block.BlockLM;
-import com.feed_the_beast.ftbl.api.item.ODItems;
-import com.feed_the_beast.ftbl.util.FTBLib;
-import com.feed_the_beast.ftbl.util.LMMod;
-import com.latmod.xpt.XPT;
 import com.latmod.xpt.XPTConfig;
 import com.latmod.xpt.net.MessageOpenGuiXPT;
 import net.minecraft.block.material.Material;
@@ -15,7 +11,6 @@ import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -45,12 +40,6 @@ public class BlockTeleporter extends BlockLM
     }
 
     @Override
-    public LMMod getMod()
-    {
-        return XPT.mod;
-    }
-
-    @Override
     public boolean canHarvestBlock(IBlockAccess world, @Nonnull BlockPos pos, @Nonnull EntityPlayer player)
     {
         return true;
@@ -67,25 +56,6 @@ public class BlockTeleporter extends BlockLM
     public TileEntity createTileEntity(@Nonnull World w, @Nonnull IBlockState state)
     {
         return new TileTeleporter();
-    }
-
-    @Override
-    public void loadTiles()
-    {
-        FTBLib.addTile(TileTeleporter.class, getRegistryName());
-    }
-
-    @Override
-    public void loadRecipes()
-    {
-        getMod().recipes.addRecipe(new ItemStack(this, 1),
-                " G ",
-                "DPD",
-                "III",
-                'I', Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE,
-                'P', ODItems.ENDERPEARL,
-                'G', ODItems.GLOWSTONE,
-                'D', ODItems.DIAMOND);
     }
 
     @Nonnull

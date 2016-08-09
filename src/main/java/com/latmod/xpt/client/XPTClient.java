@@ -1,8 +1,9 @@
 package com.latmod.xpt.client;
 
-import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.latmod.xpt.XPTCommon;
+import com.latmod.xpt.XPTItems;
 import com.latmod.xpt.block.TileTeleporter;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -12,6 +13,7 @@ public class XPTClient extends XPTCommon
     @Override
     public void preInit()
     {
-        FTBLibClient.addTileRenderer(TileTeleporter.class, new RenderTeleporter());
+        XPTItems.TELEPORTER.addDefaultModel();
+        ClientRegistry.bindTileEntitySpecialRenderer(TileTeleporter.class, new RenderTeleporter());
     }
 }
