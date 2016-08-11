@@ -1,10 +1,10 @@
 package com.latmod.xpt;
 
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryDouble;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryInt;
 import com.feed_the_beast.ftbl.api.config.ConfigFile;
-import com.feed_the_beast.ftbl.api.config.ConfigRegistry;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.latmod.lib.annotations.Info;
 import com.latmod.lib.annotations.NumberBounds;
@@ -36,7 +36,7 @@ public class XPTConfig // XPT
         configFile.setFile(new File(FTBLib.folderConfig, "XPTeleporters.json"));
         configFile.setDisplayName(new TextComponentString("XPTeleporters"));
         configFile.addGroup("general", XPTConfig.class);
-        ConfigRegistry.add("xpt", configFile);
+        FTBLibAPI.INSTANCE.registerConfigFile("xpt", configFile);
         configFile.load();
     }
 

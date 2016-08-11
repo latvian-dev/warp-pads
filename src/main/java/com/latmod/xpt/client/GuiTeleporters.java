@@ -1,13 +1,13 @@
 package com.latmod.xpt.client;
 
-import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
-import com.feed_the_beast.ftbl.api.client.gui.GuiIcons;
-import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
-import com.feed_the_beast.ftbl.api.client.gui.GuiLang;
-import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonLM;
-import com.feed_the_beast.ftbl.api.client.gui.widgets.SliderLM;
-import com.feed_the_beast.ftbl.api.client.gui.widgets.TextBoxLM;
+import com.feed_the_beast.ftbl.api.gui.GuiIcons;
+import com.feed_the_beast.ftbl.api.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.gui.GuiLang;
+import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
+import com.feed_the_beast.ftbl.api.gui.widgets.SliderLM;
+import com.feed_the_beast.ftbl.api.gui.widgets.TextBoxLM;
 import com.feed_the_beast.ftbl.api.security.EnumPrivacyLevel;
 import com.latmod.lib.TextureCoords;
 import com.latmod.xpt.XPT;
@@ -52,7 +52,7 @@ public class GuiTeleporters extends GuiLM
         }
 
         @Override
-        public void onClicked(GuiLM gui, MouseButton button)
+        public void onClicked(GuiLM gui, IMouseButton button)
         {
             playClickSound();
 
@@ -100,7 +100,7 @@ public class GuiTeleporters extends GuiLM
         buttonPrivacy = new ButtonLM(105, 5, 16, 16)
         {
             @Override
-            public void onClicked(GuiLM gui, MouseButton button)
+            public void onClicked(GuiLM gui, IMouseButton button)
             {
                 playClickSound();
                 new MessageTogglePrivacy(teleporter.getPos(), button.isLeft()).sendToServer();
@@ -112,7 +112,7 @@ public class GuiTeleporters extends GuiLM
         buttonToggle = new ButtonLM(87, 5, 16, 16)
         {
             @Override
-            public void onClicked(GuiLM gui, MouseButton button)
+            public void onClicked(GuiLM gui, IMouseButton button)
             {
                 playClickSound();
                 new MessageToggleActive(teleporter.getPos()).sendToServer();

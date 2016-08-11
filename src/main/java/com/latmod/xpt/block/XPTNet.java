@@ -1,7 +1,8 @@
 package com.latmod.xpt.block;
 
-import com.feed_the_beast.ftbl.api.ForgePlayer;
-import com.feed_the_beast.ftbl.api.ForgeWorldMP;
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
+import com.feed_the_beast.ftbl.api.IForgePlayer;
+import com.feed_the_beast.ftbl.api.IForgeWorld;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import net.minecraft.entity.player.EntityPlayerMP;
 
@@ -52,7 +53,9 @@ public class XPTNet
 
     public static Collection<TileTeleporter> getTeleporters(EntityPlayerMP player)
     {
-        ForgePlayer p = ForgeWorldMP.inst.getPlayer(player);
+        IForgeWorld world = FTBLibAPI.INSTANCE.getWorld();
+
+        IForgePlayer p = world.getPlayer(player);
         List<TileTeleporter> list = new ArrayList<>();
 
         if(p == null || NET.isEmpty())
@@ -64,11 +67,11 @@ public class XPTNet
         {
             if(tile.security.hasOwner() && tile.hasWorldObj() && !tile.isInvalid())
             {
-                ForgePlayer owner = ForgeWorldMP.inst.getPlayer(tile.security.getOwner());
+                IForgePlayer owner = world.getPlayer(tile.security.getOwner());
 
                 if(owner != null)
                 {
-                    if(tile.security.getPrivacyLevel().canInteract(owner, p))
+                    if(p.canInteract(owner, tile.security.getPrivacyLevel()))
                     {
                         list.add(tile);
                     }

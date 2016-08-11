@@ -1,6 +1,6 @@
 package com.latmod.xpt;
 
-import com.feed_the_beast.ftbl.api.events.ForgeWorldEvent;
+import com.feed_the_beast.ftbl.api.events.SyncDataEvent;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -10,17 +10,17 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class XPTEventHandler
 {
     @SubscribeEvent
-    public void syncData(ForgeWorldEvent.Sync e)
+    public void syncData(SyncDataEvent event)
     {
-        if(e.world.getSide().isServer())
+        if(event.getSide().isServer())
         {
             NBTTagCompound tag = new NBTTagCompound();
             tag.setBoolean("SB", XPTConfig.soft_blocks.getAsBoolean());
-            e.syncData.setTag("XPT", tag);
+            event.getData().setTag("XPT", tag);
         }
         else
         {
-            NBTTagCompound tag = e.syncData.getCompoundTag("XPT");
+            NBTTagCompound tag = event.getData().getCompoundTag("XPT");
             XPTConfig.soft_blocks.set(tag.getBoolean("SB"));
         }
     }
