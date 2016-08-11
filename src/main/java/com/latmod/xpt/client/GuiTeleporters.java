@@ -9,7 +9,7 @@ import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonLM;
 import com.feed_the_beast.ftbl.api.client.gui.widgets.SliderLM;
 import com.feed_the_beast.ftbl.api.client.gui.widgets.TextBoxLM;
 import com.feed_the_beast.ftbl.api.security.EnumPrivacyLevel;
-import com.feed_the_beast.ftbl.util.TextureCoords;
+import com.latmod.lib.TextureCoords;
 import com.latmod.xpt.XPT;
 import com.latmod.xpt.block.TileTeleporter;
 import com.latmod.xpt.block.XPTNode;
@@ -35,11 +35,11 @@ import java.util.List;
 public class GuiTeleporters extends GuiLM
 {
     public static final ResourceLocation TEXTURE = new ResourceLocation(XPT.MOD_ID, "textures/gui/teleporters.png");
-    public static final TextureCoords SLIDER_TEX = new TextureCoords(TEXTURE, 0, 110, 6, 10, 128, 128);
-    public static final TextureCoords AVAILABLE_ON = new TextureCoords(TEXTURE, 6, 110, 7, 7, 128, 128);
-    public static final TextureCoords AVAILABLE_OFF = new TextureCoords(TEXTURE, 13, 110, 7, 7, 128, 128);
-    public static final TextureCoords BAR_H = new TextureCoords(TEXTURE, 24, 111, 104, 1, 128, 128);
-    public static final TextureCoords BAR_V = new TextureCoords(TEXTURE, 127, 0, 1, 81, 128, 128);
+    public static final TextureCoords SLIDER_TEX = TextureCoords.fromCoords(TEXTURE, 0, 110, 6, 10, 128, 128);
+    public static final TextureCoords AVAILABLE_ON = TextureCoords.fromCoords(TEXTURE, 6, 110, 7, 7, 128, 128);
+    public static final TextureCoords AVAILABLE_OFF = TextureCoords.fromCoords(TEXTURE, 13, 110, 7, 7, 128, 128);
+    public static final TextureCoords BAR_H = TextureCoords.fromCoords(TEXTURE, 24, 111, 104, 1, 128, 128);
+    public static final TextureCoords BAR_V = TextureCoords.fromCoords(TEXTURE, 127, 0, 1, 81, 128, 128);
 
     public class ButtonXPT extends ButtonLM
     {

@@ -2,8 +2,8 @@ package com.latmod.xpt.net;
 
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToServer;
-import com.feed_the_beast.ftbl.util.LMDimUtils;
-import com.feed_the_beast.ftbl.util.LMNetUtils;
+import com.latmod.lib.util.LMDimUtils;
+import com.latmod.lib.util.LMNetUtils;
 import com.latmod.xpt.XPTConfig;
 import com.latmod.xpt.block.TileTeleporter;
 import com.latmod.xpt.block.XPTNet;
