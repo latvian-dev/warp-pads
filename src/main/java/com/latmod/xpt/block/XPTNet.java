@@ -38,7 +38,7 @@ public class XPTNet
         if(teleporter.security.hasOwner() && teleporter.hasWorldObj() && teleporter.getSide().isServer())
         {
             NET.put(teleporter.getUUID(), teleporter);
-            FTBLib.dev_logger.info("Added " + teleporter.getPos());
+            FTBLib.DEV_LOGGER.info("Added " + teleporter.getPos());
         }
     }
 
@@ -47,13 +47,13 @@ public class XPTNet
         if(teleporter.hasWorldObj() && teleporter.getSide().isServer())
         {
             NET.remove(teleporter.getUUID());
-            FTBLib.dev_logger.info("Removed " + teleporter.getPos());
+            FTBLib.DEV_LOGGER.info("Removed " + teleporter.getPos());
         }
     }
 
     public static Collection<TileTeleporter> getTeleporters(EntityPlayerMP player)
     {
-        IForgeWorld world = FTBLibAPI.INSTANCE.getWorld();
+        IForgeWorld world = FTBLibAPI.get().getWorld();
 
         IForgePlayer p = world.getPlayer(player);
         List<TileTeleporter> list = new ArrayList<>();

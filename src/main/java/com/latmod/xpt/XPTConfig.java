@@ -36,7 +36,7 @@ public class XPTConfig // XPT
         configFile.setFile(new File(FTBLib.folderConfig, "XPTeleporters.json"));
         configFile.setDisplayName(new TextComponentString("XPTeleporters"));
         configFile.addGroup("general", XPTConfig.class);
-        FTBLibAPI.INSTANCE.registerConfigFile("xpt", configFile);
+        FTBLibAPI.get().getRegistries().configFiles().register("xpt", configFile);
         configFile.load();
     }
 

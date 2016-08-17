@@ -6,6 +6,7 @@ import com.feed_the_beast.ftbl.api.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.gui.GuiLang;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
+import com.feed_the_beast.ftbl.api.gui.widgets.EnumDirection;
 import com.feed_the_beast.ftbl.api.gui.widgets.SliderLM;
 import com.feed_the_beast.ftbl.api.gui.widgets.TextBoxLM;
 import com.feed_the_beast.ftbl.api.security.EnumPrivacyLevel;
@@ -66,15 +67,15 @@ public class GuiTeleporters extends GuiLM
         @Override
         public void renderWidget(GuiLM gui)
         {
-            double ax = getAX();
-            double ay = getAY();
+            int ax = getAX();
+            int ay = getAY();
             GuiLM.render(BAR_H, ax, ay + height, 104, 1);
             GuiLM.render(node.available ? AVAILABLE_ON : AVAILABLE_OFF, ax, ay + 2, 7, 7);
-            font.drawString(node.name, (int) ax + 10, (int) ay + 2, 0xFFFFFFFF, false);
+            font.drawString(node.name, ax + 10, ay + 2, 0xFFFFFFFF, false);
 
             String lvls = Integer.toString(node.levels);
 
-            font.drawString(lvls, (int) (ax + width) - font.getStringWidth(lvls) - 2, (int) ay + 2, node.available ? 0xFF56FF47 : 0xFFFF4646, false);
+            font.drawString(lvls, ax + width - font.getStringWidth(lvls) - 2, ay + 2, node.available ? 0xFF56FF47 : 0xFFFF4646, false);
             GlStateManager.color(1F, 1F, 1F, 1F);
         }
     }
@@ -84,7 +85,6 @@ public class GuiTeleporters extends GuiLM
     public final List<ButtonXPT> buttons;
     public final SliderLM slider;
     public final TextBoxLM textBox;
-    private Boolean lastInactive;
 
     public GuiTeleporters(TileTeleporter te, List<XPTNode> t)
     {
@@ -97,7 +97,7 @@ public class GuiTeleporters extends GuiLM
             buttons.add(new ButtonXPT(n));
         }
 
-        buttonPrivacy = new ButtonLM(105, 5, 16, 16)
+        buttonPrivacy = new ButtonLM(105, 5, 16, 16, EnumPrivacyLevel.enumLangKey.translate())
         {
             @Override
             public void onClicked(GuiLM gui, IMouseButton button)
@@ -107,8 +107,6 @@ public class GuiTeleporters extends GuiLM
             }
         };
 
-        buttonPrivacy.title = EnumPrivacyLevel.enumLangKey.translate();
-
         buttonToggle = new ButtonLM(87, 5, 16, 16)
         {
             @Override
@@ -116,6 +114,12 @@ public class GuiTeleporters extends GuiLM
             {
                 playClickSound();
                 new MessageToggleActive(teleporter.getPos()).sendToServer();
+            }
+
+            @Override
+            public String getTitle()
+            {
+                return teleporter.inactive ? GuiLang.label_disabled.translate() : GuiLang.label_enabled.translate();
             }
         };
 
@@ -125,9 +129,13 @@ public class GuiTeleporters extends GuiLM
             public void onMoved(GuiLM gui)
             {
             }
-        };
 
-        slider.isVertical = true;
+            @Override
+            public EnumDirection getDirection()
+            {
+                return EnumDirection.VERTICAL;
+            }
+        };
 
         textBox = new TextBoxLM(6, 6, 78, 14)
         {
@@ -177,13 +185,7 @@ public class GuiTeleporters extends GuiLM
             return;
         }
 
-        if(lastInactive == null || lastInactive != teleporter.inactive)
-        {
-            lastInactive = teleporter.inactive;
-            buttonToggle.title = teleporter.inactive ? GuiLang.label_disabled.translate() : GuiLang.label_enabled.translate();
-        }
-
-        slider.update(this);
+        slider.updateSlider(this);
 
         FTBLibClient.setTexture(TEXTURE);
         int ax = getAX();
