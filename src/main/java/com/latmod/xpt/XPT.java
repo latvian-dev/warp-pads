@@ -1,16 +1,11 @@
 package com.latmod.xpt;
 
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
-import com.feed_the_beast.ftbl.api.item.ODItems;
-import com.feed_the_beast.ftbl.api.recipes.LMRecipes;
 import com.latmod.xpt.block.XPTNet;
 import com.latmod.xpt.net.XPTNetHandler;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
 
@@ -32,23 +27,9 @@ public class XPT
         XPTConfig.load();
         proxy.preInit();
         FTBLibAPI.get().getRegistries().syncedData().register(new ResourceLocation(MOD_ID, "config"), new XPTSyncConfig());
-        XPTNetHandler.init();
-    }
+        FTBLibAPI.get().getRegistries().recipeHandlers().register(new ResourceLocation(MOD_ID, "blocks"), new XPTRecipes());
 
-    @Mod.EventHandler
-    public void postInit(FMLPostInitializationEvent event)
-    {
-        if(XPTConfig.enable_crafting.getAsBoolean())
-        {
-            LMRecipes.INSTANCE.addRecipe(new ItemStack(XPTItems.TELEPORTER),
-                    " G ",
-                    "DPD",
-                    "III",
-                    'I', Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE,
-                    'P', ODItems.ENDERPEARL,
-                    'G', ODItems.GLOWSTONE,
-                    'D', ODItems.DIAMOND);
-        }
+        XPTNetHandler.init();
     }
 
     @Mod.EventHandler

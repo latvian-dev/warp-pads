@@ -3,7 +3,7 @@ package com.latmod.xpt.block;
 import com.feed_the_beast.ftbl.api.security.ISecure;
 import com.feed_the_beast.ftbl.api.security.Security;
 import com.feed_the_beast.ftbl.api.tile.TileLM;
-import com.latmod.lib.util.LMUtils;
+import com.latmod.lib.util.LMStringUtils;
 import com.latmod.xpt.XPTConfig;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -32,7 +32,7 @@ public class TileTeleporter extends TileLM implements ITickable
     @Nonnull
     public String getName()
     {
-        return name == null ? LMUtils.fromUUID(getUUID()) : name;
+        return name == null ? LMStringUtils.fromUUID(getUUID()) : name;
     }
 
     public void setName(String n)
@@ -77,7 +77,7 @@ public class TileTeleporter extends TileLM implements ITickable
     {
         super.readTileData(tag);
 
-        uuid = LMUtils.fromString(tag.getString("UUID"));
+        uuid = LMStringUtils.fromString(tag.getString("UUID"));
 
         if(tag.hasKey("Name"))
         {
@@ -96,7 +96,7 @@ public class TileTeleporter extends TileLM implements ITickable
     {
         super.writeTileData(tag);
 
-        tag.setString("UUID", LMUtils.fromUUID(getUUID()));
+        tag.setString("UUID", LMStringUtils.fromUUID(getUUID()));
 
         if(name != null && !name.isEmpty())
         {
@@ -112,7 +112,7 @@ public class TileTeleporter extends TileLM implements ITickable
     @Override
     public void readTileClientData(@Nonnull NBTTagCompound tag)
     {
-        uuid = LMUtils.fromString(tag.getString("U"));
+        uuid = new UUID(tag.getLong("UM"), tag.getLong("UL"));
 
         if(tag.hasKey("N"))
         {
@@ -129,7 +129,8 @@ public class TileTeleporter extends TileLM implements ITickable
     @Override
     public void writeTileClientData(@Nonnull NBTTagCompound tag)
     {
-        tag.setString("U", LMUtils.fromUUID(getUUID()));
+        tag.setLong("UM", getUUID().getMostSignificantBits());
+        tag.setLong("UL", getUUID().getLeastSignificantBits());
 
         if(name != null && !name.isEmpty())
         {
