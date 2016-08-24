@@ -73,74 +73,76 @@ public class TileTeleporter extends TileLM implements ITickable
     }
 
     @Override
-    public void readTileData(@Nonnull NBTTagCompound tag)
+    public void writeTileData(@Nonnull NBTTagCompound nbt)
     {
-        super.readTileData(tag);
+        super.writeTileData(nbt);
 
-        uuid = LMStringUtils.fromString(tag.getString("UUID"));
+        nbt.setString("UUID", LMStringUtils.fromUUID(getUUID()));
 
-        if(tag.hasKey("Name"))
+        if(name != null && !name.isEmpty())
         {
-            name = tag.getString("Name");
+            nbt.setString("Name", name);
+        }
+
+        if(inactive)
+        {
+            nbt.setBoolean("Inactive", true);
+        }
+    }
+
+    @Override
+    public void readTileData(@Nonnull NBTTagCompound nbt)
+    {
+        super.readTileData(nbt);
+
+        uuid = LMStringUtils.fromString(nbt.getString("UUID"));
+
+        if(nbt.hasKey("Name"))
+        {
+            name = nbt.getString("Name");
         }
         else
         {
             name = null;
         }
 
-        inactive = tag.getBoolean("Inactive");
+        inactive = nbt.getBoolean("Inactive");
     }
 
     @Override
-    public void writeTileData(@Nonnull NBTTagCompound tag)
+    public void writeTileClientData(@Nonnull NBTTagCompound nbt)
     {
-        super.writeTileData(tag);
-
-        tag.setString("UUID", LMStringUtils.fromUUID(getUUID()));
+        super.writeTileClientData(nbt);
+        nbt.setLong("UM", getUUID().getMostSignificantBits());
+        nbt.setLong("UL", getUUID().getLeastSignificantBits());
 
         if(name != null && !name.isEmpty())
         {
-            tag.setString("Name", name);
+            nbt.setString("N", name);
         }
 
         if(inactive)
         {
-            tag.setBoolean("Inactive", true);
+            nbt.setBoolean("I", inactive);
         }
     }
 
     @Override
-    public void readTileClientData(@Nonnull NBTTagCompound tag)
+    public void readTileClientData(@Nonnull NBTTagCompound nbt)
     {
-        uuid = new UUID(tag.getLong("UM"), tag.getLong("UL"));
+        super.readTileClientData(nbt);
+        uuid = new UUID(nbt.getLong("UM"), nbt.getLong("UL"));
 
-        if(tag.hasKey("N"))
+        if(nbt.hasKey("N"))
         {
-            name = tag.getString("N");
+            name = nbt.getString("N");
         }
         else
         {
             name = null;
         }
 
-        inactive = tag.getBoolean("I");
-    }
-
-    @Override
-    public void writeTileClientData(@Nonnull NBTTagCompound tag)
-    {
-        tag.setLong("UM", getUUID().getMostSignificantBits());
-        tag.setLong("UL", getUUID().getLeastSignificantBits());
-
-        if(name != null && !name.isEmpty())
-        {
-            tag.setString("N", name);
-        }
-
-        if(inactive)
-        {
-            tag.setBoolean("I", inactive);
-        }
+        inactive = nbt.getBoolean("I");
     }
 
     @Override
