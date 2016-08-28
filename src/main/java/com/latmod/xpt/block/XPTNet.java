@@ -2,7 +2,7 @@ package com.latmod.xpt.block;
 
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.api.IForgeWorld;
+import com.feed_the_beast.ftbl.api.IUniverse;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import net.minecraft.entity.player.EntityPlayerMP;
 
@@ -53,7 +53,7 @@ public class XPTNet
 
     public static Collection<TileTeleporter> getTeleporters(EntityPlayerMP player)
     {
-        IForgeWorld world = FTBLibAPI.get().getWorld();
+        IUniverse world = FTBLibAPI.get().getUniverse();
 
         IForgePlayer p = world.getPlayer(player);
         List<TileTeleporter> list = new ArrayList<>();
