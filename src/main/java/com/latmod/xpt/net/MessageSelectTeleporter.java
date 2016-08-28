@@ -21,8 +21,8 @@ import java.util.UUID;
  */
 public class MessageSelectTeleporter extends MessageToServer<MessageSelectTeleporter>
 {
-    public BlockPos pos;
-    public UUID uuid;
+    private BlockPos pos;
+    private UUID uuid;
 
     public MessageSelectTeleporter()
     {

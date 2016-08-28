@@ -11,17 +11,18 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
 import java.util.UUID;
 
 public class TileTeleporter extends TileLM implements ITickable
 {
     public boolean inactive;
     private UUID uuid;
-    private String name;
+    private String name = "";
 
     @Override
     protected Security createSecurity()
@@ -29,25 +30,23 @@ public class TileTeleporter extends TileLM implements ITickable
         return new Security(ISecure.SAVE_OWNER | ISecure.SAVE_PRIVACY_LEVEL);
     }
 
-    @Nonnull
     public String getName()
     {
-        return name == null ? LMStringUtils.fromUUID(getUUID()) : name;
+        return name.isEmpty() ? LMStringUtils.fromUUID(getUUID()) : name;
+    }
+
+    @Override
+    public ITextComponent getDisplayName()
+    {
+        return new TextComponentString(getName());
     }
 
     public void setName(String n)
     {
         name = n;
-
-        if(name != null && name.isEmpty())
-        {
-            name = null;
-        }
-
         markDirty();
     }
 
-    @Nonnull
     public UUID getUUID()
     {
         if(uuid == null)
@@ -73,75 +72,49 @@ public class TileTeleporter extends TileLM implements ITickable
     }
 
     @Override
-    public void writeTileData(@Nonnull NBTTagCompound nbt)
+    public void writeTileData(NBTTagCompound nbt)
     {
         super.writeTileData(nbt);
 
         nbt.setString("UUID", LMStringUtils.fromUUID(getUUID()));
-
-        if(name != null && !name.isEmpty())
-        {
-            nbt.setString("Name", name);
-        }
-
-        if(inactive)
-        {
-            nbt.setBoolean("Inactive", true);
-        }
+        nbt.setString("Name", name);
+        nbt.setBoolean("Inactive", inactive);
     }
 
     @Override
-    public void readTileData(@Nonnull NBTTagCompound nbt)
+    public void readTileData(NBTTagCompound nbt)
     {
         super.readTileData(nbt);
 
         uuid = LMStringUtils.fromString(nbt.getString("UUID"));
-
-        if(nbt.hasKey("Name"))
-        {
-            name = nbt.getString("Name");
-        }
-        else
-        {
-            name = null;
-        }
-
+        name = nbt.getString("Name");
         inactive = nbt.getBoolean("Inactive");
     }
 
     @Override
-    public void writeTileClientData(@Nonnull NBTTagCompound nbt)
+    public void writeTileClientData(NBTTagCompound nbt)
     {
         super.writeTileClientData(nbt);
         nbt.setLong("UM", getUUID().getMostSignificantBits());
         nbt.setLong("UL", getUUID().getLeastSignificantBits());
 
-        if(name != null && !name.isEmpty())
+        if(!name.isEmpty())
         {
             nbt.setString("N", name);
         }
 
         if(inactive)
         {
-            nbt.setBoolean("I", inactive);
+            nbt.setBoolean("I", true);
         }
     }
 
     @Override
-    public void readTileClientData(@Nonnull NBTTagCompound nbt)
+    public void readTileClientData(NBTTagCompound nbt)
     {
         super.readTileClientData(nbt);
         uuid = new UUID(nbt.getLong("UM"), nbt.getLong("UL"));
-
-        if(nbt.hasKey("N"))
-        {
-            name = nbt.getString("N");
-        }
-        else
-        {
-            name = null;
-        }
-
+        name = nbt.getString("N");
         inactive = nbt.getBoolean("I");
     }
 
@@ -162,7 +135,7 @@ public class TileTeleporter extends TileLM implements ITickable
     }
 
     @Override
-    public void onPlacedBy(@Nonnull EntityLivingBase el, @Nonnull ItemStack is, @Nonnull IBlockState state)
+    public void onPlacedBy(EntityLivingBase el, ItemStack is, IBlockState state)
     {
         super.onPlacedBy(el, is, state);
 
@@ -181,7 +154,6 @@ public class TileTeleporter extends TileLM implements ITickable
         onLoad();
     }
 
-    @Nonnull
     @Override
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getRenderBoundingBox()

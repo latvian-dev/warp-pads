@@ -1,6 +1,5 @@
 package com.latmod.xpt.block;
 
-import javax.annotation.Nonnull;
 import java.util.UUID;
 
 /**
@@ -13,7 +12,7 @@ public class XPTNode
     public final int levels;
     public final boolean available;
 
-    public XPTNode(@Nonnull UUID id, @Nonnull String n, int l, boolean a)
+    public XPTNode(UUID id, String n, int l, boolean a)
     {
         uuid = id;
         name = n;

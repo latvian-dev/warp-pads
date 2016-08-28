@@ -14,8 +14,8 @@ import net.minecraft.util.math.BlockPos;
  */
 public class MessageTogglePrivacy extends MessageToServer<MessageTogglePrivacy>
 {
-    public BlockPos pos;
-    public boolean next;
+    private BlockPos pos;
+    private boolean next;
 
     public MessageTogglePrivacy()
     {

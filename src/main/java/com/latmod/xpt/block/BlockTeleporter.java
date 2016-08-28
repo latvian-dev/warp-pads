@@ -22,7 +22,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +39,7 @@ public class BlockTeleporter extends BlockLM
     }
 
     @Override
-    public boolean canHarvestBlock(IBlockAccess world, @Nonnull BlockPos pos, @Nonnull EntityPlayer player)
+    public boolean canHarvestBlock(IBlockAccess world, BlockPos pos, EntityPlayer player)
     {
         return true;
     }
@@ -51,14 +50,12 @@ public class BlockTeleporter extends BlockLM
         return true;
     }
 
-    @Nonnull
     @Override
-    public TileEntity createTileEntity(@Nonnull World w, @Nonnull IBlockState state)
+    public TileEntity createTileEntity(World w, IBlockState state)
     {
         return new TileTeleporter();
     }
 
-    @Nonnull
     @Override
     @Deprecated
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess w, BlockPos pos)
@@ -75,7 +72,7 @@ public class BlockTeleporter extends BlockLM
 
     @Override
     @Deprecated
-    public void addCollisionBoxToList(IBlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull AxisAlignedBB entityBox, @Nonnull List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn)
+    public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn)
     {
         if(!XPTConfig.soft_blocks.getAsBoolean())
         {
@@ -126,7 +123,7 @@ public class BlockTeleporter extends BlockLM
     }
 
     @Override
-    public void harvestBlock(@Nonnull World worldIn, EntityPlayer player, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nullable TileEntity te, @Nullable ItemStack stack)
+    public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, @Nullable ItemStack stack)
     {
         if(te instanceof TileTeleporter)
         {
@@ -145,9 +142,8 @@ public class BlockTeleporter extends BlockLM
         }
     }
 
-    @Nonnull
     @Override
-    public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, @Nonnull IBlockState state, int fortune)
+    public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune)
     {
         List<ItemStack> ret = new ArrayList<>();
         ItemStack itemstack = new ItemStack(this, 1, 0);

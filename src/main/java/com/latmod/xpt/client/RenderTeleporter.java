@@ -11,15 +11,13 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
-import javax.annotation.Nonnull;
-
 @SideOnly(Side.CLIENT)
 public class RenderTeleporter extends TileEntitySpecialRenderer<TileTeleporter>
 {
     private static long debugTimer = 0L;
 
     @Override
-    public void renderTileEntityAt(@Nonnull TileTeleporter te, double rx, double ry, double rz, float partialTicks, int destroyStage)
+    public void renderTileEntityAt(TileTeleporter te, double rx, double ry, double rz, float partialTicks, int destroyStage)
     {
         GlStateManager.pushMatrix();
         GlStateManager.translate(rx + 0.5D, ry + 0.5D, rz + 0.5D);

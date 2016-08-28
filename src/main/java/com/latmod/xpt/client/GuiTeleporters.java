@@ -24,7 +24,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,21 +31,20 @@ import java.util.List;
  * Created by LatvianModder on 28.07.2016.
  */
 @SideOnly(Side.CLIENT)
-@ParametersAreNonnullByDefault
 public class GuiTeleporters extends GuiLM
 {
-    public static final ResourceLocation TEXTURE = new ResourceLocation(XPT.MOD_ID, "textures/gui/teleporters.png");
-    public static final TextureCoords SLIDER_TEX = TextureCoords.fromCoords(TEXTURE, 0, 110, 6, 10, 128, 128);
-    public static final TextureCoords AVAILABLE_ON = TextureCoords.fromCoords(TEXTURE, 6, 110, 7, 7, 128, 128);
-    public static final TextureCoords AVAILABLE_OFF = TextureCoords.fromCoords(TEXTURE, 13, 110, 7, 7, 128, 128);
-    public static final TextureCoords BAR_H = TextureCoords.fromCoords(TEXTURE, 24, 111, 104, 1, 128, 128);
-    public static final TextureCoords BAR_V = TextureCoords.fromCoords(TEXTURE, 127, 0, 1, 81, 128, 128);
+    private static final ResourceLocation TEXTURE = new ResourceLocation(XPT.MOD_ID, "textures/gui/teleporters.png");
+    private static final TextureCoords SLIDER_TEX = TextureCoords.fromCoords(TEXTURE, 0, 110, 6, 10, 128, 128);
+    private static final TextureCoords AVAILABLE_ON = TextureCoords.fromCoords(TEXTURE, 6, 110, 7, 7, 128, 128);
+    private static final TextureCoords AVAILABLE_OFF = TextureCoords.fromCoords(TEXTURE, 13, 110, 7, 7, 128, 128);
+    private static final TextureCoords BAR_H = TextureCoords.fromCoords(TEXTURE, 24, 111, 104, 1, 128, 128);
+    private static final TextureCoords BAR_V = TextureCoords.fromCoords(TEXTURE, 127, 0, 1, 81, 128, 128);
 
-    public class ButtonXPT extends ButtonLM
+    private class ButtonXPT extends ButtonLM
     {
-        public final XPTNode node;
+        private final XPTNode node;
 
-        public ButtonXPT(XPTNode n)
+        private ButtonXPT(XPTNode n)
         {
             super(6, 0, 104, 11);
             node = n;
@@ -80,11 +78,11 @@ public class GuiTeleporters extends GuiLM
         }
     }
 
-    public final TileTeleporter teleporter;
-    public final ButtonLM buttonPrivacy, buttonToggle;
-    public final List<ButtonXPT> buttons;
-    public final SliderLM slider;
-    public final TextBoxLM textBox;
+    private final TileTeleporter teleporter;
+    private final ButtonLM buttonPrivacy, buttonToggle;
+    private final List<ButtonXPT> buttons;
+    private final SliderLM slider;
+    private final TextBoxLM textBox;
 
     public GuiTeleporters(TileTeleporter te, List<XPTNode> t)
     {
@@ -117,9 +115,9 @@ public class GuiTeleporters extends GuiLM
             }
 
             @Override
-            public String getTitle()
+            public String getTitle(GuiLM gui)
             {
-                return teleporter.inactive ? GuiLang.label_disabled.translate() : GuiLang.label_enabled.translate();
+                return teleporter.inactive ? GuiLang.LABEL_DISABLED.translate() : GuiLang.LABEL_ENABLED.translate();
             }
         };
 
@@ -194,7 +192,7 @@ public class GuiTeleporters extends GuiLM
         super.drawBackground();
 
         buttonPrivacy.render(teleporter.security.getPrivacyLevel().getIcon());
-        buttonToggle.render(teleporter.inactive ? GuiIcons.accept_gray : GuiIcons.accept);
+        buttonToggle.render(teleporter.inactive ? GuiIcons.ACCEPT_GRAY : GuiIcons.ACCEPT);
         slider.renderSlider(SLIDER_TEX);
     }
 }

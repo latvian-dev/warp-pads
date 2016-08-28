@@ -14,8 +14,8 @@ import net.minecraft.util.math.BlockPos;
  */
 public class MessageSetName extends MessageToServer<MessageSetName>
 {
-    public BlockPos pos;
-    public String name;
+    private BlockPos pos;
+    private String name;
 
     public MessageSetName()
     {

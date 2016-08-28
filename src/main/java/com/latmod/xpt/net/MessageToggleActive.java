@@ -14,7 +14,7 @@ import net.minecraft.util.math.BlockPos;
  */
 public class MessageToggleActive extends MessageToServer<MessageToggleActive>
 {
-    public BlockPos pos;
+    private BlockPos pos;
 
     public MessageToggleActive()
     {

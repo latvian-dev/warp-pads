@@ -22,8 +22,8 @@ import java.util.UUID;
  */
 public class MessageOpenGuiXPT extends MessageToClient<MessageOpenGuiXPT>
 {
-    public BlockPos pos;
-    public List<XPTNode> teleporters;
+    private BlockPos pos;
+    private List<XPTNode> teleporters;
 
     public MessageOpenGuiXPT()
     {
