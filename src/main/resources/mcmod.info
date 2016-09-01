@@ -4,13 +4,13 @@
   "name": "XP Teleporters",
   "description": "This mod adds XP Teleporters",
   "version": "${version}",
-  "url": "http://minecraft.curseforge.com/mc-mods/230738-xpteleporters",
+  "url": "https://minecraft.curseforge.com/projects/xpteleporters",
   "updateUrl": "",
   "authorList": [
     "LatvianModder"
   ],
   "credits": "",
-  "logoFile": "",
+  "logoFile": "assets/xpt/textures/logo.png",
   "screenshots": [
   ],
   "parent":"",
