@@ -1,9 +1,11 @@
 package com.latmod.xpt.client;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
+import com.feed_the_beast.ftbl.api.gui.GuiHelper;
 import com.feed_the_beast.ftbl.api.gui.GuiIcons;
 import com.feed_the_beast.ftbl.api.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.gui.GuiLang;
+import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
 import com.feed_the_beast.ftbl.api.gui.widgets.EnumDirection;
@@ -51,9 +53,9 @@ public class GuiTeleporters extends GuiLM
         }
 
         @Override
-        public void onClicked(GuiLM gui, IMouseButton button)
+        public void onClicked(IGui gui, IMouseButton button)
         {
-            playClickSound();
+            GuiHelper.playClickSound();
 
             if(node.available && button.isLeft())
             {
@@ -63,17 +65,17 @@ public class GuiTeleporters extends GuiLM
         }
 
         @Override
-        public void renderWidget(GuiLM gui)
+        public void renderWidget(IGui gui)
         {
             int ax = getAX();
             int ay = getAY();
-            GuiLM.render(BAR_H, ax, ay + height, 104, 1);
-            GuiLM.render(node.available ? AVAILABLE_ON : AVAILABLE_OFF, ax, ay + 2, 7, 7);
-            font.drawString(node.name, ax + 10, ay + 2, 0xFFFFFFFF, false);
+            GuiHelper.render(BAR_H, ax, ay + getHeight(), 104, 1);
+            GuiHelper.render(node.available ? AVAILABLE_ON : AVAILABLE_OFF, ax, ay + 2, 7, 7);
+            getFont().drawString(node.name, ax + 10, ay + 2, 0xFFFFFFFF, false);
 
             String lvls = Integer.toString(node.levels);
 
-            font.drawString(lvls, ax + width - font.getStringWidth(lvls) - 2, ay + 2, node.available ? 0xFF56FF47 : 0xFFFF4646, false);
+            getFont().drawString(lvls, ax + getWidth() - getFont().getStringWidth(lvls) - 2, ay + 2, node.available ? 0xFF56FF47 : 0xFFFF4646, false);
             GlStateManager.color(1F, 1F, 1F, 1F);
         }
     }
@@ -98,9 +100,9 @@ public class GuiTeleporters extends GuiLM
         buttonPrivacy = new ButtonLM(105, 5, 16, 16, EnumPrivacyLevel.enumLangKey.translate())
         {
             @Override
-            public void onClicked(GuiLM gui, IMouseButton button)
+            public void onClicked(IGui gui, IMouseButton button)
             {
-                playClickSound();
+                GuiHelper.playClickSound();
                 new MessageTogglePrivacy(teleporter.getPos(), button.isLeft()).sendToServer();
             }
         };
@@ -108,14 +110,14 @@ public class GuiTeleporters extends GuiLM
         buttonToggle = new ButtonLM(87, 5, 16, 16)
         {
             @Override
-            public void onClicked(GuiLM gui, IMouseButton button)
+            public void onClicked(IGui gui, IMouseButton button)
             {
-                playClickSound();
+                GuiHelper.playClickSound();
                 new MessageToggleActive(teleporter.getPos()).sendToServer();
             }
 
             @Override
-            public String getTitle(GuiLM gui)
+            public String getTitle(IGui gui)
             {
                 return teleporter.inactive ? GuiLang.LABEL_DISABLED.translate() : GuiLang.LABEL_ENABLED.translate();
             }
@@ -124,7 +126,7 @@ public class GuiTeleporters extends GuiLM
         slider = new SliderLM(114, 23, 6, 81, 10)
         {
             @Override
-            public void onMoved(GuiLM gui)
+            public void onMoved(IGui gui)
             {
             }
 
@@ -138,7 +140,7 @@ public class GuiTeleporters extends GuiLM
         textBox = new TextBoxLM(6, 6, 78, 14)
         {
             @Override
-            public void onEnterPressed(GuiLM gui)
+            public void onEnterPressed(IGui gui)
             {
                 new MessageSetName(teleporter.getPos(), getText()).sendToServer();
             }
@@ -160,7 +162,7 @@ public class GuiTeleporters extends GuiLM
         for(ButtonXPT b : buttons)
         {
             b.posY = y;
-            y += b.height + 1D;
+            y += b.getHeight() + 1D;
         }
     }
 
@@ -188,7 +190,7 @@ public class GuiTeleporters extends GuiLM
         FTBLibClient.setTexture(TEXTURE);
         int ax = getAX();
         int ay = getAY();
-        GuiScreen.drawModalRectWithCustomSizedTexture(ax, ay, 0F, 0F, width, height, 128F, 128F);
+        GuiScreen.drawModalRectWithCustomSizedTexture(ax, ay, 0F, 0F, getWidth(), getHeight(), 128F, 128F);
         super.drawBackground();
 
         buttonPrivacy.render(teleporter.security.getPrivacyLevel().getIcon());

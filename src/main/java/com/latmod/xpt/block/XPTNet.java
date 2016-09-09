@@ -3,9 +3,10 @@ package com.latmod.xpt.block;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IUniverse;
-import com.feed_the_beast.ftbl.util.FTBLib;
+import com.latmod.lib.util.LMUtils;
 import net.minecraft.entity.player.EntityPlayerMP;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -28,6 +29,7 @@ public class XPTNet
         NET.clear();
     }
 
+    @Nullable
     public static TileTeleporter get(UUID id)
     {
         return NET.get(id);
@@ -38,7 +40,7 @@ public class XPTNet
         if(teleporter.security.hasOwner() && teleporter.hasWorldObj() && teleporter.getSide().isServer())
         {
             NET.put(teleporter.getUUID(), teleporter);
-            FTBLib.DEV_LOGGER.info("Added " + teleporter.getPos());
+            LMUtils.DEV_LOGGER.info("Added " + teleporter.getPos());
         }
     }
 
@@ -47,7 +49,7 @@ public class XPTNet
         if(teleporter.hasWorldObj() && teleporter.getSide().isServer())
         {
             NET.remove(teleporter.getUUID());
-            FTBLib.DEV_LOGGER.info("Removed " + teleporter.getPos());
+            LMUtils.DEV_LOGGER.info("Removed " + teleporter.getPos());
         }
     }
 

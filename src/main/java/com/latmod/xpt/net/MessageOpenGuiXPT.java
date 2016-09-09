@@ -10,8 +10,6 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,10 +72,9 @@ public class MessageOpenGuiXPT extends MessageToClient<MessageOpenGuiXPT>
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void onMessage(MessageOpenGuiXPT m, Minecraft mc)
+    public void onMessage(MessageOpenGuiXPT m)
     {
-        TileEntity te = mc.theWorld.getTileEntity(m.pos);
+        TileEntity te = Minecraft.getMinecraft().theWorld.getTileEntity(m.pos);
 
         if(te instanceof TileTeleporter)
         {

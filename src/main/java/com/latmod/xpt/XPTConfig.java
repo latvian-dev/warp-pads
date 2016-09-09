@@ -5,9 +5,9 @@ import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryDouble;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryInt;
 import com.feed_the_beast.ftbl.api.config.ConfigFile;
-import com.feed_the_beast.ftbl.util.FTBLib;
 import com.latmod.lib.annotations.Info;
 import com.latmod.lib.annotations.NumberBounds;
+import com.latmod.lib.util.LMUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextComponentString;
 
@@ -33,7 +33,7 @@ public class XPTConfig // XPT
 
     public static void load()
     {
-        configFile.setFile(new File(FTBLib.folderConfig, "XPTeleporters.json"));
+        configFile.setFile(new File(LMUtils.folderConfig, "XPTeleporters.json"));
         configFile.setDisplayName(new TextComponentString("XPTeleporters"));
         configFile.addGroup("general", XPTConfig.class);
         FTBLibAPI.get().getRegistries().configFiles().register("xpt", configFile);

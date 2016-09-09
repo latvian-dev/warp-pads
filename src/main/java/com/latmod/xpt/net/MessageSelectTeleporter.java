@@ -2,8 +2,8 @@ package com.latmod.xpt.net;
 
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToServer;
-import com.latmod.lib.util.LMDimUtils;
 import com.latmod.lib.util.LMNetUtils;
+import com.latmod.lib.util.LMServerUtils;
 import com.latmod.xpt.XPTConfig;
 import com.latmod.xpt.block.TileTeleporter;
 import com.latmod.xpt.block.XPTNet;
@@ -72,7 +72,7 @@ public class MessageSelectTeleporter extends MessageToServer<MessageSelectTelepo
                 if(XPTConfig.consumeLevels(player, levels, true))
                 {
                     teleporter0.playSound(SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.BLOCKS, 1F, 1F);
-                    LMDimUtils.teleportPlayer(player, teleporter.getDimPos());
+                    LMServerUtils.teleportPlayer(player, teleporter.getDimPos());
                     XPTConfig.consumeLevels(player, levels, false);
                     teleporter.playSound(SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.BLOCKS, 1F, 1F);
                 }
