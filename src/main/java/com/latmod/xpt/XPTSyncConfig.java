@@ -14,13 +14,13 @@ public class XPTSyncConfig implements ISyncData
     public NBTTagCompound writeSyncData(EntityPlayerMP player, IForgePlayer forgePlayer)
     {
         NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setBoolean("SB", XPTConfig.soft_blocks.getAsBoolean());
+        nbt.setTag("SB", XPTConfig.FILE.get(XPTConfig.SOFT_BLOCKS).serializeNBT());
         return nbt;
     }
 
     @Override
     public void readSyncData(NBTTagCompound nbt)
     {
-        XPTConfig.soft_blocks.set(nbt.getBoolean("SB"));
+        XPTConfig.FILE.get(XPTConfig.SOFT_BLOCKS).deserializeNBT(nbt.getTag("SB"));
     }
 }

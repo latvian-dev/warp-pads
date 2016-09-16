@@ -74,7 +74,7 @@ public class BlockTeleporter extends BlockLM
     @Deprecated
     public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn)
     {
-        if(!XPTConfig.soft_blocks.getAsBoolean())
+        if(!XPTConfig.softBlocks())
         {
             super.addCollisionBoxToList(state, worldIn, pos, entityBox, collidingBoxes, entityIn);
         }
