@@ -14,7 +14,7 @@ public class XPTRecipes implements IRecipeHandler
     @Override
     public boolean isActive()
     {
-        return XPTConfig.enableCrafting();
+        return XPTConfig.ENABLE_CRAFTING.getBoolean();
     }
 
     @Override

@@ -24,7 +24,6 @@ public class XPT
     public void preInit(FMLPreInitializationEvent event)
     {
         XPTItems.init();
-        XPTConfig.load();
         proxy.preInit();
         FTBLibAPI.get().getRegistries().syncedData().register(new ResourceLocation(MOD_ID, "config"), new XPTSyncConfig());
         FTBLibAPI.get().getRegistries().recipeHandlers().register(new ResourceLocation(MOD_ID, "blocks"), new XPTRecipes());
