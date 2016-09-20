@@ -1,9 +1,7 @@
 package com.latmod.xpt;
 
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.latmod.xpt.block.XPTNet;
 import com.latmod.xpt.net.XPTNetHandler;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -25,9 +23,6 @@ public class XPT
     {
         XPTItems.init();
         proxy.preInit();
-        FTBLibAPI.get().getRegistries().syncedData().register(new ResourceLocation(MOD_ID, "config"), new XPTSyncConfig());
-        FTBLibAPI.get().getRegistries().recipeHandlers().register(new ResourceLocation(MOD_ID, "blocks"), new XPTRecipes());
-
         XPTNetHandler.init();
     }
 
