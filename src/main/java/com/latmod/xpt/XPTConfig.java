@@ -3,9 +3,9 @@ package com.latmod.xpt;
 import com.feed_the_beast.ftbl.api.config.ConfigFileProvider;
 import com.feed_the_beast.ftbl.api.config.ConfigValue;
 import com.feed_the_beast.ftbl.api.config.IConfigFileProvider;
-import com.feed_the_beast.ftbl.api_impl.config.PropertyBool;
-import com.feed_the_beast.ftbl.api_impl.config.PropertyDouble;
-import com.feed_the_beast.ftbl.api_impl.config.PropertyInt;
+import com.latmod.lib.config.PropertyBool;
+import com.latmod.lib.config.PropertyDouble;
+import com.latmod.lib.config.PropertyInt;
 import com.latmod.lib.util.LMUtils;
 import net.minecraft.entity.player.EntityPlayer;
 

@@ -12,7 +12,7 @@ import com.feed_the_beast.ftbl.api.gui.widgets.EnumDirection;
 import com.feed_the_beast.ftbl.api.gui.widgets.SliderLM;
 import com.feed_the_beast.ftbl.api.gui.widgets.TextBoxLM;
 import com.feed_the_beast.ftbl.api.security.EnumPrivacyLevel;
-import com.latmod.lib.TextureCoords;
+import com.latmod.lib.client.TextureCoords;
 import com.latmod.xpt.XPT;
 import com.latmod.xpt.block.TileTeleporter;
 import com.latmod.xpt.block.XPTNode;
