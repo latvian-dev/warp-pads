@@ -2,7 +2,6 @@ package com.latmod.xpt;
 
 import com.feed_the_beast.ftbl.api.item.ODItems;
 import com.feed_the_beast.ftbl.api.recipes.IRecipeHandler;
-import com.feed_the_beast.ftbl.api.recipes.IRecipes;
 import com.feed_the_beast.ftbl.api.recipes.RecipeHandler;
 import com.latmod.lib.util.LMUtils;
 import com.latmod.xpt.block.BlockTeleporter;
@@ -25,29 +24,13 @@ public class XPTItems
     }
 
     @RecipeHandler
-    public static final IRecipeHandler RECIPES = new IRecipeHandler()
+    public static final IRecipeHandler RECIPES = recipes ->
     {
-        @Override
-        public ResourceLocation getID()
-        {
-            return new ResourceLocation(XPT.MOD_ID, "items");
-        }
-
-        @Override
-        public boolean isActive()
-        {
-            return XPTConfig.ENABLE_CRAFTING.getBoolean();
-        }
-
-        @Override
-        public void loadRecipes(IRecipes recipes)
-        {
-            recipes.addRecipe(new ItemStack(XPTItems.TELEPORTER),
-                    " G ", "DPD", "III",
-                    'I', Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE,
-                    'P', ODItems.ENDERPEARL,
-                    'G', ODItems.GLOWSTONE,
-                    'D', ODItems.DIAMOND);
-        }
+        recipes.addRecipe(new ItemStack(XPTItems.TELEPORTER),
+                " G ", "DPD", "III",
+                'I', Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE,
+                'P', ODItems.ENDERPEARL,
+                'G', ODItems.GLOWSTONE,
+                'D', ODItems.DIAMOND);
     };
 }
