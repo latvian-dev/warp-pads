@@ -1,6 +1,6 @@
 package com.latmod.xpt.net;
 
-import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
+import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.latmod.xpt.XPT;
 
 /**

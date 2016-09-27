@@ -1,6 +1,6 @@
 package com.latmod.xpt;
 
-import com.latmod.lib.LangKey;
+import com.feed_the_beast.ftbl.lib.LangKey;
 
 /**
  * Created by LatvianModder on 17.04.2016.

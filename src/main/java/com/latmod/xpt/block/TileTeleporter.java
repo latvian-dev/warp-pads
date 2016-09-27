@@ -1,9 +1,9 @@
 package com.latmod.xpt.block;
 
 import com.feed_the_beast.ftbl.api.security.ISecure;
-import com.feed_the_beast.ftbl.api.security.Security;
-import com.feed_the_beast.ftbl.api.tile.TileLM;
-import com.latmod.lib.util.LMStringUtils;
+import com.feed_the_beast.ftbl.lib.Security;
+import com.feed_the_beast.ftbl.lib.tile.TileLM;
+import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.latmod.xpt.XPTConfig;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;

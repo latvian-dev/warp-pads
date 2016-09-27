@@ -1,18 +1,18 @@
 package com.latmod.xpt.client;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
-import com.feed_the_beast.ftbl.api.gui.GuiHelper;
-import com.feed_the_beast.ftbl.api.gui.GuiIcons;
-import com.feed_the_beast.ftbl.api.gui.GuiLM;
-import com.feed_the_beast.ftbl.api.gui.GuiLang;
 import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
-import com.feed_the_beast.ftbl.api.gui.widgets.EnumDirection;
-import com.feed_the_beast.ftbl.api.gui.widgets.SliderLM;
-import com.feed_the_beast.ftbl.api.gui.widgets.TextBoxLM;
 import com.feed_the_beast.ftbl.api.security.EnumPrivacyLevel;
-import com.latmod.lib.client.TextureCoords;
+import com.feed_the_beast.ftbl.lib.client.TextureCoords;
+import com.feed_the_beast.ftbl.lib.gui.ButtonLM;
+import com.feed_the_beast.ftbl.lib.gui.EnumDirection;
+import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
+import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
+import com.feed_the_beast.ftbl.lib.gui.GuiLM;
+import com.feed_the_beast.ftbl.lib.gui.GuiLang;
+import com.feed_the_beast.ftbl.lib.gui.SliderLM;
+import com.feed_the_beast.ftbl.lib.gui.TextBoxLM;
 import com.latmod.xpt.XPT;
 import com.latmod.xpt.block.TileTeleporter;
 import com.latmod.xpt.block.XPTNode;

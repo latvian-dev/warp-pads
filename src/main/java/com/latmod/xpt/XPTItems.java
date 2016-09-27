@@ -1,9 +1,9 @@
 package com.latmod.xpt;
 
-import com.feed_the_beast.ftbl.api.item.ODItems;
 import com.feed_the_beast.ftbl.api.recipes.IRecipeHandler;
 import com.feed_the_beast.ftbl.api.recipes.RecipeHandler;
-import com.latmod.lib.util.LMUtils;
+import com.feed_the_beast.ftbl.lib.item.ODItems;
+import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.latmod.xpt.block.BlockTeleporter;
 import com.latmod.xpt.block.TileTeleporter;
 import net.minecraft.init.Blocks;

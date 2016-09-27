@@ -1,6 +1,6 @@
 package com.latmod.xpt.block;
 
-import com.feed_the_beast.ftbl.api.block.BlockLM;
+import com.feed_the_beast.ftbl.lib.block.BlockLM;
 import com.latmod.xpt.XPTConfig;
 import com.latmod.xpt.net.MessageOpenGuiXPT;
 import net.minecraft.block.material.Material;
