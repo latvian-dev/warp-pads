@@ -1,8 +1,0 @@
-{
-  "name": "XPTeleporters",
-  "text": [
-    {"image": "http://assets.latmod.com/badges/mod_author.png", "url": true},
-    "Testing text 1 2 3...",
-    {"text": "Blue text", "color": "blue"}
-  ]
-}
