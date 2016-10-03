@@ -1,0 +1,7 @@
+[
+  {"text": "      XPTeleporters", "color": "blue", "bold": true},
+  null,
+  {"id": "image", "image": "xpt:textures/logo.png", "url": true, "width": 128, "height": 128},
+  null,
+  "XPT is a mod that allows players to teleport using their XP as fuel"
+]

@@ -3,3 +3,6 @@ xpt.tile.teleporter.name=XPTeleporter
 
 # Lang
 xpt.lang.need_xp_level_tp=You need XP level %d to teleport to %s!
+
+# Guide
+xpt.guide=XPTeleporters
