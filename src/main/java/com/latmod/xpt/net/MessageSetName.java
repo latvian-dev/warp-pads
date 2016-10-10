@@ -56,7 +56,7 @@ public class MessageSetName extends MessageToServer<MessageSetName>
         {
             TileTeleporter teleporter = (TileTeleporter) te;
 
-            if(teleporter.security.isOwner(player))
+            if(teleporter.getOwner() != null && teleporter.getOwner().equals(player.getGameProfile().getId()))
             {
                 teleporter.setName(m.name);
             }

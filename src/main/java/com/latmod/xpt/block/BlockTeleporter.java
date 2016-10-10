@@ -7,6 +7,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.entity.player.EntityPlayer;
@@ -34,7 +35,7 @@ public class BlockTeleporter extends BlockLM
     {
         super(Material.IRON);
         setHardness(1F);
-        setResistance(100000F);
+        setResistance(10000000F);
         setCreativeTab(CreativeTabs.TRANSPORTATION);
     }
 
@@ -123,6 +124,35 @@ public class BlockTeleporter extends BlockLM
     }
 
     @Override
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
+    {
+        super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
+
+        if(hasTileEntity(state) && placer instanceof EntityPlayer)
+        {
+            TileEntity te = worldIn.getTileEntity(pos);
+
+            if(te instanceof TileTeleporter)
+            {
+                TileTeleporter t = (TileTeleporter) te;
+
+                if(stack.hasTagCompound() && stack.getTagCompound().hasKey(TileTeleporter.ITEM_NBT_KEY))
+                {
+                    t.readTileData(stack.getTagCompound().getCompoundTag(TileTeleporter.ITEM_NBT_KEY));
+                }
+
+                if(stack.hasDisplayName())
+                {
+                    t.setName(stack.getDisplayName());
+                }
+
+                te.markDirty();
+                te.onLoad();
+            }
+        }
+    }
+
+    @Override
     public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, @Nullable ItemStack stack)
     {
         if(te instanceof TileTeleporter)
@@ -132,7 +162,7 @@ public class BlockTeleporter extends BlockLM
             itemstack.setTagCompound(new NBTTagCompound());
             NBTTagCompound tag = new NBTTagCompound();
             ((TileTeleporter) te).writeTileData(tag);
-            itemstack.getTagCompound().setTag("TeleporterData", tag);
+            itemstack.getTagCompound().setTag(TileTeleporter.ITEM_NBT_KEY, tag);
 
             spawnAsEntity(worldIn, pos, itemstack);
         }
@@ -155,7 +185,7 @@ public class BlockTeleporter extends BlockLM
             itemstack.setTagCompound(new NBTTagCompound());
             NBTTagCompound tag = new NBTTagCompound();
             ((TileTeleporter) te).writeTileData(tag);
-            itemstack.getTagCompound().setTag("TeleporterData", tag);
+            itemstack.getTagCompound().setTag(TileTeleporter.ITEM_NBT_KEY, tag);
         }
 
         ret.add(itemstack);

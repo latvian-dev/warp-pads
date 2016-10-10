@@ -1,13 +1,9 @@
 package com.latmod.xpt.block;
 
-import com.feed_the_beast.ftbl.api.security.ISecure;
-import com.feed_the_beast.ftbl.lib.Security;
+import com.feed_the_beast.ftbl.api.security.EnumPrivacyLevel;
 import com.feed_the_beast.ftbl.lib.tile.TileLM;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.latmod.xpt.XPTConfig;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -16,19 +12,17 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.UUID;
 
 public class TileTeleporter extends TileLM implements ITickable
 {
-    public boolean inactive;
-    private UUID uuid;
-    private String name = "";
+    public static final String ITEM_NBT_KEY = "TeleporterData";
 
-    @Override
-    protected Security createSecurity()
-    {
-        return new Security(ISecure.SAVE_OWNER | ISecure.SAVE_PRIVACY_LEVEL);
-    }
+    private UUID owner, uuid;
+    public boolean inactive;
+    private String name = "";
+    private EnumPrivacyLevel privacyLevel = EnumPrivacyLevel.TEAM;
 
     public String getName()
     {
@@ -47,6 +41,17 @@ public class TileTeleporter extends TileLM implements ITickable
         markDirty();
     }
 
+    @Nullable
+    public UUID getOwner()
+    {
+        return owner;
+    }
+
+    public void setOwner(UUID id)
+    {
+        owner = id;
+    }
+
     public UUID getUUID()
     {
         if(uuid == null)
@@ -55,6 +60,11 @@ public class TileTeleporter extends TileLM implements ITickable
         }
 
         return uuid;
+    }
+
+    public EnumPrivacyLevel getPrivacyLevel()
+    {
+        return privacyLevel;
     }
 
     @Override
@@ -76,6 +86,12 @@ public class TileTeleporter extends TileLM implements ITickable
     {
         super.writeTileData(nbt);
 
+        if(owner != null)
+        {
+            nbt.setString("Owner", LMStringUtils.fromUUID(owner));
+        }
+
+        nbt.setByte("Privacy", (byte) privacyLevel.ordinal());
         nbt.setString("UUID", LMStringUtils.fromUUID(getUUID()));
         nbt.setString("Name", name);
         nbt.setBoolean("Inactive", inactive);
@@ -86,6 +102,8 @@ public class TileTeleporter extends TileLM implements ITickable
     {
         super.readTileData(nbt);
 
+        owner = nbt.hasKey("Owner") ? LMStringUtils.fromString(nbt.getString("Owner")) : null;
+        privacyLevel = EnumPrivacyLevel.VALUES[nbt.getByte("Privacy")];
         uuid = LMStringUtils.fromString(nbt.getString("UUID"));
         name = nbt.getString("Name");
         inactive = nbt.getBoolean("Inactive");
@@ -135,26 +153,6 @@ public class TileTeleporter extends TileLM implements ITickable
     }
 
     @Override
-    public void onPlacedBy(EntityLivingBase el, ItemStack is, IBlockState state)
-    {
-        super.onPlacedBy(el, is, state);
-
-        if(is.hasTagCompound() && is.getTagCompound().hasKey("TeleporterData"))
-        {
-            readTileData(is.getTagCompound().getCompoundTag("TeleporterData"));
-            markDirty();
-        }
-
-        if(is.hasDisplayName())
-        {
-            name = is.getDisplayName();
-            markDirty();
-        }
-
-        onLoad();
-    }
-
-    @Override
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getRenderBoundingBox()
     {
@@ -166,11 +164,5 @@ public class TileTeleporter extends TileLM implements ITickable
     public double getMaxRenderDistanceSquared()
     {
         return 64D;
-    }
-
-    @Override
-    public boolean isExplosionResistant()
-    {
-        return true;
     }
 }

@@ -37,7 +37,7 @@ public class XPTNet
 
     public static void add(TileTeleporter teleporter)
     {
-        if(teleporter.security.hasOwner() && teleporter.hasWorldObj() && teleporter.getSide().isServer())
+        if(teleporter.getOwner() != null && teleporter.hasWorldObj() && teleporter.isServerSide())
         {
             NET.put(teleporter.getUUID(), teleporter);
             LMUtils.DEV_LOGGER.info("Added " + teleporter.getPos());
@@ -46,7 +46,7 @@ public class XPTNet
 
     public static void remove(TileTeleporter teleporter)
     {
-        if(teleporter.hasWorldObj() && teleporter.getSide().isServer())
+        if(teleporter.hasWorldObj() && teleporter.isServerSide())
         {
             NET.remove(teleporter.getUUID());
             LMUtils.DEV_LOGGER.info("Removed " + teleporter.getPos());
@@ -67,13 +67,13 @@ public class XPTNet
 
         for(TileTeleporter tile : NET.values())
         {
-            if(tile.security.hasOwner() && tile.hasWorldObj() && !tile.isInvalid())
+            if(tile.getOwner() != null && tile.hasWorldObj() && !tile.isInvalid())
             {
-                IForgePlayer owner = world.getPlayer(tile.security.getOwner());
+                IForgePlayer owner = world.getPlayer(tile.getOwner());
 
                 if(owner != null)
                 {
-                    if(p.canInteract(owner, tile.security.getPrivacyLevel()))
+                    if(p.canInteract(owner, tile.getPrivacyLevel()))
                     {
                         list.add(tile);
                     }
