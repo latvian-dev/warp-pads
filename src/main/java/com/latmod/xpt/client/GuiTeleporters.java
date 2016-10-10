@@ -193,7 +193,7 @@ public class GuiTeleporters extends GuiLM
         GuiScreen.drawModalRectWithCustomSizedTexture(ax, ay, 0F, 0F, getWidth(), getHeight(), 128F, 128F);
         super.drawBackground();
 
-        buttonPrivacy.render(teleporter.security.getPrivacyLevel().getIcon());
+        buttonPrivacy.render(teleporter.getPrivacyLevel().getIcon());
         buttonToggle.render(teleporter.inactive ? GuiIcons.ACCEPT_GRAY : GuiIcons.ACCEPT);
         slider.renderSlider(SLIDER_TEX);
     }

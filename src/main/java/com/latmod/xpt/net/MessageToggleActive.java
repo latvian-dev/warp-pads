@@ -52,7 +52,7 @@ public class MessageToggleActive extends MessageToServer<MessageToggleActive>
         {
             TileTeleporter teleporter = (TileTeleporter) te;
 
-            if(teleporter.security.isOwner(player))
+            if(teleporter.getOwner() != null && teleporter.getOwner().equals(player.getGameProfile().getId()))
             {
                 teleporter.inactive = !teleporter.inactive;
                 teleporter.markDirty();

@@ -56,7 +56,7 @@ public class MessageTogglePrivacy extends MessageToServer<MessageTogglePrivacy>
         {
             TileTeleporter teleporter = (TileTeleporter) te;
 
-            if(teleporter.security.isOwner(player))
+            if(teleporter.getOwner() != null && teleporter.getOwner().equals(player.getGameProfile().getId()))
             {
                 //
                 teleporter.markDirty();

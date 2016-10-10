@@ -1,7 +1,7 @@
 package com.latmod.xpt;
 
+import com.feed_the_beast.ftbl.api.RegistryObject;
 import com.feed_the_beast.ftbl.api.recipes.IRecipeHandler;
-import com.feed_the_beast.ftbl.api.recipes.RecipeHandler;
 import com.feed_the_beast.ftbl.lib.item.ODItems;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.latmod.xpt.block.BlockTeleporter;
@@ -23,7 +23,7 @@ public class XPTItems
         LMUtils.addTile(TileTeleporter.class, TELEPORTER.getRegistryName());
     }
 
-    @RecipeHandler
+    @RegistryObject
     public static final IRecipeHandler RECIPES = recipes ->
     {
         recipes.addRecipe(new ItemStack(XPTItems.TELEPORTER),

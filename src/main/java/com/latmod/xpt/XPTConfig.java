@@ -1,6 +1,6 @@
 package com.latmod.xpt;
 
-import com.feed_the_beast.ftbl.api.config.ConfigFileProvider;
+import com.feed_the_beast.ftbl.api.RegistryObject;
 import com.feed_the_beast.ftbl.api.config.ConfigValue;
 import com.feed_the_beast.ftbl.api.config.IConfigFileProvider;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
@@ -13,7 +13,7 @@ import java.io.File;
 
 public class XPTConfig // XPT
 {
-    @ConfigFileProvider(XPT.MOD_ID)
+    @RegistryObject(XPT.MOD_ID)
     public static final IConfigFileProvider FILE = () -> new File(LMUtils.folderConfig, "XPTeleporters.json");
 
     @ConfigValue(id = "general.enable_crafting", file = XPT.MOD_ID, info = "Enable crafting recipes")
