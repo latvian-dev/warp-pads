@@ -14,7 +14,6 @@ buildscript {
 }
 
 apply plugin: 'net.minecraftforge.gradle.forge'
-apply plugin: 'maven'
 
 version = "1.9.4-" + version_mod
 group = "com.latmod.xpteleporters"
@@ -26,15 +25,19 @@ compileJava {
 }
 
 minecraft {
-    version = "1.10.2-12.18.2.2098"
+    version = "1.10.2-12.18.2.2099"
     runDir = "run"
     mappings = "snapshot_20160518"
     replace "@VERSION@", version_mod
     replaceIn "XPT.java"
 }
 
+repositories {
+    maven { url 'https://jitpack.io' }
+}
+
 dependencies {
-    compile ''
+    compile 'com.github.LatvianModder:FTBLib:3.0.1'
 }
 
 sourceSets {
