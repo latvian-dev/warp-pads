@@ -37,7 +37,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.github.LatvianModder:FTBLib:3.0.1'
+    compile 'com.github.LatvianModder:FTBLib:1.9-SNAPSHOT'
 }
 
 sourceSets {
