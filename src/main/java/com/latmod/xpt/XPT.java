@@ -2,8 +2,8 @@ package com.latmod.xpt;
 
 import com.latmod.xpt.block.XPTNet;
 import com.latmod.xpt.net.XPTNetHandler;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
 
@@ -15,14 +15,10 @@ public class XPT
     @Mod.Instance(XPT.MOD_ID)
     public static XPT inst;
 
-    @SidedProxy(clientSide = "com.latmod.xpt.client.XPTClient", serverSide = "com.latmod.xpt.XPTCommon")
-    public static XPTCommon proxy;
-
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
-        XPTItems.init();
-        proxy.preInit();
+        MinecraftForge.EVENT_BUS.register(new XPTEventHandler());
         XPTNetHandler.init();
     }
 

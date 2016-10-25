@@ -97,7 +97,7 @@ public class GuiTeleporters extends GuiLM
             buttons.add(new ButtonXPT(n));
         }
 
-        buttonPrivacy = new ButtonLM(105, 5, 16, 16, EnumPrivacyLevel.enumLangKey.translate())
+        buttonPrivacy = new ButtonLM(105, 5, 16, 16, EnumPrivacyLevel.ENUM_LANG_KEY.translate())
         {
             @Override
             public void onClicked(IGui gui, IMouseButton button)
