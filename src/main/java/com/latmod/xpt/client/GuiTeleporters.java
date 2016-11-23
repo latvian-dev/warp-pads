@@ -1,6 +1,5 @@
 package com.latmod.xpt.client;
 
-import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.security.EnumPrivacyLevel;
@@ -187,7 +186,7 @@ public class GuiTeleporters extends GuiLM
 
         slider.updateSlider(this);
 
-        FTBLibClient.setTexture(TEXTURE);
+        mc.getTextureManager().bindTexture(TEXTURE);
         int ax = getAX();
         int ay = getAY();
         GuiScreen.drawModalRectWithCustomSizedTexture(ax, ay, 0F, 0F, getWidth(), getHeight(), 128F, 128F);
