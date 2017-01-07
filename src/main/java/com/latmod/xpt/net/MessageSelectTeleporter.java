@@ -8,7 +8,7 @@ import com.latmod.xpt.XPTConfig;
 import com.latmod.xpt.block.TileTeleporter;
 import com.latmod.xpt.block.XPTNet;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.SoundCategory;
@@ -55,7 +55,7 @@ public class MessageSelectTeleporter extends MessageToServer<MessageSelectTelepo
     }
 
     @Override
-    public void onMessage(MessageSelectTeleporter m, EntityPlayerMP player)
+    public void onMessage(MessageSelectTeleporter m, EntityPlayer player)
     {
         TileEntity te = player.worldObj.getTileEntity(m.pos);
 

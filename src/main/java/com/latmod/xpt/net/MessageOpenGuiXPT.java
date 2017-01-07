@@ -7,7 +7,7 @@ import com.latmod.xpt.block.TileTeleporter;
 import com.latmod.xpt.block.XPTNode;
 import com.latmod.xpt.client.GuiTeleporters;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 
@@ -72,9 +72,9 @@ public class MessageOpenGuiXPT extends MessageToClient<MessageOpenGuiXPT>
     }
 
     @Override
-    public void onMessage(MessageOpenGuiXPT m)
+    public void onMessage(MessageOpenGuiXPT m, EntityPlayer player)
     {
-        TileEntity te = Minecraft.getMinecraft().theWorld.getTileEntity(m.pos);
+        TileEntity te = player.worldObj.getTileEntity(m.pos);
 
         if(te instanceof TileTeleporter)
         {

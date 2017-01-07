@@ -5,7 +5,7 @@ import com.feed_the_beast.ftbl.lib.net.MessageToServer;
 import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
 import com.latmod.xpt.block.TileTeleporter;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 
@@ -48,7 +48,7 @@ public class MessageTogglePrivacy extends MessageToServer<MessageTogglePrivacy>
     }
 
     @Override
-    public void onMessage(MessageTogglePrivacy m, EntityPlayerMP player)
+    public void onMessage(MessageTogglePrivacy m, EntityPlayer player)
     {
         TileEntity te = player.worldObj.getTileEntity(m.pos);
 
