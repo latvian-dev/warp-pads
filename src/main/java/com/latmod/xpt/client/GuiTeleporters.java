@@ -194,6 +194,6 @@ public class GuiTeleporters extends GuiLM
 
         buttonPrivacy.render(teleporter.getPrivacyLevel().getIcon());
         buttonToggle.render(teleporter.inactive ? GuiIcons.ACCEPT_GRAY : GuiIcons.ACCEPT);
-        slider.renderSlider(SLIDER_TEX);
+        slider.renderSlider(this, SLIDER_TEX);
     }
 }
