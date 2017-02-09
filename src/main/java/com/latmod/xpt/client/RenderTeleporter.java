@@ -1,12 +1,16 @@
 package com.latmod.xpt.client;
 
+import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
+import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
 import com.latmod.xpt.block.TileTeleporter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
@@ -20,7 +24,7 @@ public class RenderTeleporter extends TileEntitySpecialRenderer<TileTeleporter>
     public void renderTileEntityAt(TileTeleporter te, double rx, double ry, double rz, float partialTicks, int destroyStage)
     {
         GlStateManager.pushMatrix();
-        GlStateManager.translate(rx + 0.5D, ry + 0.5D, rz + 0.5D);
+        GlStateManager.translate(rx + 0.5D, ry, rz + 0.5D);
         GlStateManager.disableCull();
         GlStateManager.enableBlend();
         GlStateManager.disableLighting();
@@ -29,11 +33,14 @@ public class RenderTeleporter extends TileEntitySpecialRenderer<TileTeleporter>
         String name = te.getName();
 
         GlStateManager.pushMatrix();
-        GlStateManager.translate(rx + 0.5D, ry + 0.5D, rz + 0.5D);
-        //OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
-        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+        OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
+        //GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
         GlStateManager.enableTexture2D();
         float f1 = 0.02F;
+        GlStateManager.translate(0D, 1.5D, 0D);
+
+        double rot = -MathHelper.atan2((te.getPos().getZ() + 0.5F) - FTBLibClient.playerZ, (te.getPos().getX() + 0.5F) - FTBLibClient.playerX) * MathHelperLM.DEG + 90D;
+        GlStateManager.rotate((float) rot, 0F, 1F, 0F);
         GlStateManager.scale(-f1, -f1, f1);
 
         GlStateManager.rotate(0F, 0F, 1F, 0F);

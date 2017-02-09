@@ -149,7 +149,7 @@ public class TileTeleporter extends TileLM implements ITickable
             return XPTConfig.getLevels(Math.sqrt(teleporter.getDistanceSq(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D)));
         }
 
-        return XPTConfig.getLevels(0D);
+        return XPTConfig.getLevels(-1D);
     }
 
     @Override

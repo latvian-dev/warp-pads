@@ -59,7 +59,7 @@ public class GuiTeleporters extends GuiLM
             if(node.available && button.isLeft())
             {
                 new MessageSelectTeleporter(teleporter.getPos(), node.uuid).sendToServer();
-                closeGui();
+                gui.closeGui();
             }
         }
 

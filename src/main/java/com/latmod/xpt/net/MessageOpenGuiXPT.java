@@ -10,6 +10,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +49,7 @@ public class MessageOpenGuiXPT extends MessageToClient<MessageOpenGuiXPT>
         for(XPTNode t : teleporters)
         {
             LMNetUtils.writeUUID(io, t.uuid);
-            LMNetUtils.writeString(io, t.name);
+            ByteBufUtils.writeUTF8String(io, t.name);
             io.writeShort(t.levels);
             io.writeBoolean(t.available);
         }
@@ -64,7 +65,7 @@ public class MessageOpenGuiXPT extends MessageToClient<MessageOpenGuiXPT>
         for(int i = 0; i < s; i++)
         {
             UUID id = LMNetUtils.readUUID(io);
-            String n = LMNetUtils.readString(io);
+            String n = ByteBufUtils.readUTF8String(io);
             int l = io.readUnsignedShort();
             boolean a = io.readBoolean();
             teleporters.add(new XPTNode(id, n, l, a));

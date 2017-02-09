@@ -1,8 +1,11 @@
 package com.latmod.xpt.block;
 
 import com.feed_the_beast.ftbl.lib.block.BlockLM;
+import com.feed_the_beast.ftbl.lib.block.ItemBlockLM;
+import com.latmod.xpt.XPT;
 import com.latmod.xpt.XPTConfig;
 import com.latmod.xpt.net.MessageOpenGuiXPT;
+import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
@@ -12,6 +15,7 @@ import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -29,14 +33,20 @@ import java.util.List;
 
 public class BlockTeleporter extends BlockLM
 {
-    public static final AxisAlignedBB AABB = new AxisAlignedBB(0D, 0D, 0D, 1D, 1D / 8D, 1D);
+    private static final AxisAlignedBB AABB = new AxisAlignedBB(0D, 0D, 0D, 1D, 1D / 8D, 1D);
 
     public BlockTeleporter()
     {
-        super(Material.IRON);
+        super(XPT.MOD_ID + ":teleporter", Material.IRON, MapColor.GRAY);
         setHardness(1F);
         setResistance(10000000F);
         setCreativeTab(CreativeTabs.TRANSPORTATION);
+    }
+
+    @Override
+    public ItemBlock createItemBlock()
+    {
+        return new ItemBlockLM(this, false);
     }
 
     @Override

@@ -8,6 +8,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 /**
  * Created by LatvianModder on 31.07.2016.
@@ -37,14 +38,14 @@ public class MessageSetName extends MessageToServer<MessageSetName>
     public void toBytes(ByteBuf io)
     {
         LMNetUtils.writePos(io, pos);
-        LMNetUtils.writeString(io, name);
+        ByteBufUtils.writeUTF8String(io, name);
     }
 
     @Override
     public void fromBytes(ByteBuf io)
     {
         pos = LMNetUtils.readPos(io);
-        name = LMNetUtils.readString(io);
+        name = ByteBufUtils.readUTF8String(io);
     }
 
     @Override
