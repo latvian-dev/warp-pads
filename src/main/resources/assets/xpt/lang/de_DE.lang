@@ -1,0 +1,8 @@
+# Blocks
+tile.xpt.teleporter.name=XPTeleporter
+
+# Lang
+xpt.lang.need_xp_level_tp=Du brauchst %d Erfahrungslevel, um dich zu %s zu teleportieren!
+
+# Guide
+xpt.guide=XPTeleporters
