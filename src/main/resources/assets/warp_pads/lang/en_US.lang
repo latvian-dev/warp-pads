@@ -1,0 +1,9 @@
+# Blocks
+tile.warp_pads.warp_pad.name=Warp Pad
+
+# Items
+item.warp_pads.warp_whistle.name=Warp Whistle
+
+# Lang
+warp_pads.lang.not_enough_energy=Not enough energy to teleport!
+warp_pads.guide=Warp Pads

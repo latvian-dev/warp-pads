@@ -1,0 +1,34 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "warp_pads:warp_pad.obj",
+		"transform": "forge:default-block"
+	},
+	"variants": {
+		"inventory": [
+			{
+				"transform": {
+					"thirdperson": {
+						"rotation": [{"x": 45}],
+						"scale": 0.2
+					},
+					"gui": {
+						"rotation": [{"x": 45}],
+						"scale": 0.3
+					}
+				}
+			}
+		],
+		"part": {
+			"center": {},
+			"north": {},
+			"north_east": {},
+			"east": {},
+			"south_east": {},
+			"south": {},
+			"south_west": {},
+			"west": {},
+			"north_west": {}
+		}
+	}
+}
