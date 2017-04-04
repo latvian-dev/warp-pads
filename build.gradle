@@ -39,7 +39,7 @@ repositories {
 }
 
 dependencies {
-    deobfCompile 'LatMod:FTBLib:1.10.2-3.3.0:api'
+    compile 'LatMod:FTBLib:1.10.2-3.5.0:api'
 }
 
 sourceSets {

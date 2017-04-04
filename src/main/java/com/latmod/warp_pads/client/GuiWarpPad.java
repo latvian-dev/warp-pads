@@ -68,13 +68,13 @@ public class GuiWarpPad extends GuiBase
         {
             int ax = getAX();
             int ay = getAY();
-            BAR_H.draw(ax, ay + getHeight(), 104, 1);
+            BAR_H.draw(ax, ay + height, 104, 1);
             (node.available ? AVAILABLE_ON : AVAILABLE_OFF).draw(ax, ay + 2, 7, 7);
             getFont().drawString(node.name, ax + 10, ay + 2, 0xFFFFFFFF, false);
 
             String lvls = Integer.toString(node.energy);
 
-            getFont().drawString(lvls, ax + getWidth() - getFont().getStringWidth(lvls) - 2, ay + 2, node.available ? 0xFF56FF47 : 0xFFFF4646, false);
+            getFont().drawString(lvls, ax + width - getFont().getStringWidth(lvls) - 2, ay + 2, node.available ? 0xFF56FF47 : 0xFFFF4646, false);
             GlStateManager.color(1F, 1F, 1F, 1F);
         }
     }
@@ -162,7 +162,7 @@ public class GuiWarpPad extends GuiBase
         for(ButtonXPT b : buttons)
         {
             b.posY = y;
-            y += b.getHeight() + 1D;
+            y += b.height + 1D;
         }
     }
 
