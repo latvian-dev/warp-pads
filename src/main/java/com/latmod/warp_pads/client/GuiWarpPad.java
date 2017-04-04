@@ -1,18 +1,17 @@
 package com.latmod.warp_pads.client;
 
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
-import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.security.EnumPrivacyLevel;
 import com.feed_the_beast.ftbl.lib.client.TextureCoords;
-import com.feed_the_beast.ftbl.lib.gui.ButtonLM;
+import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.EnumDirection;
+import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
-import com.feed_the_beast.ftbl.lib.gui.GuiLM;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
-import com.feed_the_beast.ftbl.lib.gui.SliderLM;
-import com.feed_the_beast.ftbl.lib.gui.TextBoxLM;
+import com.feed_the_beast.ftbl.lib.gui.Slider;
+import com.feed_the_beast.ftbl.lib.gui.TextBox;
 import com.latmod.warp_pads.WarpPads;
 import com.latmod.warp_pads.block.TileWarpPad;
 import com.latmod.warp_pads.block.WarpPadNode;
@@ -32,7 +31,7 @@ import java.util.List;
  * Created by LatvianModder on 28.07.2016.
  */
 @SideOnly(Side.CLIENT)
-public class GuiWarpPad extends GuiLM
+public class GuiWarpPad extends GuiBase
 {
     private static final ResourceLocation TEXTURE = new ResourceLocation(WarpPads.MOD_ID, "textures/gui/warp_pad.png");
     private static final TextureCoords BACKGROUND = TextureCoords.fromCoords(TEXTURE, 0, 0, 126, 110, 128, 128);
@@ -42,7 +41,7 @@ public class GuiWarpPad extends GuiLM
     private static final TextureCoords BAR_H = TextureCoords.fromCoords(TEXTURE, 24, 111, 104, 1, 128, 128);
     private static final TextureCoords BAR_V = TextureCoords.fromCoords(TEXTURE, 127, 0, 1, 81, 128, 128);
 
-    private class ButtonXPT extends ButtonLM
+    private class ButtonXPT extends Button
     {
         private final WarpPadNode node;
 
@@ -53,7 +52,7 @@ public class GuiWarpPad extends GuiLM
         }
 
         @Override
-        public void onClicked(IGui gui, IMouseButton button)
+        public void onClicked(GuiBase gui, IMouseButton button)
         {
             GuiHelper.playClickSound();
 
@@ -65,7 +64,7 @@ public class GuiWarpPad extends GuiLM
         }
 
         @Override
-        public void renderWidget(IGui gui)
+        public void renderWidget(GuiBase gui)
         {
             int ax = getAX();
             int ay = getAY();
@@ -81,10 +80,10 @@ public class GuiWarpPad extends GuiLM
     }
 
     private final TileWarpPad teleporter;
-    private final ButtonLM buttonPrivacy, buttonToggle;
+    private final Button buttonPrivacy, buttonToggle;
     private final List<ButtonXPT> buttons;
-    private final SliderLM slider;
-    private final TextBoxLM textBox;
+    private final Slider slider;
+    private final TextBox textBox;
 
     public GuiWarpPad(TileWarpPad te, List<WarpPadNode> t)
     {
@@ -97,36 +96,36 @@ public class GuiWarpPad extends GuiLM
             buttons.add(new ButtonXPT(n));
         }
 
-        buttonPrivacy = new ButtonLM(105, 5, 16, 16, EnumPrivacyLevel.ENUM_LANG_KEY.translate())
+        buttonPrivacy = new Button(105, 5, 16, 16, EnumPrivacyLevel.ENUM_LANG_KEY.translate())
         {
             @Override
-            public void onClicked(IGui gui, IMouseButton button)
+            public void onClicked(GuiBase gui, IMouseButton button)
             {
                 GuiHelper.playClickSound();
                 new MessageTogglePrivacy(teleporter.getPos(), button.isLeft()).sendToServer();
             }
         };
 
-        buttonToggle = new ButtonLM(87, 5, 16, 16)
+        buttonToggle = new Button(87, 5, 16, 16)
         {
             @Override
-            public void onClicked(IGui gui, IMouseButton button)
+            public void onClicked(GuiBase gui, IMouseButton button)
             {
                 GuiHelper.playClickSound();
                 new MessageToggleActive(teleporter.getPos()).sendToServer();
             }
 
             @Override
-            public String getTitle(IGui gui)
+            public String getTitle(GuiBase gui)
             {
                 return teleporter.inactive ? GuiLang.LABEL_DISABLED.translate() : GuiLang.LABEL_ENABLED.translate();
             }
         };
 
-        slider = new SliderLM(114, 23, 6, 81, 10)
+        slider = new Slider(114, 23, 6, 81, 10)
         {
             @Override
-            public void onMoved(IGui gui)
+            public void onMoved(GuiBase gui)
             {
             }
 
@@ -139,10 +138,10 @@ public class GuiWarpPad extends GuiLM
 
         slider.slider = SLIDER_TEX;
 
-        textBox = new TextBoxLM(6, 6, 78, 14)
+        textBox = new TextBox(6, 6, 78, 14)
         {
             @Override
-            public void onEnterPressed(IGui gui)
+            public void onEnterPressed(GuiBase gui)
             {
                 new MessageSetName(teleporter.getPos(), getText()).sendToServer();
             }
@@ -178,13 +177,13 @@ public class GuiWarpPad extends GuiLM
     }
 
     @Override
-    public boolean isEnabled(IGui gui)
+    public boolean isEnabled(GuiBase gui)
     {
         return !teleporter.isInvalid();
     }
 
     @Override
-    public IDrawableObject getIcon(IGui gui)
+    public IDrawableObject getIcon(GuiBase gui)
     {
         return BACKGROUND;
     }
