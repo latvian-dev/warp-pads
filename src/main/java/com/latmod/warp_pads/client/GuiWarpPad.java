@@ -3,6 +3,7 @@ package com.latmod.warp_pads.client;
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.security.EnumPrivacyLevel;
+import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.TextureCoords;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.EnumDirection;
@@ -68,8 +69,8 @@ public class GuiWarpPad extends GuiBase
         {
             int ax = getAX();
             int ay = getAY();
-            BAR_H.draw(ax, ay + height, 104, 1);
-            (node.available ? AVAILABLE_ON : AVAILABLE_OFF).draw(ax, ay + 2, 7, 7);
+            BAR_H.draw(ax, ay + height, 104, 1, Color4I.NONE);
+            (node.available ? AVAILABLE_ON : AVAILABLE_OFF).draw(ax, ay + 2, 7, 7, Color4I.NONE);
             getFont().drawString(node.name, ax + 10, ay + 2, 0xFFFFFFFF, false);
 
             String lvls = Integer.toString(node.energy);

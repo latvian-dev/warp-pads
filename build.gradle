@@ -17,8 +17,8 @@ version = System.properties['mod_version']
 if (version == null) {
     version = "Dev"
 }
-group = "com.latmod.xpteleporters"
-archivesBaseName = "XPTeleporters"
+group = "com.latmod.warppads"
+archivesBaseName = "WarpPads"
 
 sourceCompatibility = targetCompatibility = "1.8"
 compileJava {
@@ -39,7 +39,7 @@ repositories {
 }
 
 dependencies {
-    compile 'LatMod:FTBLib:1.10.2-3.5.0:api'
+    compile 'LatMod:FTBLib:1.10.2-3.5.1:api'
 }
 
 sourceSets {
