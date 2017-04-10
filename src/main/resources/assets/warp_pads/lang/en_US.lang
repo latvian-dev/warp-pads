@@ -4,6 +4,12 @@ tile.warp_pads.warp_pad.name=Warp Pad
 # Items
 item.warp_pads.warp_whistle.name=Warp Whistle
 
+# Config
+config.warp_pads.general.levels_per_block.name=Levels per block
+config.warp_pads.general.levels_per_block.info=Levels required to teleport in same dimension
+config.warp_pads.general.levels_for_crossdim.name=Levels for cross-dimensional teleport
+config.warp_pads.general.levels_for_crossdim.info=Levels required to teleport to another dimension
+
 # Lang
 warp_pads.lang.not_enough_energy=Not enough energy to teleport!
 warp_pads.guide=Warp Pads

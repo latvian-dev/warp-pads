@@ -16,8 +16,8 @@ public class WarpPadsConfig // WarpPads
     {
         reg.addConfigFileProvider(WarpPads.MOD_ID, () -> new File(LMUtils.folderConfig, "WarpPads.json"));
 
-        reg.addConfig(WarpPads.MOD_ID, "general.levels_per_block", LEVELS_PER_BLOCK).setInfo("Levels required to teleport in same dimension");
-        reg.addConfig(WarpPads.MOD_ID, "general.levels_for_crossdim", LEVELS_FOR_CROSSDIM).setInfo("Levels required to teleport to another dimension");
+        reg.addConfig(WarpPads.MOD_ID, "general.levels_per_block", LEVELS_PER_BLOCK);
+        reg.addConfig(WarpPads.MOD_ID, "general.levels_for_crossdim", LEVELS_FOR_CROSSDIM);
     }
 
     public static int getEnergyRequired(double distance)
