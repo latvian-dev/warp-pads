@@ -1,6 +1,6 @@
 package com.latmod.warp_pads.net;
 
-import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
+import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
 import com.latmod.warp_pads.WarpPads;
 
 /**
@@ -8,7 +8,7 @@ import com.latmod.warp_pads.WarpPads;
  */
 public class WarpPadsNetHandler
 {
-    static final LMNetworkWrapper NET = LMNetworkWrapper.newWrapper(WarpPads.MOD_ID);
+    static final NetworkWrapper NET = NetworkWrapper.newWrapper(WarpPads.MOD_ID);
 
     public static void init()
     {

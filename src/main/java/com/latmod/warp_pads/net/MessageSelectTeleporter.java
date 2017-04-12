@@ -1,10 +1,10 @@
 package com.latmod.warp_pads.net;
 
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
-import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToServer;
-import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
-import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
+import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
+import com.feed_the_beast.ftbl.lib.util.NetUtils;
+import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.latmod.warp_pads.block.TileWarpPad;
 import com.latmod.warp_pads.block.WarpPadsNet;
 import io.netty.buffer.ByteBuf;
@@ -33,7 +33,7 @@ public class MessageSelectTeleporter extends MessageToServer<MessageSelectTelepo
     }
 
     @Override
-    public LMNetworkWrapper getWrapper()
+    public NetworkWrapper getWrapper()
     {
         return WarpPadsNetHandler.NET;
     }
@@ -41,15 +41,15 @@ public class MessageSelectTeleporter extends MessageToServer<MessageSelectTelepo
     @Override
     public void toBytes(ByteBuf io)
     {
-        LMNetUtils.writePos(io, pos);
-        LMNetUtils.writeDimPos(io, dst);
+        NetUtils.writePos(io, pos);
+        NetUtils.writeDimPos(io, dst);
     }
 
     @Override
     public void fromBytes(ByteBuf io)
     {
-        pos = LMNetUtils.readPos(io);
-        dst = LMNetUtils.readDimPos(io);
+        pos = NetUtils.readPos(io);
+        dst = NetUtils.readDimPos(io);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class MessageSelectTeleporter extends MessageToServer<MessageSelectTelepo
                 if(teleporter0.consumeEnergy(player, levels, true))
                 {
                     teleporter0.playSound(SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.BLOCKS, 1F, 1F);
-                    LMServerUtils.teleportPlayer(player, teleporter.getDimPos());
+                    ServerUtils.teleportPlayer(player, teleporter.getDimPos());
                     teleporter0.consumeEnergy(player, levels, false);
                     teleporter.playSound(SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.BLOCKS, 1F, 1F);
                 }

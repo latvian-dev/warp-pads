@@ -1,7 +1,7 @@
 package com.latmod.warp_pads.block;
 
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
-import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
+import com.feed_the_beast.ftbl.lib.util.NetUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
@@ -17,7 +17,7 @@ public class WarpPadNode
 
     public void write(ByteBuf io)
     {
-        LMNetUtils.writeDimPos(io, pos);
+        NetUtils.writeDimPos(io, pos);
         ByteBufUtils.writeUTF8String(io, name);
         io.writeInt(energy);
         io.writeBoolean(available);
@@ -25,7 +25,7 @@ public class WarpPadNode
 
     public void read(ByteBuf io)
     {
-        pos = LMNetUtils.readDimPos(io);
+        pos = NetUtils.readDimPos(io);
         name = ByteBufUtils.readUTF8String(io);
         energy = io.readInt();
         available = io.readBoolean();

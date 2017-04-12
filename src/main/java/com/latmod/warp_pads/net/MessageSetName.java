@@ -1,8 +1,8 @@
 package com.latmod.warp_pads.net;
 
-import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToServer;
-import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
+import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
+import com.feed_the_beast.ftbl.lib.util.NetUtils;
 import com.latmod.warp_pads.block.TileWarpPad;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,7 +29,7 @@ public class MessageSetName extends MessageToServer<MessageSetName>
     }
 
     @Override
-    public LMNetworkWrapper getWrapper()
+    public NetworkWrapper getWrapper()
     {
         return WarpPadsNetHandler.NET;
     }
@@ -37,14 +37,14 @@ public class MessageSetName extends MessageToServer<MessageSetName>
     @Override
     public void toBytes(ByteBuf io)
     {
-        LMNetUtils.writePos(io, pos);
+        NetUtils.writePos(io, pos);
         ByteBufUtils.writeUTF8String(io, name);
     }
 
     @Override
     public void fromBytes(ByteBuf io)
     {
-        pos = LMNetUtils.readPos(io);
+        pos = NetUtils.readPos(io);
         name = ByteBufUtils.readUTF8String(io);
     }
 

@@ -1,8 +1,8 @@
 package com.latmod.warp_pads.block;
 
-import com.feed_the_beast.ftbl.api.security.EnumPrivacyLevel;
+import com.feed_the_beast.ftbl.lib.EnumPrivacyLevel;
 import com.feed_the_beast.ftbl.lib.block.EnumHorizontalOffset;
-import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.latmod.warp_pads.WarpPadsConfig;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -103,7 +103,7 @@ public class TileWarpPad extends TileWarpPadBase implements ITickable
 
         if(owner != null)
         {
-            nbt.setString("Owner", LMStringUtils.fromUUID(owner));
+            nbt.setString("Owner", StringUtils.fromUUID(owner));
         }
 
         nbt.setByte("Privacy", (byte) privacyLevel.ordinal());
@@ -116,7 +116,7 @@ public class TileWarpPad extends TileWarpPadBase implements ITickable
     {
         super.readTileData(nbt);
 
-        owner = nbt.hasKey("Owner") ? LMStringUtils.fromString(nbt.getString("Owner")) : null;
+        owner = nbt.hasKey("Owner") ? StringUtils.fromString(nbt.getString("Owner")) : null;
         privacyLevel = EnumPrivacyLevel.VALUES[nbt.getByte("Privacy")];
         name = nbt.getString("Name");
         inactive = nbt.getBoolean("Inactive");

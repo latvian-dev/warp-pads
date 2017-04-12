@@ -1,6 +1,6 @@
 package com.latmod.warp_pads.block;
 
-import com.feed_the_beast.ftbl.lib.block.BlockLM;
+import com.feed_the_beast.ftbl.lib.block.BlockBase;
 import com.feed_the_beast.ftbl.lib.block.EnumHorizontalOffset;
 import com.latmod.warp_pads.WarpPads;
 import com.latmod.warp_pads.net.MessageOpenWarpPadGui;
@@ -31,7 +31,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BlockWarpPad extends BlockLM
+public class BlockWarpPad extends BlockBase
 {
     public static final PropertyEnum<EnumHorizontalOffset> PART = PropertyEnum.create("part", EnumHorizontalOffset.class);
     public static final AxisAlignedBB AABB = new AxisAlignedBB(0D, 0D, 0D, 1D, 10D / 16D, 1D);

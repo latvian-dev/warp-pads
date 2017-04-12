@@ -1,7 +1,7 @@
 package com.latmod.warp_pads.client;
 
 import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
-import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
+import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.latmod.warp_pads.block.TileWarpPad;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -39,7 +39,7 @@ public class RenderWarpPad extends TileEntitySpecialRenderer<TileWarpPad>
         float f1 = 0.02F;
         GlStateManager.translate(0D, 1.5D, 0D);
 
-        double rot = -MathHelper.atan2((te.getPos().getZ() + 0.5F) - FTBLibClient.playerZ, (te.getPos().getX() + 0.5F) - FTBLibClient.playerX) * MathHelperLM.DEG + 90D;
+        double rot = -MathHelper.atan2((te.getPos().getZ() + 0.5F) - FTBLibClient.playerZ, (te.getPos().getX() + 0.5F) - FTBLibClient.playerX) * MathUtils.DEG + 90D;
         GlStateManager.rotate((float) rot, 0F, 1F, 0F);
         GlStateManager.scale(-f1, -f1, f1);
 
