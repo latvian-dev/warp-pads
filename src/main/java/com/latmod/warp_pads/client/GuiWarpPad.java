@@ -6,7 +6,6 @@ import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.EnumPrivacyLevel;
 import com.feed_the_beast.ftbl.lib.client.TextureCoords;
 import com.feed_the_beast.ftbl.lib.gui.Button;
-import com.feed_the_beast.ftbl.lib.gui.EnumDirection;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
@@ -128,12 +127,6 @@ public class GuiWarpPad extends GuiBase
             @Override
             public void onMoved(GuiBase gui)
             {
-            }
-
-            @Override
-            public EnumDirection getDirection()
-            {
-                return EnumDirection.VERTICAL;
             }
         };
 

@@ -9,8 +9,8 @@ import java.io.File;
 
 public class WarpPadsConfig // WarpPads
 {
-    private static final PropertyDouble LEVELS_PER_BLOCK = new PropertyDouble(0.001D).setMin(0D).setMax(5D);
-    private static final PropertyInt LEVELS_FOR_CROSSDIM = new PropertyInt(30).setMin(0).setMax(200);
+    private static final PropertyDouble LEVELS_PER_BLOCK = new PropertyDouble(0.001D, 0D, 5D);
+    private static final PropertyInt LEVELS_FOR_CROSSDIM = new PropertyInt(30, 0, 200);
 
     public static void init(IFTBLibRegistry reg)
     {
