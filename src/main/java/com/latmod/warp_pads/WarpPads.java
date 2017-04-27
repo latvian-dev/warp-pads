@@ -4,6 +4,7 @@ import com.latmod.warp_pads.block.WarpPadsNet;
 import com.latmod.warp_pads.net.WarpPadsNetHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
 
@@ -19,14 +20,20 @@ public class WarpPads
     public static WarpPadsCommon PROXY;
 
     @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent event)
+    public void onPreInit(FMLPreInitializationEvent event)
     {
         WarpPadsNetHandler.init();
         PROXY.preInit();
     }
 
     @Mod.EventHandler
-    public void serverStopped(FMLServerStoppedEvent event)
+    public void onInit(FMLInitializationEvent event)
+    {
+        PROXY.init();
+    }
+
+    @Mod.EventHandler
+    public void onServerStopped(FMLServerStoppedEvent event)
     {
         WarpPadsNet.clear();
     }
