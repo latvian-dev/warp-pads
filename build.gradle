@@ -36,10 +36,14 @@ repositories {
         name "LatMod"
         artifactPattern "http://mods.latmod.com/[module]/[revision]/[module]-[revision](-[classifier]).[ext]"
     }
+    maven {
+        url "http://maven.k-4u.nl"
+    }
 }
 
 dependencies {
-    compile 'LatMod:FTBLib:1.1x-3.5.5:api'
+    compile 'LatMod:FTBLib:1.1x-3.6.0:api'
+    deobfCompile "com.github.mcjty:compatlayer:1.10-0.2.7"
 }
 
 sourceSets {
