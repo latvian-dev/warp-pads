@@ -68,7 +68,7 @@ public class MessageOpenWarpPadGui extends MessageToClient<MessageOpenWarpPadGui
     @Override
     public void onMessage(MessageOpenWarpPadGui m, EntityPlayer player)
     {
-        TileEntity te = player.world.getTileEntity(m.pos);
+        TileEntity te = player.getEntityWorld().getTileEntity(m.pos);
 
         if(te instanceof TileWarpPad)
         {
